@@ -276,7 +276,7 @@ function actHTML(a){
   </div>
   <dl class="side">
    <div><dt>Status</dt><dd class="status">${["plan","doing","done"].map(x=>`<span class="${x===s?"on":""}">${x[0].toUpperCase()+x.slice(1)}</span>`).join("")}</dd></div>
-   <div><dt>Volunteer lead</dt><dd class="avail ${taken?"no":"yes"}" id="v${a.n}">${taken?"Not available":"Available"}</dd>
+   <div><dd class="avail ${taken?"no":"yes"}" id="v${a.n}">${taken?"Work in progress":"Available"}</dd>
    ${taken?"":`<button type="button" class="vlink" data-n="${a.n}">Volunteer for this</button>`}</div>
   </dl></article>`;
 }

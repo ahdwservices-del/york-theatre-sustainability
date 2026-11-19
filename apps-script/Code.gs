@@ -55,7 +55,7 @@ function doPost(e) {
       body: name + ' has volunteered for roadmap action #' + action + ': ' + title + '\n\n' +
             'Role: ' + (role || 'not given') + '\nEmail: ' + email + '\n' +
             (note ? '\nNote: ' + note + '\n' : '') +
-            '\nReply to this email to contact them. The action now shows as Not available on the site. To make it available again, type NO in column H of the sheet.'
+            '\nReply to this email to contact them. The action now shows as Work in progress on the site. To make it available again, type NO in column H of the sheet.'
     });
   } finally {
     lock.releaseLock();
