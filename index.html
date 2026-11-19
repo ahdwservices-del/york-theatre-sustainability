@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>York Theatre Sustainability</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: scrub-teal masthead, wide working column, waste streams carry their real bag and lid colours as the only loud colour on the page. */
+:root{
+  --bg:#f1f5f4; --surface:#ffffff; --ink:#10302f; --muted:#51696a; --line:#d3dedc;
+  --accent:#0b6e69; --accent-ink:#ffffff; --accent-soft:#dcefec; --hero:#0c3f3d; --hero-ink:#eef7f5;
+  --warn:#9a3412; --warn-soft:#fdeee4;
+  --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+    --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5;
+    --warn:#fdba8c; --warn-soft:#3a2416; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+  --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5;
+  --warn:#fdba8c; --warn-soft:#3a2416; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:var(--display);line-height:1.12;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3.3rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0;max-width:65ch}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+
+/* masthead */
+header.top{background:var(--hero);color:var(--hero-ink);position:sticky;top:0;z-index:5}
+.topbar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:12px 20px;max-width:1120px;margin:0 auto}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--hero-ink);text-decoration:none;margin-right:auto;display:flex;gap:10px;align-items:center}
+.brand i{width:14px;height:14px;border-radius:50%;background:#5fd0c5;display:inline-block}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav a{color:var(--hero-ink);text-decoration:none;padding:7px 12px;border-radius:999px;font-size:.92rem;font-weight:500;opacity:.85}
+nav a:hover{opacity:1;background:rgba(255,255,255,.1)}
+nav a[aria-current="page"]{background:#5fd0c5;color:#062a28;opacity:1;font-weight:600}
+
+.view{display:none;padding:0 0 72px}
+.view.on{display:block}
+.pagehead{padding:40px 0 8px}
+.pagehead p{color:var(--muted);margin-top:10px;font-size:1.05rem}
+section.block{padding:32px 0 0}
+
+/* home */
+.hero{background:var(--hero);color:var(--hero-ink);padding:52px 0 60px}
+.hero .wrap{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:center}
+.hero p{font-size:1.12rem;opacity:.9;margin-top:16px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 1rem var(--body);padding:12px 20px;border-radius:999px;border:2px solid transparent;cursor:pointer;text-decoration:none}
+.btn.primary{background:#5fd0c5;color:#062a28}
+.btn.ghost{border-color:rgba(255,255,255,.4);color:var(--hero-ink);background:transparent}
+.btn.solid{background:var(--accent);color:var(--accent-ink)}
+.btn.line{border-color:var(--line);color:var(--ink);background:var(--surface)}
+.binrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.binrow a{background:#fff;border-radius:var(--r);padding:8px;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:#10302f;font-size:.74rem;font-weight:600;text-align:center;transition:transform .15s}
+.binrow a:hover{transform:translateY(-3px)}
+.binrow svg{height:74px;width:62px;display:block}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:-28px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px}
+.stat b{font-family:var(--display);font-size:2.1rem;display:block;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{display:block;margin-top:8px;font-size:.92rem}
+.stat small{display:block;color:var(--muted);margin-top:6px;font-size:.78rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
+a.card:hover{border-color:var(--accent)}
+.card .go{margin-top:auto;color:var(--accent);font-weight:600;font-size:.92rem;padding-top:6px}
+.pill{align-self:flex-start;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.pill.plan{background:var(--warn-soft);color:var(--warn)}
+.band{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.lane{border-left:4px solid var(--accent);padding:4px 0 4px 12px}
+.lane b{display:block;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.lane ul{margin:6px 0 0;padding:0;list-style:none;font-size:.88rem;display:flex;flex-direction:column;gap:4px}
+
+/* finder */
+.finder{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:24px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.search{width:100%;font:500 1.05rem var(--body);padding:13px 16px;border-radius:var(--r);border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.search:focus{border-color:var(--accent);outline:none}
+.items{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;max-height:232px;overflow:auto}
+.chip{font:500 .9rem var(--body);padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.85rem;margin:20px 0 14px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.q{font-family:var(--display);font-size:1.3rem;font-weight:700;margin:0 0 4px}
+.qhelp{color:var(--muted);font-size:.92rem;margin-bottom:14px}
+.opts{display:grid;gap:10px}
+.opts.two{grid-template-columns:1fr 1fr}
+.opt{text-align:left;font:600 1rem var(--body);padding:14px 16px;border-radius:var(--r);border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.opt small{display:block;font-weight:400;color:var(--muted);margin-top:2px;font-size:.85rem}
+.opt:hover{border-color:var(--accent);background:var(--accent-soft)}
+.trail{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.trail span{font-size:.8rem;background:var(--accent-soft);color:var(--accent);padding:3px 10px;border-radius:999px;font-weight:600}
+.tools{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.linkbtn{background:none;border:none;color:var(--accent);font:600 .92rem var(--body);cursor:pointer;padding:4px 0;text-decoration:underline}
+.result{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.rhead{display:flex;gap:16px;align-items:center;padding:18px 20px;background:var(--sc);color:var(--st)}
+.rhead .ph{background:#fff;border-radius:8px;padding:6px;flex:none}
+.rhead .ph svg{height:96px;width:80px;display:block}
+.rhead .lab{font-size:.78rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.85}
+.rhead h3{font-size:1.7rem;margin-top:2px}
+.rhead .sub{font-weight:600;margin-top:2px}
+.rbody{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.note{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:10px 14px;font-size:.92rem;font-weight:500}
+.rbody h4{margin:0 0 6px;font:700 .78rem var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rbody ul{margin:0;padding-left:18px;font-size:.93rem;display:flex;flex-direction:column;gap:4px}
+.empty{color:var(--muted);text-align:center;padding:38px 16px}
+.tiger{background:repeating-linear-gradient(135deg,#ffd400 0 16px,#141414 16px 32px)!important}
+.tiger>div:not(.ph){background:#141414;color:#ffd400;padding:8px 12px;border-radius:8px}
+
+/* streams */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.scard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.scard .rhead{padding:14px 16px}
+.scard .rhead .ph img{height:64px}
+.scard .rhead h3{font-size:1.25rem}
+
+/* article pages */
+.cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:24px;align-items:start}
+.prose{display:flex;flex-direction:column;gap:14px}
+.prose ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:65ch}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:.93rem;margin:0}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center;font-size:.9rem}
+.bar i{height:22px;border-radius:4px;background:var(--accent);display:block}
+.bar b{font-variant-numeric:tabular-nums;text-align:right}
+.ref{font-size:.82rem;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:.85rem}
+@media (max-width:820px){
+  header.top{position:static}
+  .items{max-height:none;overflow:visible}
+  .hero .wrap,.finder,.cols,.band{grid-template-columns:1fr}
+  .lanes{grid-template-columns:1fr}
+  .bar{grid-template-columns:110px 1fr 60px}
+  .stats{margin-top:16px}
+}
+@media (max-width:420px){.opts.two{grid-template-columns:1fr}.rhead{flex-wrap:wrap}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topbar">
+    <a class="brand" href="#home"><i></i>York Theatre Sustainability</a>
+    <nav aria-label="Main">
+      <a href="#home" data-nav="home">Home</a>
+      <a href="#waste-finder" data-nav="waste-finder">Which bin?</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HOME -->
+<main>
+<div class="view" id="v-home">
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Greener operating theatres, one change at a time</h1>
+        <p>Operating theatres are among the most resource-hungry places in a hospital. This site collects practical tools and project outputs from our theatre sustainability work, starting with getting waste into the right bin.</p>
+        <div class="cta">
+          <a class="btn primary" href="#waste-finder">Which bin does this go in?</a>
+          <a class="btn ghost" href="#projects">What else is here</a>
+        </div>
+      </div>
+      <div class="binrow" id="heroBins" aria-label="The nine theatre waste streams"></div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>9</b><span>waste streams in every theatre, each with a different cost and carbon footprint</span><small>Bags and bins covered by the finder</small></div>
+      <div class="stat"><b>10.8 → 5.5</b><span>kgCO<sub>2</sub>e per case: low-flow sevoflurane compared with spinal anaesthesia</span><small>Lechani et al, Br J Anaesth 2026; single-centre LCA, operative hysteroscopy</small></div>
+      <div class="stat"><b>60%</b><span>of healthcare waste should be offensive (tiger) waste, the national target in HTM 07-01</span><small>HTM 07-01, 2022 edition</small></div>
+    </div>
+
+    <section class="block stack" id="projects">
+      <h2>Projects</h2>
+      <div class="cards">
+        <a class="card" href="#waste-finder"><span class="pill">Live tool</span><h3>Which bin?</h3><p>Tell the finder what is in your hand and it names the right bag or bin for the anaesthetic room, theatre and recovery.</p><span class="go">Open the bin finder →</span></a>
+        <div class="card"><span class="pill plan">Coming soon</span><h3>Anaesthetic gas usage</h3><p>Feedback on fresh gas flow and volatile agent use, so teams can see the effect of low-flow technique.</p></div>
+        <div class="card"><span class="pill plan">Coming soon</span><h3>Reusable theatre caps</h3><p>The evidence on reusable headwear and a simple home-laundering standard.</p></div>
+      </div>
+    </section>
+
+    <section class="block stack">
+      <h2>The roadmap</h2>
+      <div class="band">
+        <div class="stack">
+          <p>Our theatre roadmap sorts 41 actions into two lanes. Sixteen are things you, your list or your team can start without new kit. Twenty-five need procurement, pharmacy, estates or IPC.</p>
+          <p class="muted">Four are flagged as big hitters because of their climate impact per case: low-flow anaesthesia, removing desflurane, decommissioning nitrous oxide manifolds, and the gases used in vitreoretinal surgery.</p>
+        </div>
+        <div class="lanes">
+          <div class="lane"><b>Easy wins</b><ul><li>Low flow and end-tidal control</li><li>Rubbing not scrubbing</li><li>IV to oral paracetamol</li><li>Waste segregation</li></ul></div>
+          <div class="lane"><b>Next up</b><ul><li>Reusable hats, gowns, masks</li><li>Lean surgical trays</li><li>Reusable sharps bins</li><li>Metal recycling</li></ul></div>
+          <div class="lane"><b>Longer term</b><ul><li>N<sub>2</sub>O manifolds</li><li>Remanufactured instruments</li><li>Volatile capture</li><li>AGSS review</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block stack">
+      <h2>Get involved</h2>
+      <div class="cards">
+        <div class="card"><h3>Pick an easy win</h3><p>Choose one action from the roadmap for your own list. Put a name and a date against it.</p></div>
+        <div class="card"><h3>Bring a project</h3><p>Audits, QI projects and posters from any theatre role are welcome once they are ready to share publicly.</p></div>
+        <div class="card"><h3>Tell us what is missing</h3><p>If the bin finder cannot place an item you see every day, let the theatre sustainability team know so the tool can be updated.</p></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- FINDER -->
+<div class="view" id="v-waste-finder">
+  <div class="wrap">
+    <div class="pagehead">
+      <h1>Which bin?</h1>
+      <p>Search for the item, or answer up to four questions. Answers follow HTM 07-01 waste segregation for the anaesthetic room, theatre and recovery.</p>
+    </div>
+    <section class="block finder">
+      <div class="panel" id="askPanel">
+        <label for="itemSearch" class="q" style="display:block;margin-bottom:10px">What are you holding?</label>
+        <input class="search" id="itemSearch" type="search" placeholder="Try LMA, filter, syringe, gloves…" autocomplete="off">
+        <div class="items" id="itemList"></div>
+        <div class="or">or work it out step by step</div>
+        <div id="flow"></div>
+      </div>
+      <div id="resultBox" aria-live="polite"></div>
+    </section>
+    <p class="small muted" style="margin-top:20px">This tool is a quick guide. Your organisation's waste policy and local bin labels take precedence. If an item is not covered, ask the person in charge of the theatre before you bin it.</p>
+  </div>
+</div>
+
+</main>
+
+<footer><div class="wrap">Theatre sustainability resources. Waste guidance is based on HTM 07-01 (2022 edition) and pharmaceutical waste guidance. Local waste policy and bin labels take precedence. Contains no patient or organisational data.</div></footer>
+
+<script>
+const AIRN="Airway kit follows the HTM 07-01 rule for items contaminated with body fluids: offensive waste unless the patient is infectious or the item carries medicine.";
+const S={
+ clear:{name:"Clear bag",sub:"Recycling",kind:"bag",c:"#e9f0f2",t:"#10302f",
+  yes:["Clean outer cardboard and paper packaging, including the outer layer of sterile wrap","Clean, uncontaminated plastic film and wrappers","Alcohol hand-gel dispensers and wall-mount boxes, rinsed thoroughly with water and left to dry","Outer packaging from airway kit and circuits"],
+  no:["IV fluid bags and giving sets. These go in the tiger bag because the cannula port can draw back body fluids.","Anything with medicine, chemical or blood residue","Un-rinsed gel containers. These go in the yellow bag."]},
+ tiger:{name:"Tiger bag",sub:"Offensive waste",kind:"bag",c:"#ffd400",t:"#141414",tiger:true,
+  yes:["PPE from non-infectious patients (body fluids, no medicines)","IV fluid bags and giving sets with no medicines added and no needle","Dressings, wipes and drapes from non-infectious patients","Non-infectious dressings and drapes from the scrub field","Used airway kit from non-infectious patients: LMAs, tubes, oral and nasal airways, face masks, filters, circuits, catheter mounts and sampling lines"],
+  no:["Waste from suspected or confirmed infection. Use the orange bag.","Anything contaminated with medicines or chemicals. Use the yellow bag.","Sharps or free-flowing liquids"]},
+ orangebag:{name:"Orange bag",sub:"Infectious clinical waste",kind:"bag",c:"#e8590c",t:"#ffffff",
+  yes:["PPE from infectious or suspected-infectious patients","Dressings, wipes and swabs contaminated with infectious body fluids","Recovery: any waste from patients with suspected infection","Drapes, swabs and dressings from the scrub field, infectious patients only","Airway kit, filters and circuits from patients with suspected or confirmed infection, including respiratory infection"],
+  no:["Anything contaminated with medicines or chemicals. Use the yellow bag.","Waste from non-infectious patients. Use the tiger bag.","Sharps or free-flowing liquids"]},
+ yellowbag:{name:"Yellow bag",sub:"Medicine or chemical contaminated, and infectious",kind:"bag",c:"#ffd400",t:"#141414",
+  yes:["IV bags, lines and tubing with medicines added, once you have checked there is no needle","PPE and dressings contaminated with medicine and body fluids","Body fluids mixed with medicines or chemicals","Chemically contaminated items","Scrub solution bottles","Airway kit or circuits that a medicine was given through, such as drugs down the tube or a nebuliser in the circuit"],
+  no:["Infectious-only waste with no medicines. Use the orange bag.","Sharps. Use the yellow-lid sharps bin.","Clean packaging. Use the clear recycling bag."]},
+ orangesharps:{name:"Orange-lid sharps bin",sub:"Sharps with no medicine contamination",kind:"bin",c:"#e8590c",t:"#ffffff",
+  yes:["Blood-only sharps","Scissors, scalpels and forceps","Uncontaminated metal sharps","Single-use metal laryngoscope blades and handles (batteries removed) and metal stylets","Metal is extracted and recycled from the orange stream. It is not recovered from yellow."],
+  no:["Any sharps contaminated with medicines","Soft healthcare waste","Packaging"],fill:true},
+ yellowsharps:{name:"Yellow-lid sharps bin",sub:"Medicine-contaminated sharps, non-cytotoxic",kind:"bin",c:"#ffd400",t:"#141414",
+  yes:["Needles used to draw up or give medicines","Syringes with the needle still attached and medicine residue","Non-cytotoxic sharps from the anaesthetic room","IV lines with a needle at the end: the entire assembly"],
+  no:["Cytotoxic or cytostatic sharps. Use the purple-lid bin.","Blood-only sharps and recyclable metal such as blades, scissors and forceps. Use the orange-lid bin so the metal is recycled."],fill:true},
+ purple:{name:"Purple-lid bin",sub:"Cytotoxic and cytostatic waste",kind:"bin",c:"#6d2077",t:"#ffffff",
+  yes:["Cytotoxic or cytostatic drug vials, ampoules and part-used syringes","IV bags and giving sets contaminated with cytotoxic drugs","Gloves, gowns and PPE worn when preparing or giving cytotoxic agents","Wipes, swabs and dressings contaminated with cytotoxic agents","Cytotoxic sharps. Never the yellow-lid bin."],
+  no:["Non-cytotoxic medicines. Use the blue-lid bin or yellow bag.","Uncontaminated waste","Never mix cytotoxic waste with general clinical waste"],fill:true},
+ blue:{name:"Blue-lid burn bin",sub:"Pharmaceutical waste, non-cytotoxic",kind:"bin",c:"#1f3fd6",t:"#ffffff",
+  yes:["Vials and ampoules, empty or part-used","Blister packs from the anaesthetic room","Syringes with medicine residue, needle removed, not in direct contact with the patient","Empty or part-used vials from the scrub field"],
+  no:["Any sharps","Cytotoxic or cytostatic medicines. Use the purple-lid bin.","Needles and needle-attached sharps. Use the yellow-lid sharps bin.","IV bags with medicines. Use the yellow bag."],fill:true,nosharps:true},
+ red:{name:"Red-lid burn bin",sub:"Anatomical waste",kind:"bin",c:"#c40000",t:"#ffffff",
+  yes:["Recognisable human tissue","Body parts","Can instead be double bagged in yellow clinical waste bags and labelled anatomical"],
+  no:["Sharps","PPE","Swabs, wipes or dressings"],nosharps:true}
+};
+const CYTO={q:"Is it contaminated with cytotoxic or cytostatic drugs?",help:"For example chemotherapy agents, or anything used to prepare or give them."};
+const N={
+ start:{q:"What kind of item is it?",opts:[
+  ["Sharp","Needle, blade, scissors, anything that can pierce","sharp1"],
+  ["Medicine container or syringe","Vials, ampoules, blister packs, syringes","med1"],
+  ["IV bag, giving set or line","Fluid bags, tubing, extensions","iv1"],
+  ["PPE, swabs, dressings or drapes","Gloves, gowns, wipes, soft waste","soft1"],
+  ["Airway or breathing equipment","LMAs, tubes, airways, masks, filters, circuits","air1"],
+  ["Packaging or bottles","Wrap, cardboard, film, dispensers","pack1"],
+  ["Human tissue","Recognisable tissue or body parts","=red"]]},
+ sharp1:{...CYTO,yn:["=purple","sharp2"]},
+ sharp2:{q:"Has it been in contact with medicines?",help:"Used to draw up or give a drug, or carrying medicine residue.",yn:["=yellowsharps","=orangesharps"],labels:["Yes, medicines","No, blood only or clean metal"]},
+ med1:{...CYTO,yn:["=purple","med2"]},
+ med2:{q:"Is a needle still attached?",yn:["=yellowsharps","=blue"]},
+ iv1:{...CYTO,yn:["=purple","iv2"]},
+ iv2:{q:"Check the line end. Is there a needle?",help:"Always check before disposing. If there is, the entire assembly goes in the sharps bin.",yn:["=yellowsharps","iv3"]},
+ iv3:{q:"Were medicines added to the bag or given through the line?",yn:["=yellowbag","soft3"]},
+ soft1:{...CYTO,yn:["=purple","soft2"]},
+ soft2:{q:"Is it contaminated with medicines or chemicals?",help:"Including body fluids mixed with medicines or chemicals.",yn:["=yellowbag","soft3"]},
+ soft3:{q:"Is the patient infectious or suspected infectious?",yn:["=orangebag","=tiger"]},
+ pack1:{q:"Is it clean and uncontaminated?",help:"No medicine, chemical, blood or body fluid residue.",yn:["=clear","pack2"]},
+ pack2:{q:"What is it contaminated with?",opts:[["Medicine or chemical residue","Including un-rinsed gel and scrub solution","=yellowbag"],["Blood or body fluids only","","soft3"]]},
+ air1:{q:"Is it single-use metal?",help:"Metal laryngoscope blades and handles, metal stylets.",yn:["=orangesharps","air2"],labels:["Yes, metal","No, plastic or rubber"]},
+ air2:{q:"Has a medicine been given through it or onto it?",help:"For example drugs instilled down the tube or a nebuliser run through the circuit. Saliva, secretions and water-based lubricant do not count.",yn:["=yellowbag","air3"]},
+ air3:{q:"Is the patient infectious or suspected infectious?",help:"Include suspected or confirmed respiratory infection such as TB, influenza or COVID-19, and any patient on transmission-based precautions.",yn:["=orangebag","=tiger"]},
+ gel:{q:"Has it been rinsed thoroughly with water and left to dry?",yn:["=clear","=yellowbag"]}
+};
+const ITEMS=[
+ ["Needle","hypodermic drawing up blunt fill","sharp1"],
+ ["Syringe with needle attached","","med1"],
+ ["Syringe, no needle","drug residue empty","med1"],
+ ["Glass ampoule","amp","med1"],
+ ["Drug vial","bottle propofol","med1"],
+ ["Blister pack","tablet","=blue"],
+ ["Scalpel blade","knife","sharp1","Pass blades through a neutral zone, never hand to hand."],
+ ["Suture needle","stitch","sharp1"],
+ ["Scissors or forceps","metal single-use instrument","sharp1"],
+ ["Cannula or stylet","venflon introducer","sharp1"],
+ ["IV fluid bag","saline hartmanns","iv1"],
+ ["Giving set","line tubing extension","iv1"],
+ ["Gloves","ppe","soft1"],
+ ["Gown or apron","ppe","soft1"],
+ ["Face mask or visor","ppe surgical","soft1"],
+ ["Swabs","gauze","soft1"],
+ ["Dressings","plaster","soft1"],
+ ["Wipes","","soft1"],
+ ["Drapes","","soft1"],
+ ["Laryngeal mask (LMA, i-gel)","supraglottic airway sga igel","air2",AIRN],
+ ["Endotracheal tube","ett et tube intubation","air2",AIRN],
+ ["Oral or nasal airway","guedel opa npa nasopharyngeal","air2",AIRN],
+ ["Anaesthetic face mask","airway mask","air2",AIRN],
+ ["Breathing circuit","tubing limb reservoir bag","air2",AIRN+" Many single-use circuits are validated for up to 7 days when a filter is used at the patient end. Follow the local change schedule rather than binning the circuit after every case, unless it is visibly contaminated."],
+ ["HME or viral/bacterial filter","hmef heat moisture exchanger","air2",AIRN],
+ ["Catheter mount","angle piece elbow","air2",AIRN],
+ ["Capnography sampling line","etco2 co2 gas line","air2",AIRN],
+ ["Bougie or plastic stylet","introducer","air2",AIRN],
+ ["Suction catheter or Yankauer","sucker","air3",AIRN],
+ ["Suction liner with fluid","canister","air3","Free-flowing liquid must never go in a bag. Solidify the contents with gelling agent first, or use the local closed suction disposal system."],
+ ["Single-use metal laryngoscope blade","mac","=orangesharps","Orange-lid so the metal is recovered and recycled. If a drug was sprayed onto it, use the yellow-lid sharps bin."],
+ ["Single-use laryngoscope handle","battery","=orangesharps","Take the batteries out first and put them in battery recycling. Then the handle goes in the orange-lid bin so the metal is recovered."],
+ ["Metal stylet","intubating wire","=orangesharps","Orange-lid so the metal is recovered and recycled."],
+ ["Unopened or unused airway kit packaging","wrapper bag","pack1"],
+ ["Sterile wrap, outer layer","packaging","pack1"],
+ ["Cardboard or paper packaging","box","pack1"],
+ ["Plastic film or wrappers","packaging","pack1"],
+ ["Alcohol gel dispenser","hand gel bottle","gel"],
+ ["Scrub solution bottle","chlorhexidine betadine","=yellowbag"],
+ ["Chemotherapy drug or kit","cytotoxic cytostatic","=purple"],
+ ["Human tissue or body part","anatomical specimen","=red"]
+];
+let trail=[],cur="start",itemNote="";
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function bagSVG(fill,stroke,tiger,clear){
+  const id="t"+Math.random().toString(36).slice(2,7);
+  const f=tiger?`url(#${id})`:fill;
+  return `<svg viewBox="0 0 80 96" role="img" aria-hidden="true">${tiger?`<defs><pattern id="${id}" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(0)"><rect width="14" height="14" fill="#ffd400"/><rect width="14" height="6" y="4" fill="#141414"/></pattern></defs>`:""}
+  <path d="M30 14 L26 6 L36 10 L40 4 L44 10 L54 6 L50 14 Z" fill="${f}" stroke="${stroke}" stroke-width="1.5" stroke-linejoin="round" ${clear?'fill-opacity=".35"':""}/>
+  <path d="M33 14 Q40 18 47 14 L49 22 Q66 30 70 56 Q74 86 56 90 Q40 94 24 90 Q6 86 10 56 Q14 30 31 22 Z" fill="${f}" stroke="${stroke}" stroke-width="2" stroke-linejoin="round" ${clear?'fill-opacity=".35"':""}/>
+  <rect x="32" y="15" width="16" height="5" rx="2" fill="${stroke}" opacity=".7"/></svg>`;
+}
+function binSVG(body,lid,label,tall){
+  const h=tall?78:62, y=92-h;
+  return `<svg viewBox="0 0 80 96" role="img" aria-hidden="true">
+  <path d="M14 ${y} L66 ${y} L61 92 L19 92 Z" fill="${body}" stroke="#2a2a2a" stroke-width="1.5" stroke-linejoin="round"/>
+  <rect x="9" y="${y-10}" width="62" height="12" rx="3" fill="${lid}" stroke="#2a2a2a" stroke-width="1.5"/>
+  <rect x="30" y="${y-15}" width="20" height="6" rx="2" fill="${lid}" stroke="#2a2a2a" stroke-width="1.2"/>
+  <g transform="translate(40 ${y+h/2+2})"><rect x="-11" y="-11" width="22" height="22" transform="rotate(45)" fill="#fff" stroke="#2a2a2a" stroke-width="1.2"/><text y="5" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#2a2a2a">${label}</text></g></svg>`;
+}
+const ART={
+  clear:()=>bagSVG("#cfd8dc","#7b8a90",false,true),
+  tiger:()=>bagSVG("#ffd400","#141414",true),
+  orangebag:()=>bagSVG("#ee6a1f","#9a3a08"),
+  yellowbag:()=>bagSVG("#ffd83b","#9c7c00"),
+  orangesharps:()=>binSVG("#ffd83b","#ee6a1f","6"),
+  yellowsharps:()=>binSVG("#ffd83b","#ffd83b","6"),
+  purple:()=>binSVG("#ffd83b","#7b2d8e","6"),
+  blue:()=>binSVG("#ffffff","#1f3fd6","",true),
+  red:()=>binSVG("#b8bec2","#c40000","6",true)
+};
+const art=k=>ART[k]();
+function head(k,big){const s=S[k];return `<div class="rhead${s.tiger?" tiger":""}" style="--sc:${s.c};--st:${s.t}"><div class="ph" aria-label="${esc(s.name)}">${art(k)}</div><div>${big?`<div class="lab">Put it in the</div>`:""}<h3>${esc(s.name)}</h3><div class="sub">${esc(s.sub)}</div></div></div>`}
+function lists(k){const s=S[k];return `<div><h4>Goes in</h4><ul>${s.yes.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div><h4>Keep out</h4><ul>${s.no.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`}
+function notes(k){const s=S[k];let n=[];if(s.nosharps)n.push("No sharps in this bin.");if(s.fill)n.push("Never fill past the fill line.");return n}
+function go(dest,label){
+  if(label)trail.push(label);
+  if(dest[0]==="="){showResult(dest.slice(1));cur=null;renderFlow();return}
+  cur=dest;renderFlow();
+}
+function renderFlow(){
+  const f=$("#flow");
+  const t=trail.length?`<div class="trail">${trail.map(x=>`<span>${esc(x)}</span>`).join("")}</div>`:"";
+  if(!cur){f.innerHTML=t+`<div class="tools"><button class="btn solid" id="again" type="button">Check another item</button></div>`;$("#again").onclick=reset;return}
+  const n=N[cur];let o;
+  if(n.opts)o=`<div class="opts">${n.opts.map((x,i)=>`<button class="opt" type="button" data-i="${i}">${esc(x[0])}${x[1]?`<small>${esc(x[1])}</small>`:""}</button>`).join("")}</div>`;
+  else{const l=n.labels||["Yes","No"];o=`<div class="opts two"><button class="opt" type="button" data-i="0">${esc(l[0])}</button><button class="opt" type="button" data-i="1">${esc(l[1])}</button></div>`}
+  f.innerHTML=t+`<p class="q">${esc(n.q)}</p>${n.help?`<p class="qhelp">${esc(n.help)}</p>`:`<div style="height:10px"></div>`}${o}${trail.length?`<div class="tools"><button class="linkbtn" id="rs" type="button">Start again</button></div>`:""}`;
+  f.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;
+    if(n.opts)go(n.opts[i][2],n.opts[i][0]);
+    else{const l=n.labels||["Yes","No"];go(n.yn[i],n.q.replace(/\?$/,"")+": "+l[i].toLowerCase())}});
+  const rs=$("#rs");if(rs)rs.onclick=reset;
+}
+function showResult(k){
+  const extra=[...(itemNote?[itemNote]:[]),...notes(k)];
+  $("#resultBox").innerHTML=`<div class="result">${head(k,true)}<div class="rbody">${extra.map(x=>`<div class="note">${esc(x)}</div>`).join("")}${lists(k)}</div></div>`;
+  if(window.innerWidth<820)$("#resultBox").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function reset(){trail=[];cur="start";itemNote="";$("#itemSearch").value="";renderItems("");renderFlow();
+  $("#resultBox").innerHTML=`<div class="panel empty"><p style="margin:0 auto">Your answer appears here, with the bin, what else belongs in it and what to keep out.</p></div>`}
+function renderItems(q){
+  q=q.trim().toLowerCase();
+  let m=ITEMS.filter(x=>!q||(x[0]+" "+x[1]).toLowerCase().includes(q));
+  const small=window.innerWidth<820, more=!q&&small?m.length-8:0;
+  if(more>0)m=m.slice(0,8);
+  $("#itemList").innerHTML=m.length?m.map(x=>`<button class="chip" type="button" data-n="${esc(x[0])}">${esc(x[0])}</button>`).join("")+(more>0?`<p class="small muted" style="width:100%;margin:4px 0 0">Type to search ${more} more items.</p>`:""):`<p class="small muted">Not on the list yet. Use the questions below, or ask the person in charge of the theatre.</p>`;
+  $("#itemList").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{const it=ITEMS.find(x=>x[0]===b.dataset.n);trail=[];itemNote=it[3]||"";$("#resultBox").innerHTML="";go(it[2],it[0]);if(cur)$("#resultBox").innerHTML=`<div class="panel empty"><p style="margin:0 auto">Answer the question to place your ${esc(it[0].toLowerCase())}.</p></div>`});
+}
+$("#itemSearch").addEventListener("input",e=>renderItems(e.target.value));
+$("#heroBins").innerHTML=Object.keys(S).map(k=>`<a href="#waste-finder">${art(k)}${esc(S[k].name)}</a>`).join("");
+const VIEWS=["home","waste-finder"];
+function route(){
+  let h=location.hash.slice(1),v=VIEWS.includes(h)?h:"home";
+  VIEWS.forEach(x=>document.getElementById("v-"+x).classList.toggle("on",x===v));
+  document.querySelectorAll("nav a").forEach(a=>a.dataset.nav===v?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current"));
+  if(h==="projects"){document.getElementById("projects").scrollIntoView()}else window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",route);
+reset();route();
+</script>
+</body>
+</html>
