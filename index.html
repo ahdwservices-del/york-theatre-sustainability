@@ -70,8 +70,8 @@ section.block{padding:32px 0 0}
 .btn.ghost{border-color:rgba(255,255,255,.4);color:var(--hero-ink);background:transparent}
 .btn.solid{background:var(--accent);color:var(--accent-ink)}
 .btn.line{border-color:var(--line);color:var(--ink);background:var(--surface)}
-.binrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.binrow a{background:#fff;border-radius:var(--r);padding:8px;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:#10302f;font-size:.74rem;font-weight:600;text-align:center;transition:transform .15s}
+.binrow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.binrow a{background:#fff;border-radius:var(--r);padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:#10302f;font-size:.74rem;font-weight:600;text-align:center;transition:transform .15s}
 .binrow a:hover{transform:translateY(-3px)}
 .binrow svg{height:74px;width:62px;display:block}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:-28px}
@@ -146,6 +146,30 @@ a.card:hover{border-color:var(--accent)}
 .bar b{font-variant-numeric:tabular-nums;text-align:right}
 .ref{font-size:.82rem;color:var(--muted)}
 footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:.85rem}
+
+/* low flow poster page */
+.lf-now{background:var(--hero);color:var(--hero-ink);border-radius:var(--r);padding:22px}
+.lf-now h2{color:var(--hero-ink)}
+.lf-now .sub{opacity:.85;margin-top:4px}
+.lf-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.lf-stat{background:rgba(255,255,255,.08);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.lf-stat b{font-family:var(--display);font-size:clamp(2rem,5vw,2.8rem);line-height:1;color:#ffd166;font-variant-numeric:tabular-nums}
+.lf-stat span{flex:1}
+.lf-stat em{font-style:normal;font-weight:700;border-top:1px solid rgba(255,255,255,.25);padding-top:8px}
+.lf-acts{display:flex;flex-direction:column;gap:12px}
+.lf-act{display:flex;gap:16px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:16px 18px}
+.lf-num{flex:none;width:42px;height:42px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font:700 1.3rem var(--display);display:flex;align-items:center;justify-content:center}
+.lf-act h3{margin-bottom:6px}
+.lf-act ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.lf-save{border:2px solid #e9a400;border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.lf-save-top{background:#ffd166;color:#1d1a10;padding:16px 20px;display:flex;flex-wrap:wrap;gap:6px 20px;align-items:baseline}
+.lf-save-top b{font-family:var(--display);font-size:clamp(1.5rem,3.4vw,2rem)}
+.lf-save-bot{padding:16px 20px;display:grid;grid-template-columns:auto 1fr 1fr;gap:12px 24px;align-items:center}
+.lf-save-bot strong{display:block;font-family:var(--display);font-size:1.2rem}
+.lf-save-bot span{color:var(--muted);font-size:.92rem}
+.lf-tips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:820px){.lf-stats{grid-template-columns:1fr}.lf-save-bot{grid-template-columns:1fr 1fr}.lf-save-bot>p:first-child{grid-column:1/-1}.lf-tips{grid-template-columns:1fr}.binrow{grid-template-columns:repeat(5,1fr)}.binrow a{font-size:.62rem}.binrow svg{height:52px;width:44px}}
+@media (max-width:420px){.lf-save-bot{grid-template-columns:1fr}.lf-act{gap:12px;padding:14px}.lf-num{width:34px;height:34px;font-size:1rem}.binrow{grid-template-columns:repeat(5,1fr);gap:4px}}
 @media (max-width:820px){
   header.top{position:static}
   .items{max-height:none;overflow:visible}
@@ -165,6 +189,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
     <nav aria-label="Main">
       <a href="#home" data-nav="home">Home</a>
       <a href="#waste-finder" data-nav="waste-finder">Which bin?</a>
+      <a href="#low-flow" data-nav="low-flow">Low flow</a>
     </nav>
   </div>
 </header>
@@ -187,7 +212,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
   </div>
   <div class="wrap">
     <div class="stats">
-      <div class="stat"><b>9</b><span>waste streams in every theatre, each with a different cost and carbon footprint</span><small>Bags and bins covered by the finder</small></div>
+      <div class="stat"><b>10</b><span>waste streams in every theatre, each with a different cost and carbon footprint</span><small>Bags and bins covered by the finder</small></div>
       <div class="stat"><b>10.8 → 5.5</b><span>kgCO<sub>2</sub>e per case: low-flow sevoflurane compared with spinal anaesthesia</span><small>Lechani et al, Br J Anaesth 2026; single-centre LCA, operative hysteroscopy</small></div>
       <div class="stat"><b>60%</b><span>of healthcare waste should be offensive (tiger) waste, the national target in HTM 07-01</span><small>HTM 07-01, 2022 edition</small></div>
     </div>
@@ -196,7 +221,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
       <h2>Projects</h2>
       <div class="cards">
         <a class="card" href="#waste-finder"><span class="pill">Live tool</span><h3>Which bin?</h3><p>Tell the finder what is in your hand and it names the right bag or bin for the anaesthetic room, theatre and recovery.</p><span class="go">Open the bin finder →</span></a>
-        <div class="card"><span class="pill plan">Coming soon</span><h3>Anaesthetic gas usage</h3><p>Feedback on fresh gas flow and volatile agent use, so teams can see the effect of low-flow technique.</p></div>
+        <a class="card" href="#low-flow"><span class="pill">Early findings</span><h3>Low flow, less waste</h3><p>What our anaesthetic machines recorded about sevoflurane and fresh gas flow, and three changes that cut the waste.</p><span class="go">See the findings →</span></a>
         <div class="card"><span class="pill plan">Coming soon</span><h3>Reusable theatre caps</h3><p>The evidence on reusable headwear and a simple home-laundering standard.</p></div>
       </div>
     </section>
@@ -237,7 +262,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
     <section class="block finder">
       <div class="panel" id="askPanel">
         <label for="itemSearch" class="q" style="display:block;margin-bottom:10px">What are you holding?</label>
-        <input class="search" id="itemSearch" type="search" placeholder="Try LMA, filter, syringe, gloves…" autocomplete="off">
+        <input class="search" id="itemSearch" type="search" placeholder="Try LMA, hand towel, syringe…" autocomplete="off">
         <div class="items" id="itemList"></div>
         <div class="or">or work it out step by step</div>
         <div id="flow"></div>
@@ -248,6 +273,62 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
   </div>
 </div>
 
+
+<!-- LOW FLOW -->
+<div class="view" id="v-low-flow">
+  <div class="wrap">
+    <div class="pagehead">
+      <span class="pill">Early findings</span>
+      <h1 style="margin-top:10px">Low flow, less waste</h1>
+      <p>What our anaesthetic machines recorded about sevoflurane use, January to November 2026.</p>
+    </div>
+    <section class="block stack">
+      <div class="lf-now">
+        <h2>Where we are now</h2>
+        <p class="sub">Our current practice, which we need to improve.</p>
+        <div class="lf-stats">
+          <div class="lf-stat"><b>57%</b><span>of our sevoflurane goes to the scavenger, not the patient.*</span><em>Target: 50% or less</em></div>
+          <div class="lf-stat"><b>2.0 L/min</b><span>our usual maintenance fresh gas flow, in every area.</span><em>Target: below 1, aim for 0.5</em></div>
+          <div class="lf-stat"><b>1 in 3</b><span>sevoflurane cases never reach 1 L/min.</span><em>Target: fewer than 1 in 7</em></div>
+        </div>
+      </div>
+    </section>
+    <section class="block stack">
+      <h2>What can I do?</h2>
+      <div class="lf-acts">
+        <div class="lf-act"><span class="lf-num" aria-hidden="true">1</span><div><h3>Go low early</h3><ul>
+          <li><b>Preoxygenate:</b> vaporiser off, tight seal, 6 L/min (10 in pregnancy) to end-tidal O<sub>2</sub> of 90% or more.</li>
+          <li><b>Induce:</b> mask-ventilate at 6 L/min; reach for an adjunct before more flow.</li>
+          <li><b>Intubate:</b> turn the flow down while the circuit is open.</li>
+          <li><b>Airway secured:</b> 1 L/min within 5 minutes, then 0.5 L/min.</li></ul></div></div>
+        <div class="lf-act"><span class="lf-num" aria-hidden="true">2</span><div><h3>Vaporiser to 0 when suturing starts</h3>
+          <p>Keep flow low while the surgeon closes. When surgery ends, raise flow to the patient's minute ventilation: 15 L/min does not wake them faster.</p></div></div>
+        <div class="lf-act"><span class="lf-num" aria-hidden="true">3</span><div><h3>Induce on the machine's circle system, not a Mapleson D</h3>
+          <p>A Mapleson D induction uses about 19 mL of sevoflurane, more than half a whole case's worth, and nearly all of it goes to the scavenger.</p></div></div>
+      </div>
+    </section>
+    <section class="block">
+      <div class="lf-save">
+        <div class="lf-save-top"><span>If we all do this, every year we save</span><b>17–24 tonnes CO<sub>2</sub>e</b></div>
+        <div class="lf-save-bot">
+          <p><b>What does 24 tonnes look like?</b></p>
+          <p><strong>3½ times round the world</strong><span>145,000 km in a petrol car</span></p>
+          <p><strong>15 return flights</strong><span>London to New York, economy</span></p>
+        </div>
+      </div>
+    </section>
+    <section class="block stack">
+      <h2>Tips</h2>
+      <div class="lf-tips">
+        <div class="card"><h3>Need to deepen? Burst, then back</h3><p>A minute or two of high flow, then straight back down.</p></div>
+        <div class="card"><h3>Almost all sevoflurane ends up in the atmosphere</h3><p>Very little is metabolised. What the patient absorbs is breathed out in recovery, so the only fix is to use less.</p></div>
+        <div class="card"><h3>Save more carbon: regional or TIVA</h3><p>For the same operation: spinal 5.5 kg CO<sub>2</sub>e, TIVA 6.6 kg, low-flow sevoflurane 10.8 kg.</p></div>
+        <div class="card"><h3>Enter the patient's age</h3><p>1 in 4 sevoflurane cases leave it at the machine default of 40, so the age-adjusted MAC shown is wrong.</p></div>
+      </div>
+      <p class="ref">Early findings from anaesthetic machine logbook data; machine-level data only, with no patient or clinician identifiers. *Excludes sevoflurane given on the anaesthetic room Mapleson D, which is not logged; Mapleson D figures are modelled from measured anaesthetic room inductions. Carbon equivalents are approximate. Regional and TIVA figures: Lechani et al, Br J Anaesth 2026 (single-centre life cycle assessment, operative hysteroscopy).</p>
+    </section>
+  </div>
+</div>
 </main>
 
 <footer><div class="wrap">Theatre sustainability resources. Waste guidance is based on HTM 07-01 (2022 edition) and pharmaceutical waste guidance. Local waste policy and bin labels take precedence. Contains no patient or organisational data.</div></footer>
@@ -255,9 +336,12 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
 <script>
 const AIRN="Airway kit follows the HTM 07-01 rule for items contaminated with body fluids: offensive waste unless the patient is infectious or the item carries medicine.";
 const S={
+ black:{name:"Black bag",sub:"General (domestic) waste",kind:"bag",c:"#1d1d1f",t:"#ffffff",
+  yes:["Paper hand towels","Empty disposable coffee cups","Small amounts of food waste, where there is no food waste bin","Food-contaminated or greasy packaging, sandwich and snack wrappers","Polystyrene and plastic film that your recycling stream does not take","Clean packaging that is not recyclable locally, such as mixed paper-plastic pouches"],
+  no:["Anything that has touched a patient or body fluids. Use the tiger or orange bag.","PPE, drapes, swabs or dressings from a case. Use the tiger or orange bag.","Medicines, empty vials, ampoules or blister packs. Use the blue-lid bin.","Sharps of any kind","Recyclable card, paper, cans and plastic bottles. Use the clear bag.","Liquids, glass, batteries, electrical items and aerosols. These need their own streams."]},
  clear:{name:"Clear bag",sub:"Recycling",kind:"bag",c:"#e9f0f2",t:"#10302f",
   yes:["Clean outer cardboard and paper packaging, including the outer layer of sterile wrap","Clean, uncontaminated plastic film and wrappers","Alcohol hand-gel dispensers and wall-mount boxes, rinsed thoroughly with water and left to dry","Outer packaging from airway kit and circuits"],
-  no:["IV fluid bags and giving sets. These go in the tiger bag because the cannula port can draw back body fluids.","Anything with medicine, chemical or blood residue","Un-rinsed gel containers. These go in the yellow bag."]},
+  no:["IV fluid bags and giving sets. These go in the tiger bag because the cannula port can draw back body fluids.","Anything with medicine, chemical or blood residue","Un-rinsed gel containers. These go in the yellow bag.","Paper hand towels, coffee cups and food-contaminated packaging. These go in the black bag."]},
  tiger:{name:"Tiger bag",sub:"Offensive waste",kind:"bag",c:"#ffd400",t:"#141414",tiger:true,
   yes:["PPE from non-infectious patients (body fluids, no medicines)","IV fluid bags and giving sets with no medicines added and no needle","Dressings, wipes and drapes from non-infectious patients","Non-infectious dressings and drapes from the scrub field","Used airway kit from non-infectious patients: LMAs, tubes, oral and nasal airways, face masks, filters, circuits, catheter mounts and sampling lines"],
   no:["Waste from suspected or confirmed infection. Use the orange bag.","Anything contaminated with medicines or chemicals. Use the yellow bag.","Sharps or free-flowing liquids"]},
@@ -292,6 +376,7 @@ const N={
   ["PPE, swabs, dressings or drapes","Gloves, gowns, wipes, soft waste","soft1"],
   ["Airway or breathing equipment","LMAs, tubes, airways, masks, filters, circuits","air1"],
   ["Packaging or bottles","Wrap, cardboard, film, dispensers","pack1"],
+  ["Hand towels, food or drink","Staff waste that never touched a patient","gen1"],
   ["Human tissue","Recognisable tissue or body parts","=red"]]},
  sharp1:{...CYTO,yn:["=purple","sharp2"]},
  sharp2:{q:"Has it been in contact with medicines?",help:"Used to draw up or give a drug, or carrying medicine residue.",yn:["=yellowsharps","=orangesharps"],labels:["Yes, medicines","No, blood only or clean metal"]},
@@ -303,7 +388,10 @@ const N={
  soft1:{...CYTO,yn:["=purple","soft2"]},
  soft2:{q:"Is it contaminated with medicines or chemicals?",help:"Including body fluids mixed with medicines or chemicals.",yn:["=yellowbag","soft3"]},
  soft3:{q:"Is the patient infectious or suspected infectious?",yn:["=orangebag","=tiger"]},
- pack1:{q:"Is it clean and uncontaminated?",help:"No medicine, chemical, blood or body fluid residue.",yn:["=clear","pack2"]},
+ pack1:{q:"Is it clean and uncontaminated?",help:"No medicine, chemical, blood or body fluid residue.",yn:["pack3","pack2"]},
+ pack3:{q:"Is it a recyclable material?",help:"Cardboard, paper, plastic bottles and rigid plastics, tins and cans. Not coffee cups, foil-lined or greasy packaging, or polystyrene. Check what your local recycling takes.",yn:["=clear","=black"],labels:["Yes, recyclable","No, or not sure"]},
+ gen1:{q:"Has it been in contact with a patient, body fluids or medicines?",yn:["start","gen2"],labels:["Yes","No"]},
+ gen2:{q:"What is it?",opts:[["Paper hand towels","","=black"],["Food scraps, coffee cups or greasy wrappers","","=black"],["Drink cans, plastic bottles, clean paper or card","Empty and rinsed","=clear"]]},
  pack2:{q:"What is it contaminated with?",opts:[["Medicine or chemical residue","Including un-rinsed gel and scrub solution","=yellowbag"],["Blood or body fluids only","","soft3"]]},
  air1:{q:"Is it single-use metal?",help:"Metal laryngoscope blades and handles, metal stylets.",yn:["=orangesharps","air2"],labels:["Yes, metal","No, plastic or rubber"]},
  air2:{q:"Has a medicine been given through it or onto it?",help:"For example drugs instilled down the tube or a nebuliser run through the circuit. Saliva, secretions and water-based lubricant do not count.",yn:["=yellowbag","air3"]},
@@ -345,6 +433,13 @@ const ITEMS=[
  ["Single-use laryngoscope handle","battery","=orangesharps","Take the batteries out first and put them in battery recycling. Then the handle goes in the orange-lid bin so the metal is recovered."],
  ["Metal stylet","intubating wire","=orangesharps","Orange-lid so the metal is recovered and recycled."],
  ["Unopened or unused airway kit packaging","wrapper bag","pack1"],
+ ["Paper hand towels","hand drying tissue","=black","Hand towels contaminate dry mixed recycling. They always go in the black bag unless they have been used on a patient."],
+ ["Coffee cup","disposable cup lid","=black","Disposable cups have a plastic lining and are not accepted in dry mixed recycling."],
+ ["Food waste","sandwich fruit tea bags scraps","=black","Use a food waste bin instead if your department has one."],
+ ["Snack or sandwich wrapper","crisp packet sweet","=black"],
+ ["Polystyrene","packaging foam","=black"],
+ ["Drink can or plastic bottle","tin bottle","=clear","Empty it first. No liquids in any waste bag."],
+ ["Mixed paper-plastic peel pouch","sterile pouch","pack1","Many dry mixed recycling streams cannot separate paper from plastic film. If yours cannot, it goes in the black bag."],
  ["Sterile wrap, outer layer","packaging","pack1"],
  ["Cardboard or paper packaging","box","pack1"],
  ["Plastic film or wrappers","packaging","pack1"],
@@ -374,6 +469,7 @@ function binSVG(body,lid,label,tall){
   <g transform="translate(40 ${y+h/2+2})"><rect x="-11" y="-11" width="22" height="22" transform="rotate(45)" fill="#fff" stroke="#2a2a2a" stroke-width="1.2"/><text y="5" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#2a2a2a">${label}</text></g></svg>`;
 }
 const ART={
+  black:()=>bagSVG("#26262a","#000000"),
   clear:()=>bagSVG("#cfd8dc","#7b8a90",false,true),
   tiger:()=>bagSVG("#ffd400","#141414",true),
   orangebag:()=>bagSVG("#ee6a1f","#9a3a08"),
@@ -423,7 +519,7 @@ function renderItems(q){
 }
 $("#itemSearch").addEventListener("input",e=>renderItems(e.target.value));
 $("#heroBins").innerHTML=Object.keys(S).map(k=>`<a href="#waste-finder">${art(k)}${esc(S[k].name)}</a>`).join("");
-const VIEWS=["home","waste-finder"];
+const VIEWS=["home","waste-finder","low-flow"];
 function route(){
   let h=location.hash.slice(1),v=VIEWS.includes(h)?h:"home";
   VIEWS.forEach(x=>document.getElementById("v-"+x).classList.toggle("on",x===v));
