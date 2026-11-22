@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which Bin? Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: scrub-teal masthead, wide working column, waste streams carry their real bag and lid colours as the only loud colour on the page. */
+:root{
+  --bg:#f1f5f4; --surface:#ffffff; --ink:#10302f; --muted:#51696a; --line:#d3dedc;
+  --accent:#0b6e69; --accent-ink:#ffffff; --accent-soft:#dcefec; --hero:#0c3f3d; --hero-ink:#eef7f5;
+  --warn:#9a3412; --warn-soft:#fdeee4;
+  --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+    --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5;
+    --warn:#fdba8c; --warn-soft:#3a2416; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+  --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5;
+  --warn:#fdba8c; --warn-soft:#3a2416; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:var(--display);line-height:1.12;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3.3rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0;max-width:65ch}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+
+/* masthead */
+header.top{background:var(--hero);color:var(--hero-ink);position:sticky;top:0;z-index:5}
+.topbar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:12px 20px;max-width:1120px;margin:0 auto}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--hero-ink);text-decoration:none;margin-right:auto;display:flex;gap:10px;align-items:center}
+.brand i{width:14px;height:14px;border-radius:50%;background:#5fd0c5;display:inline-block}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav a{color:var(--hero-ink);text-decoration:none;padding:7px 12px;border-radius:999px;font-size:.92rem;font-weight:500;opacity:.85}
+nav a:hover{opacity:1;background:rgba(255,255,255,.1)}
+nav a[aria-current="page"]{background:#5fd0c5;color:#062a28;opacity:1;font-weight:600}
+
+.view{display:none;padding:0 0 72px}
+.view.on{display:block}
+.pagehead{padding:40px 0 8px}
+.pagehead p{color:var(--muted);margin-top:10px;font-size:1.05rem}
+section.block{padding:32px 0 0}
+
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 1rem var(--body);padding:12px 20px;border-radius:999px;border:2px solid transparent;cursor:pointer;text-decoration:none}
+.btn.primary{background:#5fd0c5;color:#062a28}
+.btn.ghost{border-color:rgba(255,255,255,.4);color:var(--hero-ink);background:transparent}
+.btn.solid{background:var(--accent);color:var(--accent-ink)}
+.btn.line{border-color:var(--line);color:var(--ink);background:var(--surface)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
+.card .go{margin-top:auto;color:var(--accent);font-weight:600;font-size:.92rem;padding-top:6px}
+.pill{align-self:flex-start;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.pill.plan{background:var(--warn-soft);color:var(--warn)}
+.qwrap{max-width:760px;margin:0 auto;padding:0 20px 56px}
+.qhead{padding:28px 0 10px;display:flex;flex-direction:column;gap:8px}
+.qhead p{color:var(--muted)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.mode{text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:18px;cursor:pointer;color:var(--ink);font:inherit;display:flex;flex-direction:column;gap:6px}
+.mode:hover{border-color:var(--accent)}
+.mode b{font-family:var(--display);font-size:1.25rem}
+.mode span{color:var(--muted);font-size:.92rem}
+.bar{display:flex;align-items:center;gap:12px;margin:18px 0 12px;font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.prog{flex:1;height:8px;background:var(--line);border-radius:999px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .25s}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px}
+.qkind{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.qtext{font-family:var(--display);font-size:clamp(1.3rem,3.6vw,1.7rem);font-weight:700;line-height:1.2}
+.qctx{display:inline-block;align-self:flex-start;background:var(--warn-soft);color:var(--warn);font-weight:600;padding:4px 12px;border-radius:999px;font-size:.92rem}
+.bins{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.binbtn{background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 4px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink);font:600 .74rem var(--body);text-align:center;line-height:1.15}
+.binbtn svg{width:46px;height:56px;display:block}
+.binbtn:hover:not(:disabled){border-color:var(--accent)}
+.binbtn:disabled{cursor:default}
+.binbtn.right{border-color:#16a34a;background:#dcfce7;color:#14532d}
+.binbtn.wrong{border-color:#dc2626;background:#fee2e2;color:#7f1d1d}
+.binbtn.dim{opacity:.45}
+.tfrow,.mcrow{display:grid;gap:10px}
+.tfrow{grid-template-columns:1fr 1fr}
+.choice{font:700 1.05rem var(--body);padding:16px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.choice:hover:not(:disabled){border-color:var(--accent)}
+.choice.right{border-color:#16a34a;background:#dcfce7;color:#14532d}
+.choice.wrong{border-color:#dc2626;background:#fee2e2;color:#7f1d1d}
+.fb{border-radius:10px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start}
+.fb.ok{background:#dcfce7;color:#14532d}.fb.no{background:#fee2e2;color:#7f1d1d}
+.fb svg{width:44px;height:52px;flex:none;background:#fff;border-radius:6px;padding:2px}
+.fb b{display:block;font-size:1.05rem}
+.fb p{margin-top:2px}
+.next{align-self:flex-end}
+.result{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:14px}
+.score{font-family:var(--display);font-size:clamp(2.6rem,8vw,3.6rem);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.score small{font-size:1.1rem;color:var(--muted);font-weight:500}
+.cert{border:2px dashed var(--accent);border-radius:10px;padding:14px 16px;background:var(--accent-soft);color:var(--ink)}
+.missed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.missed li{border-left:4px solid #dc2626;padding:6px 0 6px 12px}
+.missed li b{display:block}
+.missed li span{color:var(--muted);font-size:.92rem}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.ref{font-size:.82rem;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:.85rem}
+@media (max-width:820px){header.top{position:static}}
+@media (max-width:520px){.modes{grid-template-columns:1fr}.binbtn svg{width:34px;height:42px}.binbtn{font-size:.62rem;padding:6px 2px}.bins{gap:5px}.qcard{padding:16px}}
+@media (prefers-reduced-motion:reduce){.prog i{transition:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topbar">
+    <a class="brand" href="index.html#home"><i></i>York Theatre Sustainability</a>
+    <nav aria-label="Main">
+      <a href="index.html#home">Home</a>
+      <a href="index.html#waste-finder">Which bin?</a>
+      <a href="quiz.html" aria-current="page">Quiz</a>
+      <a href="index.html#low-flow">Low flow</a>
+      <a href="roadmap.html">Roadmap</a>
+    </nav>
+  </div>
+</header>
+<main class="qwrap" id="app"></main>
+<footer><div class="wrap">Answers follow HTM 07-01 and our theatre waste posters. Local bin labels take precedence. Nothing you enter here is recorded.</div></footer>
+
+<script>
+const STREAMS={"clear": {"name": "Clear bag"}, "black": {"name": "Black bag"}, "tiger": {"name": "Tiger bag"}, "orangebag": {"name": "Orange bag"}, "yellowbag": {"name": "Yellow bag"}, "orangesharps": {"name": "Orange-lid sharps bin"}, "yellowsharps": {"name": "Yellow-lid sharps bin"}, "purple": {"name": "Purple-lid bin"}, "blue": {"name": "Blue-lid burn bin"}, "red": {"name": "Red-lid burn bin"}};
+const ORDER=["clear", "black", "tiger", "orangebag", "yellowbag", "orangesharps", "yellowsharps", "purple", "blue", "red"];
+const QS=[{"id": 1, "t": "bin", "item": "Paper hand towel after washing your hands", "ctx": "", "a": "black", "why": "Hand towels spoil dry mixed recycling, and they haven't touched a patient."}, {"id": 2, "t": "bin", "item": "Outer cardboard box from a drape delivery", "ctx": "", "a": "clear", "why": "Clean card is recyclable."}, {"id": 3, "t": "bin", "item": "Outer layer of sterile wrap", "ctx": "Opened in the anaesthetic room", "a": "clear", "why": "The outer layer is clean plastic that never touched the patient."}, {"id": 4, "t": "bin", "item": "Empty disposable coffee cup", "ctx": "", "a": "black", "why": "Cups have a plastic lining that recycling can't take."}, {"id": 5, "t": "bin", "item": "Empty plastic drinks bottle", "ctx": "", "a": "clear", "why": "Empty, clean plastic bottles are recyclable."}, {"id": 6, "t": "bin", "item": "Sandwich wrapper", "ctx": "", "a": "black", "why": "Food-contaminated packaging is general waste."}, {"id": 7, "t": "bin", "item": "Empty propofol vial", "ctx": "", "a": "blue", "why": "A medicine container with no sharp goes to pharmaceutical waste."}, {"id": 8, "t": "bin", "item": "Blister pack from paracetamol tablets", "ctx": "", "a": "blue", "why": "Medicine packaging with residue goes to pharmaceutical waste."}, {"id": 9, "t": "bin", "item": "Empty glass ampoule", "ctx": "After drawing up", "a": "blue", "why": "Empty ampoules go with vials as pharmaceutical waste, not in the sharps bin."}, {"id": 10, "t": "bin", "item": "Needle used to draw up a drug", "ctx": "", "a": "yellowsharps", "why": "A sharp that has touched a medicine."}, {"id": 11, "t": "bin", "item": "Scalpel blade", "ctx": "Used on the patient, no drugs", "a": "orangesharps", "why": "Blood-only sharps go orange-lid, where the metal is recovered."}, {"id": 12, "t": "bin", "item": "Single-use metal scissors", "ctx": "From the scrub field, no drugs", "a": "orangesharps", "why": "Metal is only recycled from the orange-lid stream."}, {"id": 13, "t": "bin", "item": "Needle used to give methotrexate", "ctx": "", "a": "purple", "why": "Cytotoxic sharps never go in the yellow-lid bin."}, {"id": 14, "t": "bin", "item": "Gloves worn for intravesical mitomycin", "ctx": "", "a": "purple", "why": "PPE contaminated with a cytotoxic drug is cytotoxic waste."}, {"id": 15, "t": "bin", "item": "Recognisable tissue", "ctx": "Not sent to histology", "a": "red", "why": "Recognisable human tissue is anatomical waste."}, {"id": 16, "t": "bin", "item": "Gloves and apron", "ctx": "Non-infectious patient, no drugs", "a": "tiger", "why": "Body-fluid contact without infection is offensive waste."}, {"id": 17, "t": "bin", "item": "Gloves and apron", "ctx": "Patient with C. difficile", "a": "orangebag", "why": "An infectious patient makes the same PPE infectious waste."}, {"id": 18, "t": "bin", "item": "Blood-stained swabs", "ctx": "Non-infectious patient", "a": "tiger", "why": "Blood alone does not make waste infectious."}, {"id": 19, "t": "bin", "item": "Blood-stained swabs", "ctx": "Patient with suspected TB", "a": "orangebag", "why": "Suspected infection counts as infection."}, {"id": 20, "t": "bin", "item": "Empty saline bag and giving set", "ctx": "Nothing added, non-infectious patient", "a": "tiger", "why": "Not recycling: the port can draw back body fluid. No medicine, so not yellow."}, {"id": 21, "t": "bin", "item": "Saline bag and giving set", "ctx": "Potassium chloride added, no needle", "a": "yellowbag", "why": "Anything a medicine was added to goes yellow."}, {"id": 22, "t": "bin", "item": "Giving set", "ctx": "A needle is still on the end", "a": "yellowsharps", "why": "Always check the line end. If there's a needle, the whole assembly is a sharp."}, {"id": 23, "t": "bin", "item": "Line from an oxytocin infusion", "ctx": "No needle", "a": "yellowbag", "why": "Medicine-contaminated, no sharp."}, {"id": 24, "t": "bin", "item": "Saline bag, nothing added", "ctx": "Patient with norovirus", "a": "orangebag", "why": "No medicine, but the patient is infectious."}, {"id": 25, "t": "bin", "item": "Syringe with a little ondansetron left", "ctx": "Needle already removed", "a": "blue", "why": "Medicine residue and no sharp, so it is pharmaceutical waste."}, {"id": 26, "t": "bin", "item": "LMA after a routine case", "ctx": "No drugs through it, non-infectious patient", "a": "tiger", "why": "Saliva from a non-infectious patient is offensive waste."}, {"id": 27, "t": "bin", "item": "Endotracheal tube", "ctx": "Patient with confirmed influenza", "a": "orangebag", "why": "Respiratory infection makes airway kit infectious waste."}, {"id": 28, "t": "bin", "item": "HME filter and catheter mount", "ctx": "Non-infectious patient", "a": "tiger", "why": "Same rule as the LMA: secretions, no infection, no drugs."}, {"id": 29, "t": "bin", "item": "Breathing circuit", "ctx": "Used to run a salbutamol nebuliser", "a": "yellowbag", "why": "A medicine went through it."}, {"id": 30, "t": "bin", "item": "Alcohol gel dispenser", "ctx": "Empty but not rinsed", "a": "yellowbag", "why": "Unrinsed chemical residue. Rinsed and dried, it goes in the clear bag."}, {"id": 31, "t": "tf", "item": "Put an empty propofol vial in the yellow-lid sharps bin", "ctx": "", "a": false, "why": "No sharp, so it's pharmaceutical waste: blue-lid. Sharps bins are dearer to treat.", "bin": "blue"}, {"id": 32, "t": "tf", "item": "Put a saline giving set from a non-infectious patient in the orange bag, to be safe", "ctx": "", "a": false, "why": "It belongs in the tiger bag. Orange costs more and gets heavier treatment, with no gain in safety.", "bin": "tiger"}, {"id": 33, "t": "tf", "item": "Put an IV bag with drugs added in the clear recycling bag", "ctx": "", "a": false, "why": "IV bags never go in recycling, and added medicine makes it the yellow bag.", "bin": "yellowbag"}, {"id": 34, "t": "tf", "item": "Put paper hand towels in the tiger bag", "ctx": "", "a": false, "why": "Hand towels from hand-washing are general waste: black bag.", "bin": "black"}, {"id": 35, "t": "tf", "item": "Put single-use metal scissors, no drugs, in the yellow-lid sharps bin", "ctx": "", "a": false, "why": "Use the orange-lid bin: metal is only recovered from that stream.", "bin": "orangesharps"}, {"id": 36, "t": "tf", "item": "Put a full suction liner with free fluid in the tiger bag", "ctx": "", "a": false, "why": "No bag takes free liquid. Solidify it first, or use the closed suction system.", "bin": null}, {"id": 37, "t": "tf", "item": "Put an LMA from a non-infectious patient in the tiger bag", "ctx": "", "a": true, "why": "Saliva, no infection, no drugs: offensive waste.", "bin": "tiger"}, {"id": 38, "t": "tf", "item": "Flattened a clean cardboard box into the clear bag", "ctx": "", "a": true, "why": "Clean card is recyclable, and flattening saves space.", "bin": "clear"}, {"id": 39, "t": "mc", "item": "Which bag usually costs most to dispose of?", "ctx": "", "opts": ["Tiger", "Orange", "Yellow"], "a": 2, "why": "Yellow goes to high-temperature incineration. Orange gets alternative treatment, and tiger is cheapest."}, {"id": 40, "t": "mc", "item": "What share of healthcare waste does the national strategy want to be offensive (tiger) waste?", "ctx": "", "opts": ["20%", "40%", "60%"], "a": 2, "why": "HTM 07-01 aims for 60% offensive, 20% alternative treatment and 20% incineration. Most tiger waste is still going orange."}];
+function bagSVG(fill,stroke,tiger,clear){
+  const id="t"+Math.random().toString(36).slice(2,7);
+  const f=tiger?`url(#${id})`:fill;
+  return `<svg viewBox="0 0 80 96" role="img" aria-hidden="true">${tiger?`<defs><pattern id="${id}" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(0)"><rect width="14" height="14" fill="#ffd400"/><rect width="14" height="6" y="4" fill="#141414"/></pattern></defs>`:""}
+  <path d="M30 14 L26 6 L36 10 L40 4 L44 10 L54 6 L50 14 Z" fill="${f}" stroke="${stroke}" stroke-width="1.5" stroke-linejoin="round" ${clear?'fill-opacity=".35"':""}/>
+  <path d="M33 14 Q40 18 47 14 L49 22 Q66 30 70 56 Q74 86 56 90 Q40 94 24 90 Q6 86 10 56 Q14 30 31 22 Z" fill="${f}" stroke="${stroke}" stroke-width="2" stroke-linejoin="round" ${clear?'fill-opacity=".35"':""}/>
+  <rect x="32" y="15" width="16" height="5" rx="2" fill="${stroke}" opacity=".7"/></svg>`;
+}
+function binSVG(body,lid,label,tall){
+  const h=tall?78:62, y=92-h;
+  return `<svg viewBox="0 0 80 96" role="img" aria-hidden="true">
+  <path d="M14 ${y} L66 ${y} L61 92 L19 92 Z" fill="${body}" stroke="#2a2a2a" stroke-width="1.5" stroke-linejoin="round"/>
+  <rect x="9" y="${y-10}" width="62" height="12" rx="3" fill="${lid}" stroke="#2a2a2a" stroke-width="1.5"/>
+  <rect x="30" y="${y-15}" width="20" height="6" rx="2" fill="${lid}" stroke="#2a2a2a" stroke-width="1.2"/>
+  <g transform="translate(40 ${y+h/2+2})"><rect x="-11" y="-11" width="22" height="22" transform="rotate(45)" fill="#fff" stroke="#2a2a2a" stroke-width="1.2"/><text y="5" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#2a2a2a">${label}</text></g></svg>`;
+}
+const ART={
+  black:()=>bagSVG("#26262a","#000000"),
+  clear:()=>bagSVG("#cfd8dc","#7b8a90",false,true),
+  tiger:()=>bagSVG("#ffd400","#141414",true),
+  orangebag:()=>bagSVG("#ee6a1f","#9a3a08"),
+  yellowbag:()=>bagSVG("#ffd83b","#9c7c00"),
+  orangesharps:()=>binSVG("#ffd83b","#ee6a1f","6"),
+  yellowsharps:()=>binSVG("#ffd83b","#ffd83b","6"),
+  purple:()=>binSVG("#ffd83b","#7b2d8e","6"),
+  blue:()=>binSVG("#ffffff","#1f3fd6","",true),
+  red:()=>binSVG("#b8bec2","#c40000","6",true)
+};
+const art=k=>ART[k]();
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const KIND={bin:"Which bin?",tf:"Spot the mistake",mc:"Cost and carbon"};
+let round=[],i=0,score=0,missed=[],mode="practice";
+function shuffle(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
+function home(){
+  $("#app").innerHTML=`<div class="qhead"><span class="pill">Test yourself</span><h1>Which bin? quiz</h1><p>Pick the right bag or bin for each item. You'll see the answer and the rule straight after each one.</p></div>
+  <div class="modes">
+   <button class="mode" type="button" id="m-practice"><b>Practice</b><span>10 random questions from all 40, including spot-the-mistake. Play as often as you like.</span></button>
+   <button class="mode" type="button" id="m-induction"><b>Induction</b><span>The same 15 core items every time, with a completion screen for your induction record.</span></button>
+  </div>
+  <p class="ref" style="margin-top:16px">Prefer to look something up? <a href="index.html#waste-finder">Use the bin finder</a>.</p>`;
+  $("#m-practice").onclick=()=>start("practice");
+  $("#m-induction").onclick=()=>start("induction");
+}
+function start(m,list){
+  mode=m;i=0;score=0;missed=[];
+  round=list||(m==="induction"?QS.slice(0,15):shuffle(QS).slice(0,10));
+  ask();
+}
+function ask(){
+  const q=round[i],pct=Math.round(i/round.length*100);
+  let opts="";
+  if(q.t==="bin")opts=`<div class="bins" role="group" aria-label="Choose a bag or bin">${ORDER.map(k=>`<button class="binbtn" type="button" data-k="${k}">${art(k)}${esc(STREAMS[k].name)}</button>`).join("")}</div>`;
+  else if(q.t==="tf")opts=`<div class="tfrow"><button class="choice" type="button" data-v="1">Right</button><button class="choice" type="button" data-v="0">Wrong</button></div>`;
+  else opts=`<div class="mcrow">${q.opts.map((o,n)=>`<button class="choice" type="button" data-v="${n}">${esc(o)}</button>`).join("")}</div>`;
+  const lead=q.t==="tf"?"A colleague…":"";
+  $("#app").innerHTML=`<div class="bar"><span>Question ${i+1} of ${round.length}</span><div class="prog" aria-hidden="true"><i style="width:${pct}%"></i></div><span>Score ${score}</span></div>
+  <div class="qcard"><span class="qkind">${KIND[q.t]}</span>
+   <div class="qtext">${lead?`<span style="font-weight:500;font-size:.8em;color:var(--muted)">${lead} </span>`:""}${esc(q.item)}${q.t==="tf"?"":""}</div>
+   ${q.ctx?`<span class="qctx">${esc(q.ctx)}</span>`:""}
+   ${opts}<div id="fb" aria-live="polite"></div></div>`;
+  document.querySelectorAll(".binbtn").forEach(b=>b.onclick=()=>answer(b.dataset.k,b));
+  document.querySelectorAll(".choice").forEach(b=>b.onclick=()=>answer(b.dataset.v,b));
+  const first=document.querySelector(".binbtn,.choice");if(first)first.focus({preventScroll:true});
+}
+function answer(v,btn){
+  const q=round[i];let ok,right;
+  if(q.t==="bin"){ok=v===q.a;right=document.querySelector(`.binbtn[data-k="${q.a}"]`)}
+  else if(q.t==="tf"){ok=(v==="1")===q.a;right=document.querySelector(`.choice[data-v="${q.a?1:0}"]`)}
+  else{ok=+v===q.a;right=document.querySelector(`.choice[data-v="${q.a}"]`)}
+  document.querySelectorAll(".binbtn,.choice").forEach(b=>{b.disabled=true;if(b!==right&&b!==btn&&b.classList.contains("binbtn"))b.classList.add("dim")});
+  right.classList.add("right");if(!ok)btn.classList.add("wrong");
+  if(ok)score++;else missed.push(q);
+  const binKey=q.t==="bin"?q.a:(q.t==="tf"?q.bin:null);
+  const ans=q.t==="bin"?STREAMS[q.a].name:q.t==="tf"?(q.a?"Right":"Wrong"+(q.bin?": "+STREAMS[q.bin].name:"")):q.opts[q.a];
+  $("#fb").innerHTML=`<div class="fb ${ok?"ok":"no"}">${binKey?art(binKey):""}<div><b>${ok?"Correct":"Not quite"} · ${esc(ans)}</b><p>${esc(q.why)}</p></div></div>
+   <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn solid next" type="button" id="nx">${i+1<round.length?"Next question":"See my score"}</button></div>`;
+  $("#nx").onclick=()=>{i++;i<round.length?ask():finish()};$("#nx").focus({preventScroll:true});
+  $("#fb").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function finish(){
+  const n=round.length,d=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+  const msg=score===n?"Perfect round.":score>=n*0.8?"Good. Check the ones you missed below.":"Worth another go. The rules behind each miss are below.";
+  $("#app").innerHTML=`<div class="bar"><span>Finished</span><div class="prog" aria-hidden="true"><i style="width:100%"></i></div><span>Score ${score}</span></div>
+  <div class="result"><div class="score">${score}<small> / ${n}</small></div><p>${msg}</p>
+   ${mode==="induction"?`<div class="cert"><b>Induction: theatre waste segregation</b><br>Scored ${score} out of ${n} on ${d}. Take a screenshot for your induction record.</div>`:""}
+   ${missed.length?`<h2 style="font-size:1.2rem">Missed</h2><ul class="missed">${missed.map(q=>`<li><b>${esc(q.item)}${q.ctx?` (${esc(q.ctx)})`:""}</b><span>${esc(q.t==="bin"?STREAMS[q.a].name+". ":q.t==="tf"?(q.a?"Right. ":"Wrong. "):q.opts[q.a]+". ")}${esc(q.why)}</span></li>`).join("")}</ul>`:""}
+   <div class="acts">${missed.length?`<button class="btn solid" type="button" id="rm">Retry the ${missed.length} I missed</button>`:""}<button class="btn ${missed.length?"line":"solid"}" type="button" id="nr">${mode==="induction"?"Try induction again":"New round"}</button><button class="btn line" type="button" id="hm">Quiz menu</button></div></div>`;
+  const rm=$("#rm");if(rm){const m=missed.slice();rm.onclick=()=>start(mode==="induction"?"practice":mode,shuffle(m))}
+  $("#nr").onclick=()=>start(mode);$("#hm").onclick=home;
+  window.scrollTo(0,0);
+}
+home();
+</script>
+</body>
+</html>
