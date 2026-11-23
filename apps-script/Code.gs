@@ -39,7 +39,7 @@ function doPost(e) {
   if (p.website) return json_({ ok: true });                  // bot filled the hidden field
   const name = clean_(p.name, 60), email = clean_(p.email, 120);
   const action = parseInt(p.action, 10);
-  if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !(action >= 1 && action <= 41)) {
+  if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !(action >= 1 && action <= 99)) {
     return json_({ ok: false, error: 'invalid' });
   }
   const lock = LockService.getScriptLock();
