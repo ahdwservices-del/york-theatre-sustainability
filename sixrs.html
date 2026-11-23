@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The 6 Rs of Sustainable Theatre Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: the 6 Rs as a wheel in order of impact, dark teal (highest impact) fading to pale green. */
+:root{
+  --bg:#f1f5f4; --surface:#ffffff; --ink:#10302f; --muted:#51696a; --line:#d3dedc;
+  --accent:#0b6e69; --accent-ink:#ffffff; --accent-soft:#dcefec; --hero:#0c3f3d; --hero-ink:#eef7f5;
+  --warn:#9a3412; --warn-soft:#fdeee4;
+  --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+    --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5;
+    --warn:#fdba8c; --warn-soft:#3a2416; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+  --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5;
+  --warn:#fdba8c; --warn-soft:#3a2416; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:var(--display);line-height:1.12;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3.3rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0;max-width:65ch}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+
+/* masthead */
+header.top{background:var(--hero);color:var(--hero-ink);position:sticky;top:0;z-index:5}
+.topbar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:12px 20px;max-width:1120px;margin:0 auto}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--hero-ink);text-decoration:none;margin-right:auto;display:flex;gap:10px;align-items:center}
+.brand i{width:14px;height:14px;border-radius:50%;background:#5fd0c5;display:inline-block}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav a{color:var(--hero-ink);text-decoration:none;padding:7px 12px;border-radius:999px;font-size:.92rem;font-weight:500;opacity:.85}
+nav a:hover{opacity:1;background:rgba(255,255,255,.1)}
+nav a[aria-current="page"]{background:#5fd0c5;color:#062a28;opacity:1;font-weight:600}
+
+.view{display:none;padding:0 0 72px}
+.view.on{display:block}
+.pagehead{padding:40px 0 8px}
+.pagehead p{color:var(--muted);margin-top:10px;font-size:1.05rem}
+section.block{padding:32px 0 0}
+
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 1rem var(--body);padding:12px 20px;border-radius:999px;border:2px solid transparent;cursor:pointer;text-decoration:none}
+.btn.primary{background:#5fd0c5;color:#062a28}
+.btn.ghost{border-color:rgba(255,255,255,.4);color:var(--hero-ink);background:transparent}
+.btn.solid{background:var(--accent);color:var(--accent-ink)}
+.btn.line{border-color:var(--line);color:var(--ink);background:var(--surface)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
+.card .go{margin-top:auto;color:var(--accent);font-weight:600;font-size:.92rem;padding-top:6px}
+.pill{align-self:flex-start;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.pill.plan{background:var(--warn-soft);color:var(--warn)}
+.lede{color:var(--muted);font-size:17px}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:start;margin-top:18px}
+.wheel svg{width:100%;height:auto;display:block}
+.seg{cursor:pointer;transition:opacity .2s}
+.seg:focus{outline:none}
+.seg:focus-visible path.v,.seg.on path.v{stroke:var(--ink);stroke-width:3}
+.wheel.sel .seg:not(.on){opacity:.35}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips button{font:inherit;font-size:14px;min-height:44px;padding:6px 12px;border-radius:22px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:7px}
+.chips button[aria-pressed=true]{border-color:var(--ink);font-weight:600}
+.chips button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.pbpanel{background:var(--surface);border-radius:14px;padding:clamp(18px,2.4vw,28px);position:sticky;top:76px}
+.spill{display:inline-block;font-size:13px;font-weight:600;padding:3px 10px;border-radius:12px;color:#fff;margin-bottom:8px}
+.fig-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.fig-row b{font-size:20px;white-space:nowrap;text-align:right}
+.fig-row small{grid-column:1/-1;color:var(--muted);font-size:13px}
+.pbar{grid-column:1/-1;height:8px;border-radius:4px;background:var(--line);position:relative;margin-top:4px}
+.pbar i{position:absolute;inset:0 auto 0 0;border-radius:4px}
+.pbar s{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.simple{border-left:4px solid var(--accent);padding:8px 12px;margin:14px 0 4px;background:var(--bg);border-radius:0 8px 8px 0}
+.simple p{margin:0}
+.key{display:flex;flex-wrap:wrap;gap:14px;font-size:14px;color:var(--muted);margin-top:12px}
+.key span{display:flex;align-items:center;gap:6px}
+.teach{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px;margin-top:12px}
+.teach div{background:var(--surface);border-radius:12px;padding:16px 18px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin-top:12px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{text-align:right;white-space:nowrap}
+th{font-size:13px;color:var(--muted);font-weight:600}
+.src{font-size:13px;color:var(--muted)}
+.src li{margin-bottom:4px}
+:root{--safe:#1f9d55;--amber:#e39a0b;--high:#d7263d}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:.85rem}
+.blk{padding:32px 0 0}.blk:last-of-type{padding-bottom:56px}
+.blk h2{margin-bottom:8px}.pbpanel h2{font-size:1.5rem;margin-bottom:6px}
+.pbpanel p,.teach p{margin-bottom:8px}.lede{margin-top:6px}
+.pbpanel{border:1px solid var(--line)}
+.teach div{border:1px solid var(--line)}
+.rt{border-collapse:collapse;width:100%;font-size:15px;margin-top:12px}
+.rt th,.rt td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.rt td.n{text-align:right;white-space:nowrap}.rt th{font-size:13px;color:var(--muted);font-weight:600}
+.src{padding-left:20px}
+.pbpanel h3,.teach h3{margin:16px 0 4px;color:var(--accent);font-size:1.05rem}.teach h3{margin-top:0}
+@media(max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}.pbpanel{position:static}}
+@media(max-width:600px){.rt{font-size:13px}.rt thead{display:none}.rt tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.rt td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.rt td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--muted)}.rt td:empty{display:none}.rt td.n{text-align:start}}
+@media(prefers-reduced-motion:reduce){.seg{transition:none}}
+
+
+:root{--r1:#0b4f4c;--r2:#0b6e69;--r3:#148a7f;--r4:#2c9f8c;--r5:#62bd9c;--r6:#98d6b4}
+.wheel svg{max-width:480px;margin:0 auto}
+.wn{font:700 30px var(--display);text-anchor:middle;fill:#fff;pointer-events:none}
+.wl{font:600 17px var(--body);text-anchor:middle;fill:#fff;pointer-events:none}
+.seg:nth-of-type(5) text,.seg:nth-of-type(6) text{fill:#06302c}
+.wc{font:700 40px var(--display);text-anchor:middle;fill:var(--ink)}
+.wcs{font:500 15px var(--body);text-anchor:middle;fill:var(--muted)}
+.seg:focus-visible path.v,.seg.on path.v{stroke:var(--ink);stroke-width:4}
+.roles{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:18px}
+.roles .chips{margin-top:0}
+.roles button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tally{margin-top:14px;font-size:15px;color:var(--muted)}
+.tally b{color:var(--ink);font-size:18px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px;margin:12px 0 4px}
+.fact{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.fact b{font:700 1.6rem var(--display);color:var(--accent);line-height:1.1}
+.cite{color:var(--muted);font-size:12px;white-space:nowrap}
+.eg{margin:4px 0 0;padding-left:20px}.eg li{margin-bottom:4px}
+.acts{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.acts li{display:flex;gap:10px;align-items:flex-start}
+.acts label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;padding:8px 10px;border:1px solid var(--line);border-radius:8px;width:100%;background:var(--surface)}
+.acts label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.acts input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--accent);flex:none}
+.care{margin-top:14px;font-size:14px;background:var(--warn-soft);color:var(--ink);padding:10px 12px;border-radius:8px;max-width:none}
+.care b{color:var(--warn)}
+.nav2{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.nav2 .btn{font-size:.92rem;padding:9px 16px}
+.game{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px;margin-top:12px}
+.gq{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.gopts{display:flex;flex-wrap:wrap;gap:6px}
+.gopts button{font:inherit;font-size:14px;min-height:40px;padding:6px 12px;border-radius:20px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.gopts button.right{background:var(--safe);border-color:var(--safe);color:#fff;font-weight:600}
+.gopts button.wrong{border-color:var(--high);color:var(--high);text-decoration:line-through}
+.gfb{font-size:14px;min-height:1.2em}
+.gscore{grid-column:1/-1;font-weight:600}
+.mylist{margin-top:12px;max-width:760px}
+.mylist .acts li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+@media print{header.top,footer,.blk:not(:has(#mylist)),.nav2{display:none!important}.blk{padding:0}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topbar">
+    <a class="brand" href="index.html#home"><i></i>York Theatre Sustainability</a>
+    <nav aria-label="Main">
+      <a href="index.html#home">Home</a>
+      <a href="boundaries.html">Planet</a>
+      <a href="sixrs.html" aria-current="page">6 Rs</a>
+      <a href="index.html#waste-finder">Which bin?</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="index.html#low-flow">Low flow</a>
+      <a href="propofol.html">Propofol</a>
+      <a href="roadmap.html">Roadmap</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap"><section class="blk">
+  <div class="pagehead" style="padding-top:8px"><h1>The 6 Rs: six questions that make every theatre list greener</h1></div>
+  <p class="lede">Rethink, refuse, reduce, reuse, recycle, research. They run in order of impact: the earlier the step, the more carbon, waste and money it saves. Choose your role, then tap a step to see why it matters in theatre and what you can do on your next list.</p>
+
+  <div class="roles" role="group" aria-label="Choose your role">
+    <span class="muted small">I work as:</span>
+    <div class="chips" id="roles"></div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="wheel" id="wheel"><svg id="svg" viewBox="-250 -250 500 500" role="img" aria-label="The 6 Rs wheel. Select a step."></svg></div>
+      <div class="key"><span><i class="dot" style="background:var(--r1)"></i>Highest impact</span><span><i class="dot" style="background:var(--r6)"></i>Lower direct impact</span><span>Go clockwise from the top.</span></div>
+      <div class="chips" id="chips"></div>
+      <div class="tally" id="tally" aria-live="polite"></div>
+    </div>
+    <aside class="pbpanel" id="panel" aria-live="polite"></aside>
+  </div>
+</section>
+
+<section class="blk">
+  <h2>Which R is it?</h2>
+  <p class="lede">Six things that happen in theatre every week. Pick the R each one belongs to.</p>
+  <div class="game" id="game"></div>
+</section>
+
+<section class="blk">
+  <h2>How to explain it to a colleague in 30 seconds</h2>
+  <div class="teach">
+    <div><h3>Prevention beats treatment</h3><p>Rethink and refuse are the pre-op assessment: they stop the problem before it starts. Recycling is the resus team. It is vital, but by the time you need it the item has already been made, shipped, opened and thrown away.</p></div>
+    <div><h3>Three questions before you open anything</h3><p>Do I need it? Can I use less of it? Can it be used again? If the answer to all three is no, then make sure it goes in the right bin.</p></div>
+    <div><h3>The bin you choose still matters</h3><p>The same bag of waste can carry up to fifty times more carbon depending on which stream it goes into. Clean packaging in a clinical bag is the costliest mistake, in both carbon and money.</p></div>
+  </div>
+</section>
+
+<section class="blk">
+  <h2>My list for the next shift</h2>
+  <p class="lede">Actions you tick in the panel above collect here. They are saved only in this browser.</p>
+  <div class="mylist" id="mylist"></div>
+</section>
+
+<section class="blk">
+  <h2>Sources</h2>
+  <ol class="src">
+    <li>Moving towards green anaesthesia: strategies for environmental sustainability. Anaesthesia Tutorial of the Week 495. WFSA, 18 April 2023.</li>
+    <li>MacNeill AJ, Lillywhite R, Brown CJ. The impact of surgery on global climate: a carbon footprinting study of operating theatres in three health systems. Lancet Planet Health 2017;1:e381–8.</li>
+    <li>Rizan C, Bhutta MF, Reed M, Lillywhite R. The carbon footprint of waste streams in a UK hospital. J Clean Prod 2021;286:125446.</li>
+    <li>Seglenieks R, Wong A, Pearson F, McGain F. Discrepancy between procurement and clinical use of nitrous oxide: waste not, want not. Br J Anaesth 2022;128:e32–4.</li>
+    <li>Sulbaek Andersen MP, et al. Assessing the impact on global climate from general anesthetic gases. Anesth Analg 2012;114:1081–5.</li>
+    <li>Sherman JD, et al. Life cycle assessment and costing methods for device procurement: comparing reusable and single-use disposable laryngoscopes. Anesth Analg 2018;127:434–43.</li>
+    <li>Vozzola E, Overcash M, Griffing E. An environmental analysis of reusable and disposable surgical gowns. AORN J 2020;111:315–25.</li>
+    <li>National Institute for Health and Care Excellence. Routine preoperative tests for elective surgery (NG45). 2016.</li>
+  </ol>
+  <p class="src">Clinical decisions always come first. Every suggestion here applies only where it is clinically appropriate and fits local infection prevention and medicines policy.</p>
+</section></main>
+<footer><div class="wrap">The 6 Rs framework as described in Anaesthesia Tutorial of the Week 495 (WFSA, 2023). Theatre examples and figures draw on the sources listed above.</div></footer>
+<script>
+{
+const ROLES=[
+ {id:'all',name:'Everyone'},
+ {id:'anaes',name:'Anaesthetist'},
+ {id:'ap',name:'Anaesthetic practitioner / ODP'},
+ {id:'surg',name:'Surgeon'},
+ {id:'scrub',name:'Scrub & circulating'},
+ {id:'rec',name:'Recovery'}
+];
+// Each action: r = roles it applies to ('every' shows for all roles)
+const D=[
+{id:'rethink',name:'Rethink',col:'var(--r1)',tag:'Pause before you reach for it',
+ simple:'Is there a lower-impact way to give the same care? Asking that one question is where every other R starts.',
+ why:'The biggest savings are decided before anything is opened: the anaesthetic technique, the agent, what goes on the trolley and what is on the preference card. Rethinking costs nothing and does not compromise care; it just means making the default a deliberate choice.',
+ facts:[{n:'≈20×',t:'Desflurane has about 20 times the warming effect of sevoflurane per kilogram over 100 years (global warming potential about 2,540 against 130).',s:5},
+        {n:'10-fold',t:'difference in anaesthetic gas emissions between hospitals that used desflurane and one that did not, in a three-country study of operating theatres.',s:2}],
+ eg:['Choosing regional or TIVA where it is clinically equivalent for the patient.','Questioning a preference card item that has not been used in months.','Asking whether a patient needs a urinary catheter, arterial line or second cannula.'],
+ acts:[
+  {r:['anaes'],t:'For each case, consider whether regional or TIVA is clinically equivalent to a volatile.'},
+  {r:['anaes'],t:'If using a volatile, choose sevoflurane and plan to run low flow from the start.'},
+  {r:['ap','anaes'],t:'Before opening anything, ask: what will this patient actually need?'},
+  {r:['surg'],t:'Review your preference card and strike out items you never use.'},
+  {r:['scrub'],t:'Note items that come back unused on the tray and pass them to the theatre lead.'},
+  {r:['rec'],t:'Titrate oxygen to the patient\'s target saturations rather than a fixed flow.'},
+  {r:['every'],t:'Once per list, ask the team: is there a greener way to do this?'}],
+ care:'Rethink never means withholding something the patient needs. The aim is to make each choice deliberately, not by habit.'},
+{id:'refuse',name:'Refuse',col:'var(--r2)',tag:'Say no to what is not needed',
+ simple:'The greenest item is the one that is never made, ordered or opened.',
+ why:'Much theatre waste is opened "just in case" and never touched: spare drugs, extra packs, routine tests that change nothing. Every refused item avoids the carbon of making it, transporting it, sterilising it and disposing of it, and saves its cost too.',
+ facts:[{n:'>90%',t:'of piped nitrous oxide is lost to leaks before reaching a patient, according to audits at several hospitals. Decommissioning unused manifolds stops that.',s:4},
+        {n:'NG45',t:'National guidance does not recommend routine blood tests or ECGs before minor surgery in otherwise healthy patients.',s:8}],
+ eg:['Not opening a second circuit, filter or airway "in case".','Removing rarely used instruments and consumables from standard packs.','Not requesting preoperative investigations that guidance does not support.'],
+ acts:[
+  {r:['anaes'],t:'Only request preoperative tests that are indicated by guidance or by the patient\'s condition.'},
+  {r:['anaes','ap'],t:'Keep stand-by drugs in their ampoules unless local policy requires them drawn up.'},
+  {r:['ap'],t:'Open spare airways and circuits only when they are needed, not at set-up.'},
+  {r:['surg'],t:'Ask for rarely used items to be moved from the standard pack to "open on request".'},
+  {r:['scrub'],t:'Wait for the surgeon to confirm before opening sterile extras.'},
+  {r:['rec','every'],t:'Skip non-sterile gloves when hand hygiene alone is enough.'}],
+ care:'Emergency drugs and kit required by local policy are not negotiable. Refuse what is optional, not what keeps the patient safe.'},
+{id:'reduce',name:'Reduce',col:'var(--r3)',tag:'Use less of what you do need',
+ simple:'When you do need it, use the smallest amount that does the job.',
+ why:'Gas flow, drug volume and energy are the three big things theatre teams can turn down. Most theatre energy goes on ventilating and air-conditioning the room, and it keeps running when the theatre is empty unless someone switches it to a lower setting.',
+ facts:[{n:'90–99%',t:'of theatre energy goes on heating, ventilation and air conditioning, compared with about half in general inpatient areas.',s:2},
+        {n:'188 t',t:'of carbon dioxide equivalent per operating theatre per year, on average, in the three-hospital study.',s:2}],
+ eg:['Turning fresh gas flow down once the patient is at the target end-tidal concentration.','Drawing up drugs as they are needed and choosing the ampoule size that fits the dose.','Switching off lights, machines and warming devices when the theatre is empty.'],
+ acts:[
+  {r:['anaes'],t:'After induction, turn fresh gas flow down to 1 L/min or less. <a href="index.html#low-flow">See what our machines recorded</a>.'},
+  {r:['anaes','ap'],t:'Draw up drugs as needed, in the smallest syringe that fits the dose.'},
+  {r:['ap'],t:'At the end of the list, switch off the anaesthetic machine, monitors and lights.'},
+  {r:['surg'],t:'Switch off operating lights and diathermy between cases.'},
+  {r:['scrub'],t:'Turn off theatre lights and equipment when the room is empty.'},
+  {r:['rec'],t:'Switch off warming devices and suction when a bay is empty.'},
+  {r:['every'],t:'Ask the theatre lead whether ventilation drops to a lower setting overnight and at weekends.'}],
+ care:'Low flow needs a working gas analyser and attention to end-tidal concentrations. Turn flows up whenever the clinical situation needs it.'},
+{id:'reuse',name:'Reuse',col:'var(--r4)',tag:'Choose things that come back',
+ simple:'If it can be safely cleaned and used again, it usually beats a single-use version.',
+ why:'Life-cycle studies comparing reusable and single-use versions of the same item, including laryngoscopes and surgical gowns, have generally found that the reusable version carries less carbon over its life, even after the energy for cleaning and sterilising is counted.',
+ facts:[{n:'Reusable',t:'steel laryngoscope handles and blades had lower life-cycle carbon emissions than single-use plastic versions in a published comparison.',s:6},
+        {n:'≈66%',t:'lower greenhouse gas emissions for reusable surgical gowns compared with disposable gowns in a life-cycle analysis.',s:7}],
+ eg:['Reusable laryngoscope blades and rechargeable handles.','Washable theatre caps and theatre shoes instead of disposable hats and overshoes.','Washable drug trays instead of disposable ones.'],
+ acts:[
+  {r:['anaes','ap'],t:'Choose the reusable laryngoscope blade and handle when one is available.'},
+  {r:['ap'],t:'Use washable drug trays, and return them for cleaning rather than binning them.'},
+  {r:['surg','scrub'],t:'Choose reusable gowns, drapes or instruments where they are stocked.'},
+  {r:['scrub'],t:'Check that reusable items are not thrown away by mistake when clearing the trolley.'},
+  {r:['every'],t:'Wear a washable theatre cap instead of a disposable hat.'}],
+ care:'Only reuse items designed for it, processed as the manufacturer and infection prevention team specify. Never reuse a single-use device.'},
+{id:'recycle',name:'Recycle',col:'var(--r5)',tag:'Right item, right bin',
+ simple:'When something must be thrown away, put it in the lowest-carbon stream that is safe.',
+ why:'Packaging is opened before the patient arrives, so most of it is clean. In a clinical bag it is incinerated at high temperature, which carries far more carbon and costs more than recycling. Sorting at the point of opening is the easiest win in theatre.',
+ facts:[{n:'21–65',t:'kg CO₂e per tonne of hospital waste when it is recycled.',s:3},
+        {n:'1,074',t:'kg CO₂e per tonne when the same waste goes for high-temperature incineration, up to 50 times more.',s:3}],
+ eg:['Putting clean packaging from syringes, drugs and fluids in recycling before the patient arrives.','Separating sterilisation wrap ("blue wrap") where a collection exists.','Using the offensive (tiger) stream rather than clinical for non-infectious waste.'],
+ acts:[
+  {r:['every'],t:'Not sure where something goes? <a href="index.html#waste-finder">Look it up in the Which bin? finder</a>.'},
+  {r:['ap','anaes'],t:'At set-up, put clean drug and fluid packaging straight into recycling.'},
+  {r:['scrub'],t:'Separate blue wrap and clean packaging as you open trays.'},
+  {r:['surg'],t:'Keep clean packaging out of the clinical bag at the end of the case.'},
+  {r:['rec'],t:'Use the offensive stream, not clinical, for non-infectious waste.'},
+  {r:['anaes','ap'],t:'Theatres cannot yet recycle glass vials. <a href="propofol.html">Plan your propofol</a> to open fewer of them.'}],
+ care:'Anything contaminated with blood or body fluids, sharps and pharmaceutical waste must go in the correct clinical stream.'},
+{id:'research',name:'Research',col:'var(--r6)',tag:'Measure, test, share',
+ simple:'Measure what you do, try a change, and share what happened so others can copy it.',
+ why:'Many of the best theatre sustainability changes started as a local audit. Data turns "we should" into "we did", and a shared poster lets other teams copy the change without starting from scratch. Research also tests whether a greener option is as safe and effective as the current one.',
+ facts:[{n:'Low flow',t:'Our own anaesthetic machine data showed where sevoflurane was being wasted and which changes would cut it. <a href="index.html#low-flow">See the findings</a>.',s:0},
+        {n:'Roadmap',t:'Every action on the roadmap needs someone to lead or measure it. <a href="roadmap.html">Find one that interests you</a>.',s:0}],
+ eg:['Auditing your own fresh gas flow or agent use.','Weighing the waste from one type of operation before and after a change.','Turning a trainee QI project into a poster for this site.'],
+ acts:[
+  {r:['anaes'],t:'Look at your own fresh gas flow data and set yourself one target.'},
+  {r:['surg'],t:'Pick one common operation and list every single-use item it opens.'},
+  {r:['scrub','ap'],t:'Weigh one list\'s waste by bin type to find the easy wins.'},
+  {r:['rec'],t:'Suggest a recovery audit, such as oxygen flow or glove use.'},
+  {r:['every'],t:'Choose one action from the <a href="roadmap.html">roadmap</a> and put your name to it.'}],
+ care:'Service evaluations and audits still need registering locally. Ask before collecting any patient data.'}
+];
+const SRC={2:'MacNeill 2017',3:'Rizan 2021',4:'Seglenieks 2022',5:'Sulbaek Andersen 2012',6:'Sherman 2018',7:'Vozzola 2020',8:'NICE NG45'};
+const GAME=[
+ {q:'Asking the surgeon to move an instrument nobody has used this year from the standard set to "open on request".',a:'refuse'},
+ {q:'Turning the fresh gas flow down to 0.5 L/min once the patient is at target.',a:'reduce'},
+ {q:'Using a steel laryngoscope blade that goes to sterile services afterwards.',a:'reuse'},
+ {q:'Planning a spinal with sedation instead of a general anaesthetic for a patient who would do equally well with either.',a:'rethink'},
+ {q:'Putting the clean plastic wrapping from a giving set in the recycling bin.',a:'recycle'},
+ {q:'Weighing a week of waste from one theatre and presenting the results at audit.',a:'research'}
+];
+const store={get(){try{return JSON.parse(localStorage.getItem('sixrs')||'{}')}catch(e){return{}}},set(v){try{localStorage.setItem('sixrs',JSON.stringify(v))}catch(e){}}};
+let S=store.get();S.done=S.done||{};let role=S.role||'all';
+const svg=document.getElementById('svg'),panel=document.getElementById('panel'),wheel=document.getElementById('wheel');
+const NS='http://www.w3.org/2000/svg';
+const pt=(r,a)=>[r*Math.sin(a),-r*Math.cos(a)];
+const arc=(r0,r1,a0,a1)=>{const[p,q]=pt(r1,a0),[u,v]=pt(r1,a1),[w,x]=pt(r0,a1),[y,z]=pt(r0,a0);return`M${p},${q}A${r1},${r1} 0 0 1 ${u},${v}L${w},${x}A${r0},${r0} 0 0 0 ${y},${z}Z`};
+const n=D.length,gap=0.025;
+D.forEach((d,i)=>{const a0=i*2*Math.PI/n+gap,a1=(i+1)*2*Math.PI/n-gap,am=(a0+a1)/2;
+ const g=document.createElementNS(NS,'g');g.setAttribute('class','seg');g.dataset.i=i;g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label',`${i+1}. ${d.name}`);
+ const p=document.createElementNS(NS,'path');p.setAttribute('d',arc(98,232,a0,a1));p.setAttribute('fill',d.col);p.setAttribute('class','v');g.appendChild(p);
+ const[tx,ty]=pt(166,am);
+ const num=document.createElementNS(NS,'text');num.setAttribute('x',tx);num.setAttribute('y',ty-12);num.setAttribute('class','wn');num.textContent=i+1;g.appendChild(num);
+ const t=document.createElementNS(NS,'text');t.setAttribute('x',tx);t.setAttribute('y',ty+16);t.setAttribute('class','wl');t.textContent=d.name;g.appendChild(t);
+ svg.appendChild(g)});
+const c1=document.createElementNS(NS,'text');c1.setAttribute('class','wc');c1.setAttribute('y','-6');c1.textContent='6 Rs';svg.appendChild(c1);
+const c2=document.createElementNS(NS,'text');c2.setAttribute('class','wcs');c2.setAttribute('y','20');c2.textContent='start at the top';svg.appendChild(c2);
+document.getElementById('chips').innerHTML=D.map((d,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><i class="dot" style="background:${d.col}"></i>${i+1}. ${d.name}</button>`).join('');
+const rolesEl=document.getElementById('roles');
+const drawRoles=()=>{rolesEl.innerHTML=ROLES.map(r=>`<button type="button" data-r="${r.id}" aria-pressed="${r.id===role}">${r.name}</button>`).join('')};
+const key=(d,j)=>d.id+':'+j;
+const visible=d=>d.acts.map((a,j)=>({...a,j})).filter(a=>role==='all'||a.r.includes(role)||a.r.includes('every'));
+const overview=()=>{panel.innerHTML=`<span class="spill" style="background:var(--accent)">Start here</span><h2>Six steps, in order of impact</h2><p>The first two steps stop waste existing at all. The middle two make what we use go further. Recycling deals with what is left, and research tells us what works.</p><div class="simple"><p><b>Say it simply:</b> do I need it, can I use less, can it be used again, and if not, which bin?</p></div><h3>Why theatres?</h3><p>Operating theatres are among the most carbon-intensive parts of a hospital: on average about 188 tonnes of CO₂ equivalent per theatre each year in one three-country study, mostly from energy, anaesthetic gases and single-use items.</p><p class="muted small" style="margin-top:12px">Choose a step on the wheel to see the evidence and what you can do on your next list.</p>`};
+const show=i=>{const d=D[i],acts=visible(d);
+ panel.innerHTML=`<span class="spill" style="background:${d.col}">Step ${i+1} of 6</span><h2>${d.name}</h2><p class="muted">${d.tag}</p>
+ <div class="simple"><p><b>Say it simply:</b> ${d.simple}</p></div>
+ <h3>Why it matters in theatre</h3><p>${d.why}</p>
+ <div class="facts">${d.facts.map(f=>`<div class="fact"><b>${f.n}</b><span>${f.t}${f.s?` <span class="cite">(${SRC[f.s]})</span>`:''}</span></div>`).join('')}</div>
+ <h3>What it looks like in theatre</h3><ul class="eg">${d.eg.map(e=>`<li>${e}</li>`).join('')}</ul>
+ <h3>What you can do on your next list${role!=='all'?` <span class="muted small">(${ROLES.find(r=>r.id===role).name})</span>`:''}</h3>
+ <ul class="acts">${acts.map(a=>`<li><label><input type="checkbox" data-k="${key(d,a.j)}" ${S.done[key(d,a.j)]?'checked':''}><span>${a.t}</span></label></li>`).join('')}</ul>
+ <p class="care"><b>Safety first:</b> ${d.care}</p>
+ <div class="nav2">${i>0?`<button type="button" class="btn line" data-go="${i-1}">← ${D[i-1].name}</button>`:'<span></span>'}${i<n-1?`<button type="button" class="btn solid" data-go="${i+1}">${D[i+1].name} →</button>`:''}</div>`};
+let cur=null;
+const select=i=>{cur=i;document.querySelectorAll('.seg').forEach(g=>g.classList.toggle('on',+g.dataset.i===i));
+ document.querySelectorAll('#chips button').forEach(c=>c.setAttribute('aria-pressed',+c.dataset.i===i));
+ wheel.classList.toggle('sel',i!=null);i==null?overview():show(i);
+ try{history.replaceState(null,'',i==null?location.pathname:'#'+D[i].id)}catch(e){}};
+const pick=i=>select(cur===i?null:i);
+const tally=()=>{const ks=Object.keys(S.done).filter(k=>S.done[k]);
+ document.getElementById('tally').innerHTML=ks.length?`<b>${ks.length}</b> action${ks.length>1?'s':''} on your list. <a href="#mylist">See your list</a>`:'Tick actions in the panel to build a list for your next shift.';
+ const ml=document.getElementById('mylist');
+ if(!ks.length){ml.innerHTML='<p class="muted">Nothing ticked yet.</p>';return}
+ ml.innerHTML='<ul class="acts">'+ks.map(k=>{const[id,j]=k.split(':'),d=D.find(x=>x.id===id),a=d&&d.acts[+j];return a?`<li><span class="dot" style="background:${d.col};margin-top:7px"></span><span><b>${d.name}:</b> ${a.t}</span></li>`:''}).join('')+'</ul><div class="nav2" style="justify-content:flex-start"><button type="button" class="btn solid" id="print">Print my list</button><button type="button" class="btn line" id="clear">Clear list</button></div>'};
+svg.addEventListener('click',e=>{const g=e.target.closest('.seg');if(g)pick(+g.dataset.i)});
+svg.addEventListener('keydown',e=>{const g=e.target.closest('.seg');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();pick(+g.dataset.i)}});
+document.getElementById('chips').addEventListener('click',e=>{const c=e.target.closest('button');if(c)pick(+c.dataset.i)});
+rolesEl.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;role=b.dataset.r;S.role=role;store.set(S);drawRoles();select(cur)});
+panel.addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;S.done[k]=e.target.checked;if(!e.target.checked)delete S.done[k];store.set(S);tally()});
+panel.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){select(+b.dataset.go);if(window.innerWidth<860)panel.scrollIntoView({behavior:'smooth',block:'start'})}});
+document.getElementById('mylist').addEventListener('click',e=>{if(e.target.id==='print')window.print();if(e.target.id==='clear'){S.done={};store.set(S);tally();if(cur!=null)show(cur)}});
+// game
+const game=document.getElementById('game');
+game.innerHTML=GAME.map((g,i)=>`<div class="gq" data-q="${i}"><p>${g.q}</p><div class="gopts">${D.map(d=>`<button type="button" data-a="${d.id}">${d.name}</button>`).join('')}</div><p class="gfb" aria-live="polite"></p></div>`).join('')+'<p class="gscore muted" id="gscore"></p>';
+let got={};
+game.addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(!b)return;const box=b.closest('.gq'),i=+box.dataset.q,g=GAME[i],ok=b.dataset.a===g.a,d=D.find(x=>x.id===g.a);
+ box.querySelectorAll('button').forEach(x=>{x.classList.remove('right','wrong');if(x.dataset.a===g.a&&ok)x.classList.add('right')});
+ if(!ok)b.classList.add('wrong');
+ box.querySelector('.gfb').innerHTML=ok?`<b>Yes, ${d.name}.</b> ${d.simple}`:`<b>Not quite.</b> Try again. Hint: ${d.tag.toLowerCase()}.`;
+ if(!(i in got))got[i]=ok;
+ const k=Object.keys(got).length;if(k===GAME.length){const s=Object.values(got).filter(Boolean).length;document.getElementById('gscore').textContent=`You got ${s} of ${GAME.length} right first time.`}});
+drawRoles();tally();
+const h=location.hash.slice(1),hi=D.findIndex(d=>d.id===h);
+hi>=0?select(hi):overview();
+}
+</script>
+</body>
+</html>
