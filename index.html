@@ -71,8 +71,14 @@ section.block{padding:32px 0 0}
 .btn.solid{background:var(--accent);color:var(--accent-ink)}
 .btn.line{border-color:var(--line);color:var(--ink);background:var(--surface)}
 .binrow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.binrow a{background:#fff;border-radius:var(--r);padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:#10302f;font-size:.74rem;font-weight:600;text-align:center;transition:transform .15s}
-.binrow a:hover{transform:translateY(-3px)}
+.binrow button{background:#fff;border:0;border-radius:var(--r);padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;color:#10302f;font:600 .74rem var(--body);text-align:center;cursor:pointer;transition:transform .15s}
+@media (hover:hover){.binrow button:hover{transform:translateY(-3px)}}
+.bincap{font-size:.88rem;opacity:.85;margin-top:10px;text-align:center;max-width:none}
+dialog.bin{border:0;padding:0;border-radius:14px;width:min(440px,calc(100% - 32px));background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog.bin::backdrop{background:rgba(6,30,29,.6)}
+dialog.bin .rhead{position:relative;padding-right:56px}
+dialog.bin .x{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:#10302f;font:700 1.2rem var(--body);cursor:pointer}
+dialog.bin .rbody ul{font-size:1rem;gap:8px}
 .binrow svg{height:74px;width:62px;display:block}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
@@ -167,7 +173,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
 .lf-save-bot strong{display:block;font-family:var(--display);font-size:1.2rem}
 .lf-save-bot span{color:var(--muted);font-size:.92rem}
 .lf-tips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-@media (max-width:820px){.lf-stats{grid-template-columns:1fr}.lf-save-bot{grid-template-columns:1fr 1fr}.lf-save-bot>p:first-child{grid-column:1/-1}.lf-tips{grid-template-columns:1fr}.binrow{grid-template-columns:repeat(5,1fr)}.binrow a{font-size:.62rem}.binrow svg{height:52px;width:44px}}
+@media (max-width:820px){.lf-stats{grid-template-columns:1fr}.lf-save-bot{grid-template-columns:1fr 1fr}.lf-save-bot>p:first-child{grid-column:1/-1}.lf-tips{grid-template-columns:1fr}.binrow{grid-template-columns:repeat(5,1fr)}.binrow button{font-size:.62rem}.binrow svg{height:52px;width:44px}}
 @media (max-width:420px){.lf-save-bot{grid-template-columns:1fr}.lf-act{gap:12px;padding:14px}.lf-num{width:34px;height:34px;font-size:1rem}.binrow{grid-template-columns:repeat(5,1fr);gap:4px}}
 @media (max-width:820px){
   header.top{position:static}
@@ -211,7 +217,8 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
           <a class="btn ghost" href="quiz.html">Try the quiz</a>
         </div>
       </div>
-      <div class="binrow" id="heroBins" aria-label="The theatre waste streams"></div>
+      <div><div class="binrow" id="heroBins" role="group" aria-label="The theatre waste streams"></div>
+      <p class="bincap">Tap a bag or bin to see what goes in it.</p></div>
     </div>
   </div>
   <div class="wrap">
@@ -317,6 +324,8 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
   </div>
 </div>
 </main>
+
+<dialog class="bin" id="binDlg" aria-label="What goes in this bin"></dialog>
 
 <footer><div class="wrap">Waste guidance follows HTM 07-01. Local bin labels come first. Contains no patient or organisational data. <a href="reading.html">Additional reading</a></div></footer>
 
@@ -510,7 +519,29 @@ function renderItems(q){
   $("#itemList").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{const it=ITEMS.find(x=>x[0]===b.dataset.n);trail=[];itemNote=it[3]||"";$("#resultBox").innerHTML="";go(it[2],it[0]);if(cur)$("#resultBox").innerHTML=`<div class="panel empty"><p style="margin:0 auto">Answer the question to place your ${esc(it[0].toLowerCase())}.</p></div>`});
 }
 $("#itemSearch").addEventListener("input",e=>renderItems(e.target.value));
-$("#heroBins").innerHTML=Object.keys(S).map(k=>`<a href="#waste-finder">${art(k)}${esc(S[k].name)}</a>`).join("");
+const COMMON={
+ black:["Paper hand towels","Coffee cups","Food and sandwich wrappers","Polystyrene"],
+ clear:["Clean cardboard and paper","Clean plastic wrappers and film","Outer layer of sterile wrap","Empty drink cans and plastic bottles"],
+ tiger:["Gloves, aprons and gowns","Swabs, dressings and drapes","IV bags and giving sets with nothing added","Used LMAs, tubes, masks and circuits"],
+ orangebag:["Gloves, aprons and gowns from infectious patients","Swabs, dressings and drapes from infectious patients","Airway kit from patients with a respiratory infection such as flu, COVID-19 or TB"],
+ yellowbag:["IV bags and lines with a drug added (check there's no needle)","Circuits a nebuliser was run through","Scrub solution bottles","Gel dispensers that haven't been rinsed"],
+ orangesharps:["Scalpel blades and suture needles","Single-use scissors and forceps","Metal laryngoscope blades and handles (batteries out)","Metal stylets"],
+ yellowsharps:["Needles used to draw up or give drugs","Syringes with the needle still on","Lines with a needle on the end"],
+ purple:["Chemotherapy vials, syringes and bags","Sharps used for chemotherapy","Gloves and gowns worn to give chemotherapy"],
+ blue:["Empty or part-used vials and ampoules","Syringes with drug left in, needle off","Blister packs"],
+ red:["Recognisable human tissue","Body parts"]
+};
+const KEYNOTE={tiger:"Only from patients who are not infectious, and with no drugs on it.",orangebag:"Only from patients who are, or might be, infectious.",orangesharps:"Only sharps with no drugs on them.",yellowsharps:"Not for chemotherapy sharps: use the purple-lid bin."};
+function binInfo(k){
+  const d=$("#binDlg"),n=[...(KEYNOTE[k]?[KEYNOTE[k]]:[]),...notes(k)];
+  d.innerHTML=`${head(k,false).replace('</div></div>','</div><button class="x" type="button" aria-label="Close">×</button></div>')}<div class="rbody">${n.map(x=>`<div class="note">${esc(x)}</div>`).join("")}<div><h4>Common things that go in</h4><ul>${COMMON[k].map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><a class="btn solid" href="#waste-finder" style="align-self:flex-start">Check something else</a></div>`;
+  d.querySelector(".x").onclick=()=>d.close();
+  d.querySelector("a.btn").onclick=()=>d.close();
+  d.showModal();
+}
+$("#binDlg").addEventListener("click",e=>{if(e.target.id==="binDlg")e.target.close()});
+$("#heroBins").innerHTML=Object.keys(S).map(k=>`<button type="button" data-k="${k}" aria-haspopup="dialog">${art(k)}${esc(S[k].name)}</button>`).join("");
+$("#heroBins").addEventListener("click",e=>{const b=e.target.closest("button[data-k]");if(b)binInfo(b.dataset.k)});
 const VIEWS=["home","waste-finder","low-flow"];
 function route(){
   let h=location.hash.slice(1),v=VIEWS.includes(h)?h:"home";
