@@ -86,6 +86,12 @@ a.card:hover{border-color:var(--accent)}
 .card .go{margin-top:auto;color:var(--accent);font-weight:600;font-size:.92rem;padding-top:6px}
 .pill{align-self:flex-start;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
 .pill.plan{background:var(--warn-soft);color:var(--warn)}
+.tellus{display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:#ffd23f;color:#10302f;border-radius:var(--r);padding:20px 24px;margin-top:28px;text-decoration:none;box-shadow:0 2px 0 #e0a800}
+.tellus svg{width:52px;height:52px;flex:none}
+.tellus div{flex:1;min-width:200px;display:flex;flex-direction:column;gap:4px}
+.tellus b{font-family:var(--display);font-size:1.35rem;line-height:1.2}
+.tellus .tbtn{background:#10302f;color:#fff;font-weight:700;padding:12px 20px;border-radius:999px;white-space:nowrap}
+@media (hover:hover){.tellus:hover .tbtn{background:#0b6e69}}
 .help{background:var(--accent-soft);border-radius:var(--r);padding:24px 26px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .help p{margin-top:6px}
 
@@ -200,6 +206,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
       <a href="propofol.html">Propofol</a>
       <a href="roadmap.html">Roadmap</a>
       <a href="reading.html">Reading</a>
+      <a href="feedback.html">Tell us</a>
     </nav>
   </div>
 </header>
@@ -215,6 +222,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
         <div class="cta">
           <a class="btn primary" href="#waste-finder">Which bin?</a>
           <a class="btn ghost" href="quiz.html">Try the quiz</a>
+          <a class="btn ghost" href="feedback.html">Tell us what gets in the way</a>
         </div>
       </div>
       <div><div class="binrow" id="heroBins" role="group" aria-label="The theatre waste streams"></div>
@@ -222,6 +230,11 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
     </div>
   </div>
   <div class="wrap">
+    <a class="tellus" href="feedback.html">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 10h36v22H20l-9 8v-8H6z" fill="#10302f"/><circle cx="16" cy="21" r="2.6" fill="#ffd23f"/><circle cx="24" cy="21" r="2.6" fill="#ffd23f"/><circle cx="32" cy="21" r="2.6" fill="#ffd23f"/></svg>
+      <div><b>Something stopping you doing the green thing?</b><span>Tell us. It's completely anonymous and takes two minutes.</span></div>
+      <span class="tbtn">Tell us anonymously →</span>
+    </a>
     <section class="block stack" id="projects">
       <h2>Pick one</h2>
       <div class="cards">

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tell us what gets in the way · York Theatre Sustainability</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Anonymous staff feedback: barriers to doing the sustainable thing. */
+:root{
+  --bg:#f1f5f4; --surface:#ffffff; --ink:#10302f; --muted:#51696a; --line:#d3dedc;
+  --accent:#0b6e69; --accent-ink:#ffffff; --accent-soft:#dcefec; --hero:#0c3f3d; --hero-ink:#eef7f5;
+  --warn:#9a3412; --warn-soft:#fdeee4;
+  --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+    --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5;
+    --warn:#fdba8c; --warn-soft:#3a2416; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+  --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5;
+  --warn:#fdba8c; --warn-soft:#3a2416; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:var(--display);line-height:1.12;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3.3rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0;max-width:65ch}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+
+/* masthead */
+header.top{background:var(--hero);color:var(--hero-ink);position:sticky;top:0;z-index:5}
+.topbar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:12px 20px;max-width:1120px;margin:0 auto}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--hero-ink);text-decoration:none;margin-right:auto;display:flex;gap:10px;align-items:center}
+.brand i{width:14px;height:14px;border-radius:50%;background:#5fd0c5;display:inline-block}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav a{color:var(--hero-ink);text-decoration:none;padding:7px 12px;border-radius:999px;font-size:.92rem;font-weight:500;opacity:.85}
+nav a:hover{opacity:1;background:rgba(255,255,255,.1)}
+nav a[aria-current="page"]{background:#5fd0c5;color:#062a28;opacity:1;font-weight:600}
+
+.view{display:none;padding:0 0 72px}
+.view.on{display:block}
+.pagehead{padding:40px 0 8px}
+.pagehead p{color:var(--muted);margin-top:10px;font-size:1.05rem}
+section.block{padding:32px 0 0}
+
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 1rem var(--body);padding:12px 20px;border-radius:999px;border:2px solid transparent;cursor:pointer;text-decoration:none}
+.btn.primary{background:#5fd0c5;color:#062a28}
+.btn.ghost{border-color:rgba(255,255,255,.4);color:var(--hero-ink);background:transparent}
+.btn.solid{background:var(--accent);color:var(--accent-ink)}
+.btn.line{border-color:var(--line);color:var(--ink);background:var(--surface)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
+.card .go{margin-top:auto;color:var(--accent);font-weight:600;font-size:.92rem;padding-top:6px}
+.pill{align-self:flex-start;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.pill.plan{background:var(--warn-soft);color:var(--warn)}
+.lede{color:var(--muted);font-size:17px}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:start;margin-top:18px}
+.wheel svg{width:100%;height:auto;display:block}
+.seg{cursor:pointer;transition:opacity .2s}
+.seg:focus{outline:none}
+.seg:focus-visible path.v,.seg.on path.v{stroke:var(--ink);stroke-width:3}
+.wheel.sel .seg:not(.on){opacity:.35}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips button{font:inherit;font-size:14px;min-height:44px;padding:6px 12px;border-radius:22px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:7px}
+.chips button[aria-pressed=true]{border-color:var(--ink);font-weight:600}
+.chips button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.pbpanel{background:var(--surface);border-radius:14px;padding:clamp(18px,2.4vw,28px);position:sticky;top:76px}
+.spill{display:inline-block;font-size:13px;font-weight:600;padding:3px 10px;border-radius:12px;color:#fff;margin-bottom:8px}
+.fig-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.fig-row b{font-size:20px;white-space:nowrap;text-align:right}
+.fig-row small{grid-column:1/-1;color:var(--muted);font-size:13px}
+.pbar{grid-column:1/-1;height:8px;border-radius:4px;background:var(--line);position:relative;margin-top:4px}
+.pbar i{position:absolute;inset:0 auto 0 0;border-radius:4px}
+.pbar s{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.simple{border-left:4px solid var(--accent);padding:8px 12px;margin:14px 0 4px;background:var(--bg);border-radius:0 8px 8px 0}
+.simple p{margin:0}
+.key{display:flex;flex-wrap:wrap;gap:14px;font-size:14px;color:var(--muted);margin-top:12px}
+.key span{display:flex;align-items:center;gap:6px}
+.teach{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px;margin-top:12px}
+.teach div{background:var(--surface);border-radius:12px;padding:16px 18px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin-top:12px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{text-align:right;white-space:nowrap}
+th{font-size:13px;color:var(--muted);font-weight:600}
+.src{font-size:13px;color:var(--muted)}
+.src li{margin-bottom:4px}
+:root{--safe:#1f9d55;--amber:#e39a0b;--high:#d7263d}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:.85rem}
+.blk{padding:32px 0 0}.blk:last-of-type{padding-bottom:56px}
+.blk h2{margin-bottom:8px}.pbpanel h2{font-size:1.5rem;margin-bottom:6px}
+.pbpanel p,.teach p{margin-bottom:8px}.lede{margin-top:6px}
+.pbpanel{border:1px solid var(--line)}
+.teach div{border:1px solid var(--line)}
+.rt{border-collapse:collapse;width:100%;font-size:15px;margin-top:12px}
+.rt th,.rt td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.rt td.n{text-align:right;white-space:nowrap}.rt th{font-size:13px;color:var(--muted);font-weight:600}
+.src{padding-left:20px}
+.pbpanel h3,.teach h3{margin:16px 0 4px;color:var(--accent);font-size:1.05rem}.teach h3{margin-top:0}
+@media(max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}.pbpanel{position:static}}
+@media(max-width:600px){.rt{font-size:13px}.rt thead{display:none}.rt tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.rt td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.rt td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--muted)}.rt td:empty{display:none}.rt td.n{text-align:start}}
+@media(prefers-reduced-motion:reduce){.seg{transition:none}}
+
+
+:root{--r1:#0b4f4c;--r2:#0b6e69;--r3:#148a7f;--r4:#2c9f8c;--r5:#62bd9c;--r6:#98d6b4}
+.wheel svg{max-width:480px;margin:0 auto}
+.wn{font:700 30px var(--display);text-anchor:middle;fill:#fff;pointer-events:none}
+.wl{font:600 17px var(--body);text-anchor:middle;fill:#fff;pointer-events:none}
+.seg:nth-of-type(5) text,.seg:nth-of-type(6) text{fill:#06302c}
+.wc{font:700 40px var(--display);text-anchor:middle;fill:var(--ink)}
+.wcs{font:500 15px var(--body);text-anchor:middle;fill:var(--muted)}
+.seg:focus-visible path.v,.seg.on path.v{stroke:var(--ink);stroke-width:4}
+.roles{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:18px}
+.roles .chips{margin-top:0}
+.roles button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tally{margin-top:14px;font-size:15px;color:var(--muted)}
+.tally b{color:var(--ink);font-size:18px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px;margin:12px 0 4px}
+.fact{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.fact b{font:700 1.6rem var(--display);color:var(--accent);line-height:1.1}
+.cite{color:var(--muted);font-size:12px;white-space:nowrap}
+.eg{margin:4px 0 0;padding-left:20px}.eg li{margin-bottom:4px}
+.acts{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.acts li{display:flex;gap:10px;align-items:flex-start}
+.acts label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;padding:8px 10px;border:1px solid var(--line);border-radius:8px;width:100%;background:var(--surface)}
+.acts label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.acts input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--accent);flex:none}
+.care{margin-top:14px;font-size:14px;background:var(--warn-soft);color:var(--ink);padding:10px 12px;border-radius:8px;max-width:none}
+.care b{color:var(--warn)}
+.nav2{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.nav2 .btn{font-size:.92rem;padding:9px 16px}
+.game{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px;margin-top:12px}
+.gq{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.gopts{display:flex;flex-wrap:wrap;gap:6px}
+.gopts button{font:inherit;font-size:14px;min-height:40px;padding:6px 12px;border-radius:20px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.gopts button.right{background:var(--safe);border-color:var(--safe);color:#fff;font-weight:600}
+.gopts button.wrong{border-color:var(--high);color:var(--high);text-decoration:line-through}
+.gfb{font-size:14px;min-height:1.2em}
+.gscore{grid-column:1/-1;font-weight:600}
+.mylist{margin-top:12px;max-width:760px}
+.mylist .acts li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+@media print{header.top,footer,.blk:not(:has(#mylist)),.nav2{display:none!important}.blk{padding:0}}
+
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.toc a{padding:7px 14px;border-radius:999px;background:var(--accent-soft);text-decoration:none;font-weight:600;font-size:.92rem}
+.rd{padding-top:40px;scroll-margin-top:70px}
+.rd>h2{padding-bottom:6px;border-bottom:2px solid var(--line);margin-bottom:6px}
+.rd h3.sub{margin:24px 0 4px;font-size:1.15rem;color:var(--ink)}
+.rd p{margin-top:8px}
+.rd ul.plain{max-width:70ch;padding-left:20px}.rd ul.plain li{margin-bottom:6px}
+.tag{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 7px;border-radius:999px}
+.t-Study{background:#dbeafe;color:#1e3a8a}.t-Service{background:#d9f2e3;color:#14532d}.t-Guidance{background:#ede9fe;color:#4c1d95}.t-CSH{background:#ccfbf1;color:#134e4a}.t-Trade{background:#fde68a;color:#78350f}
+.star{color:#c98a00}
+
+.fbwrap{max-width:680px;margin:0 auto;padding-bottom:56px}
+.anon{background:#e6f4f1;border:2px solid #0b6e69;border-radius:var(--r);padding:18px 20px;margin-top:22px;display:flex;gap:16px;align-items:flex-start}
+.anon svg{flex:none;width:44px;height:44px}
+.anon h2{font-size:1.15rem;margin-bottom:6px;color:#0b3f3c}
+.anon ul{padding-left:18px;margin:0;display:grid;gap:4px;font-size:.96rem}
+form.fb{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-top:20px;display:flex;flex-direction:column;gap:20px}
+fieldset{border:0;padding:0;margin:0}
+legend,.lbl{font-weight:700;font-size:1.02rem;margin-bottom:8px;display:block}
+.opt{font-weight:500;color:var(--muted);font-size:.9rem}
+.topics{display:flex;flex-wrap:wrap;gap:8px}
+.topics label{cursor:pointer}
+.topics input{position:absolute;opacity:0;pointer-events:none}
+.topics span{display:inline-block;padding:9px 14px;border-radius:999px;border:2px solid var(--line);background:var(--bg);font-weight:600;font-size:.92rem}
+.topics input:checked+span{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.topics input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+textarea,select{width:100%;font:500 1rem var(--body);padding:12px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+textarea{min-height:120px;resize:vertical}
+textarea:focus,select:focus{border-color:var(--accent);outline:none}
+.count{font-size:.8rem;color:var(--muted);text-align:right;margin-top:4px}
+.send{align-self:flex-start;font:700 1.05rem var(--body);padding:14px 26px;border-radius:999px;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.send:disabled{opacity:.5;cursor:wait}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.err{background:#fee2e2;color:#7f1d1d;border-radius:10px;padding:12px 14px}
+.thanks{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;margin-top:20px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+.thanks h2{font-size:1.5rem}
+.thanks a,.thanks button{font:600 1rem var(--body)}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.rt td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<header class="top">
+  <div class="topbar">
+    <a class="brand" href="index.html#home"><i></i>York Theatre Sustainability</a>
+    <nav aria-label="Main">
+      <a href="index.html#home">Home</a>
+      <a href="boundaries.html">Planet</a>
+      <a href="sixrs.html">6 Rs</a>
+      <a href="index.html#waste-finder">Which bin?</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="index.html#low-flow">Low flow</a>
+      <a href="propofol.html">Propofol</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="reading.html">Reading</a>
+      <a href="feedback.html" aria-current="page">Tell us</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap"><div class="fbwrap">
+<div class="pagehead"><h1>Tried to do the green thing, but something got in the way?</h1>
+<p>No recycling bin where you needed one? Kit that couldn't be reused? A rule that didn't make sense? Tell us. It takes two minutes.</p></div>
+
+<div class="anon" role="note">
+  <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="20" width="28" height="22" rx="4" fill="#0b6e69"/><path d="M16 20v-6a8 8 0 0 1 16 0v6" fill="none" stroke="#0b6e69" stroke-width="4"/><circle cx="24" cy="30" r="3" fill="#fff"/><rect x="22.5" y="31" width="3" height="6" rx="1.5" fill="#fff"/></svg>
+  <div><h2>This is completely anonymous</h2>
+  <ul>
+    <li>We don't ask for your name, email or role.</li>
+    <li>We can't see who sent it. We only keep the date, not the time.</li>
+    <li>It's used only to improve things in our department.</li>
+    <li>Please leave out names and patient details, so it stays anonymous.</li>
+  </ul></div>
+</div>
+
+<form class="fb" id="fbform" novalidate>
+  <fieldset>
+    <legend>What were you trying to do?</legend>
+    <div class="topics">
+      <label><input type="radio" name="topic" value="Waste and bins" required><span>Waste and bins</span></label>
+      <label><input type="radio" name="topic" value="Anaesthetic gases"><span>Anaesthetic gases</span></label>
+      <label><input type="radio" name="topic" value="Drugs and propofol"><span>Drugs and propofol</span></label>
+      <label><input type="radio" name="topic" value="Reusable kit"><span>Reusable kit</span></label>
+      <label><input type="radio" name="topic" value="Energy and lights"><span>Energy and lights</span></label>
+      <label><input type="radio" name="topic" value="Something else"><span>Something else</span></label>
+    </div>
+  </fieldset>
+  <div>
+    <label class="lbl" for="issue">What got in the way?</label>
+    <textarea id="issue" name="issue" maxlength="1500" required placeholder="For example: there's no clear recycling bag in the anaesthetic room, so clean packaging ends up in the tiger bag."></textarea>
+    <div class="count"><span id="n1">0</span> / 1500</div>
+  </div>
+  <div>
+    <label class="lbl" for="idea">What would make it easier? <span class="opt">(optional)</span></label>
+    <textarea id="idea" name="idea" maxlength="800" placeholder="Any idea, big or small."></textarea>
+  </div>
+  <div>
+    <label class="lbl" for="where">Where was it? <span class="opt">(optional)</span></label>
+    <select id="where" name="where"><option value="">Rather not say</option><option>Anaesthetic room</option><option>Theatre</option><option>Recovery</option><option>Somewhere else</option></select>
+  </div>
+  <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+  <div id="ferr" class="err" hidden></div>
+  <button class="send" type="submit" id="send">Send anonymously</button>
+</form>
+<div class="thanks" id="thanks" hidden>
+  <svg viewBox="0 0 120 120" width="96" height="96" aria-hidden="true"><circle cx="60" cy="60" r="48" fill="#ffd23f" stroke="#e0a800" stroke-width="3"/><circle cx="43" cy="48" r="6" fill="#10302f"/><circle cx="77" cy="48" r="6" fill="#10302f"/><path d="M36 68 Q60 92 84 68" stroke="#10302f" stroke-width="6" fill="none" stroke-linecap="round"/></svg>
+  <h2>Thank you</h2>
+  <p>The theatre sustainability team reads every message and uses them to decide what to fix first.</p>
+  <p><button class="btn line" type="button" id="again">Tell us something else</button> <a class="btn line" href="index.html#home">Back to home</a></p>
+</div>
+</div></main>
+<footer><div class="wrap">Anonymous feedback for our theatre sustainability work. No names, emails or times are collected.</div></footer>
+<script>
+// Same Google Apps Script as the roadmap sign-up and quiz counter. Stored in a "Feedback" tab.
+const FEEDBACK_URL="https://script.google.com/macros/s/AKfycbxEQPqamiguEbDLKV2ZvQZ3RA0U3_Bdva9_Xpro1Q4Bt6QA6K_49Laz9ImgqdjGjA/exec";
+const $=s=>document.querySelector(s);
+$("#issue").addEventListener("input",e=>$("#n1").textContent=e.target.value.length);
+$("#again").onclick=()=>{$("#fbform").reset();$("#n1").textContent="0";$("#thanks").hidden=true;$("#fbform").hidden=false;window.scrollTo(0,0)};
+$("#fbform").addEventListener("submit",async e=>{
+  e.preventDefault();const f=e.target,err=$("#ferr");err.hidden=true;
+  const topic=(f.querySelector("input[name=topic]:checked")||{}).value,issue=f.issue.value.trim();
+  if(!topic||issue.length<5){err.textContent=!topic?"Pick what you were trying to do.":"Tell us a bit about what got in the way.";err.hidden=false;return}
+  $("#send").disabled=true;$("#send").textContent="Sending…";
+  try{
+    const r=await fetch(FEEDBACK_URL,{method:"POST",body:new URLSearchParams({kind:"feedback",topic,issue,idea:f.idea.value.trim(),where:f.where.value,website:f.website.value})});
+    const j=await r.json();if(!j.ok)throw new Error("not ok");
+    f.hidden=true;$("#thanks").hidden=false;window.scrollTo(0,0);
+  }catch(x){err.textContent="Sorry, that didn't send. Please try again in a minute.";err.hidden=false}
+  finally{$("#send").disabled=false;$("#send").textContent="Send anonymously"}
+});
+</script>
+</body>
+</html>
