@@ -2,6 +2,7 @@
  * Volunteer sign-up backend for the Green Theatres Roadmap page.
  * Bound to a Google Sheet. Receives sign-ups, stores them and emails you.
  * The site only learns which actions are taken: no names leave the sheet.
+ * Also counts completed quiz rounds (quiz.html) in a "Quiz" tab: no personal data.
  *
  * SET THIS: the inbox that should receive sign-up emails.
  */
@@ -25,8 +26,21 @@ function json_(obj) {
 
 function clean_(v, max) { return String(v || '').replace(/[<>]/g, '').trim().slice(0, max); }
 
+function quizSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName('Quiz');
+  if (!sh) {
+    sh = ss.insertSheet('Quiz');
+    sh.appendRow(['Timestamp', 'Mode', 'Score', 'Out of', 'Retry of missed']);
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+// GET ?quiz=1 → { count: 123 }  (completed quiz rounds)
 // GET ?list=1 → { taken: [3, 9, ...] }  (action numbers only)
 function doGet(e) {
+  if (e && e.parameter && e.parameter.quiz) return json_({ count: Math.max(0, quizSheet_().getLastRow() - 1) });
   const rows = sheet_().getDataRange().getValues().slice(1);
   const taken = {};
   rows.forEach(r => { if (String(r[7]).toUpperCase() !== 'NO') taken[r[1]] = true; });  // type NO in column H to free an action
@@ -37,6 +51,20 @@ function doGet(e) {
 function doPost(e) {
   const p = (e && e.parameter) || {};
   if (p.website) return json_({ ok: true });                  // bot filled the hidden field
+  if (p.kind === 'quiz') {                                     // anonymous quiz completion
+    const mode = ['practice', 'induction'].indexOf(p.mode) >= 0 ? p.mode : 'practice';
+    const outOf = Math.min(Math.max(parseInt(p.outOf, 10) || 0, 1), 50);
+    const score = Math.min(Math.max(parseInt(p.score, 10) || 0, 0), outOf);
+    const qlock = LockService.getScriptLock();
+    qlock.waitLock(10000);
+    try {
+      const qs = quizSheet_();
+      qs.appendRow([new Date(), mode, score, outOf, p.retry === '1' ? 'Yes' : '']);
+      return json_({ ok: true, count: qs.getLastRow() - 1 });
+    } finally {
+      qlock.releaseLock();
+    }
+  }
   const name = clean_(p.name, 60), email = clean_(p.email, 120);
   const action = parseInt(p.action, 10);
   if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !(action >= 1 && action <= 99)) {
