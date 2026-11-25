@@ -106,6 +106,15 @@ section.block{padding:32px 0 0}
 .fb p{margin-top:2px}
 .next{align-self:flex-end}
 .result{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:14px}
+.result>.score,.result>.score+p,.result>.tally{text-align:center}
+.face{display:block;margin:0 auto -4px;align-self:center;width:120px;height:120px;animation:pop .55s cubic-bezier(.2,1.6,.4,1) both}
+.face .sp{animation:twinkle 1.4s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+.face .sp:nth-of-type(2){animation-delay:.35s}.face .sp:nth-of-type(3){animation-delay:.7s}
+@keyframes pop{from{transform:scale(.2) rotate(-20deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes twinkle{0%,100%{transform:scale(.6);opacity:.4}50%{transform:scale(1.15);opacity:1}}
+@media (prefers-reduced-motion:reduce){.face,.face .sp{animation:none}}
+.tally{margin-top:14px;font-size:.92rem;color:var(--muted)}
+.tally b{color:var(--accent)}
 .score{font-family:var(--display);font-size:clamp(2.6rem,8vw,3.6rem);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
 .score small{font-size:1.1rem;color:var(--muted);font-weight:500}
 .cert{border:2px dashed var(--accent);border-radius:10px;padding:14px 16px;background:var(--accent-soft);color:var(--ink)}
@@ -177,7 +186,7 @@ const art=k=>ART[k]();
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const KIND={bin:"Which bin?",tf:"Spot the mistake",mc:"Cost and carbon"};
-let round=[],i=0,score=0,missed=[],mode="practice";
+let round=[],i=0,score=0,missed=[],mode="practice",isRetry=false;
 function shuffle(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
 function home(){
   $("#app").innerHTML=`<div class="qhead"><span class="pill">Test yourself</span><h1>Which bin? quiz</h1><p>Pick the right bag or bin. You'll see the answer straight away.</p></div>
@@ -189,7 +198,7 @@ function home(){
   $("#m-practice").onclick=()=>start("practice");
   $("#m-induction").onclick=()=>start("induction");
 }
-function start(m,list){
+function start(m,list){isRetry=!!list;
   mode=m;i=0;score=0;missed=[];
   round=list||(m==="induction"?QS.slice(0,15):shuffle(QS).slice(0,10));
   ask();
@@ -229,17 +238,35 @@ function answer(v,btn){
   $("#nx").onclick=()=>{i++;i<round.length?ask():finish()};$("#nx").focus({preventScroll:true});
   $("#fb").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
+// Same Google Apps Script as the roadmap sign-up. Counts completed rounds only: no personal data is sent.
+const COUNT_URL="https://script.google.com/macros/s/AKfycbxEQPqamiguEbDLKV2ZvQZ3RA0U3_Bdva9_Xpro1Q4Bt6QA6K_49Laz9ImgqdjGjA/exec";
+function face(r){
+  // r = fraction correct. Always a smile: big grin with sparkles for a perfect round.
+  const mouth=r===1?'<path d="M34 66 Q60 98 86 66 Z" fill="#10302f"/><path d="M44 80 Q60 92 76 80 Q60 86 44 80Z" fill="#f2777a"/>'
+    :r>=0.8?'<path d="M36 68 Q60 92 84 68" stroke="#10302f" stroke-width="6" fill="none" stroke-linecap="round"/>'
+    :'<path d="M40 72 Q60 86 80 72" stroke="#10302f" stroke-width="6" fill="none" stroke-linecap="round"/>';
+  const eyes=r===1?'<path d="M36 50 Q43 40 50 50M70 50 Q77 40 84 50" stroke="#10302f" stroke-width="6" fill="none" stroke-linecap="round"/>'
+    :'<circle cx="43" cy="48" r="6" fill="#10302f"/><circle cx="77" cy="48" r="6" fill="#10302f"/>';
+  const sp=r===1?'<path class="sp" d="M8 22l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#f5b400"/><path class="sp" d="M110 12l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z" fill="#0b6e69"/><path class="sp" d="M108 96l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#f2777a"/>':"";
+  return `<svg class="face" viewBox="-4 0 128 120" role="img" aria-label="Smiley face"><circle cx="60" cy="60" r="48" fill="#ffd23f" stroke="#e0a800" stroke-width="3"/><circle cx="32" cy="70" r="7" fill="#f7a072" opacity=".55"/><circle cx="88" cy="70" r="7" fill="#f7a072" opacity=".55"/>${eyes}${mouth}${sp}</svg>`;
+}
+function countRound(n,retry){
+  if(!COUNT_URL)return;
+  fetch(COUNT_URL,{method:"POST",body:new URLSearchParams({kind:"quiz",mode,score:String(score),outOf:String(n),retry:retry?"1":"0"})})
+    .then(r=>r.json()).then(j=>{const t=$("#tally");if(t&&j&&j.count>0)t.innerHTML=`You've just completed quiz number <b>${j.count.toLocaleString("en-GB")}</b> across our theatres.`}).catch(()=>{});
+}
 function finish(){
   const n=round.length,d=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
   const msg=score===n?"Perfect round.":score>=n*0.8?"Good. Check the ones you missed below.":"Worth another go. The rules behind each miss are below.";
   $("#app").innerHTML=`<div class="bar"><span>Finished</span><div class="prog" aria-hidden="true"><i style="width:100%"></i></div><span>Score ${score}</span></div>
-  <div class="result"><div class="score">${score}<small> / ${n}</small></div><p>${msg}</p>
+  <div class="result">${face(score/n)}<div class="score">${score}<small> / ${n}</small></div><p>${msg}</p><p class="tally" id="tally"></p>
    ${mode==="induction"?`<div class="cert"><b>Induction: theatre waste segregation</b><br>Scored ${score} out of ${n} on ${d}. Take a screenshot for your induction record.</div>`:""}
    ${missed.length?`<h2 style="font-size:1.2rem">Missed</h2><ul class="missed">${missed.map(q=>`<li><b>${esc(q.item)}${q.ctx?` (${esc(q.ctx)})`:""}</b><span>${esc(q.t==="bin"?STREAMS[q.a].name+". ":q.t==="tf"?(q.a?"Right. ":"Wrong. "):q.opts[q.a]+". ")}${esc(q.why)}</span></li>`).join("")}</ul>`:""}
    <div class="acts">${missed.length?`<button class="btn solid" type="button" id="rm">Retry the ${missed.length} I missed</button>`:""}<button class="btn ${missed.length?"line":"solid"}" type="button" id="nr">${mode==="induction"?"Try induction again":"New round"}</button><button class="btn line" type="button" id="hm">Quiz menu</button></div></div>`;
   const rm=$("#rm");if(rm){const m=missed.slice();rm.onclick=()=>start(mode==="induction"?"practice":mode,shuffle(m))}
   $("#nr").onclick=()=>start(mode);$("#hm").onclick=home;
   window.scrollTo(0,0);
+  countRound(n,isRetry);
 }
 home();
 </script>
