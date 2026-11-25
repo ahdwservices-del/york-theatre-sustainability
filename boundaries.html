@@ -117,6 +117,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
 @media(max-width:600px){.rt{font-size:13px}.rt thead{display:none}.rt tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.rt td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.rt td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--muted)}.rt td:empty{display:none}.rt td.n{text-align:start}}
 @media(prefers-reduced-motion:reduce){.seg{transition:none}}
 
+.why{margin-top:14px}.why summary{cursor:pointer;font-weight:600;color:var(--accent)}.why[open] summary{margin-bottom:8px}
 </style>
 <script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.rt td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
 </head>
@@ -133,125 +134,34 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
       <a href="index.html#low-flow">Low flow</a>
       <a href="propofol.html">Propofol</a>
       <a href="roadmap.html">Roadmap</a>
+      <a href="reading.html">Reading</a>
     </nav>
   </div>
 </header>
 <main class="wrap"><section class="blk">
-  <div class="pagehead" style="padding-top:8px"><h1>Seven of Earth's nine life-support systems are outside their safe range, and all seven are getting worse</h1></div>
-  <p class="lede">Figures from the Planetary Health Check 2026 (Potsdam Institute for Climate Impact Research, September 2026). Tap a wedge or a button to see the latest figure, what it means, and why it matters to anyone working in healthcare.</p>
+  <div class="pagehead" style="padding-top:8px"><h1>Earth's health check: 7 out of 9 results are outside the safe zone</h1></div>
+  <p class="lede">Think of it as a blood test for the planet. Tap a slice to see one result and what you can do.</p>
   <div class="grid">
     <div>
       <div class="wheel" id="wheel"><svg id="svg" viewBox="-318 -252 636 504" role="img" aria-label="Planetary boundaries wheel"></svg></div>
       <div class="key">
-        <span><i class="dot" style="background:var(--safe)"></i>Safe operating space</span>
-        <span><i class="dot" style="background:var(--amber)"></i>Zone of increasing risk</span>
+        <span><i class="dot" style="background:var(--safe)"></i>Safe</span>
+        <span><i class="dot" style="background:var(--amber)"></i>Rising risk</span>
         <span><i class="dot" style="background:var(--high)"></i>High risk</span>
-        <span>Dashed ring = boundary. Short tick = high-risk line.</span>
+        <span>Past the dashed ring = past the safe limit.</span>
       </div>
       <div class="chips" id="chips"></div>
     </div>
     <aside class="pbpanel" id="panel" aria-live="polite"></aside>
   </div>
 </section>
-
-<section class="blk">
-  <h2>How to explain it to a colleague in 30 seconds</h2>
-  <div class="teach">
-    <div><h3>It's a blood panel for the planet</h3><p>Nine tests, each with a reference range set by science. Inside the range, Earth stays in the stable state that let human civilisation develop. Seven results are now flagged abnormal; several are critical values.</p></div>
-    <div><h3>The results interact</h3><p>Like a patient's renal and cardiac function, the systems feed each other. The CO₂ that warms the climate also acidifies the ocean; forest loss worsens both climate and biodiversity. You can't treat one value in isolation.</p></div>
-    <div><h3>Abnormal is not yet irreversible</h3><p>A boundary is a precaution line, not a cliff edge, much like a reference range. Crossing it raises risk. The ozone layer shows a flagged result can recover when the world agrees a treatment plan and sticks to it.</p></div>
-  </div>
-</section>
-
-<section class="blk">
-  <h2>The full panel: all 13 measurements</h2>
-  <p class="lede">Boundary value, with the high-risk line in brackets. Novel entities has no single number yet; it is judged breached because thousands of new chemicals are released without safety testing.</p>
-  <table class="rt"><thead><tr><th>System</th><th>Measure</th><th>Boundary (high risk)</th><th>2026 value</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table>
-</section>
-
-<section class="blk">
-  <h2>Sources</h2>
-  <ol class="src">
-    <li>Planetary Boundaries Science Lab. <a href="https://www.planetaryhealthcheck.org">Planetary Health Check 2026</a>. Potsdam Institute for Climate Impact Research, 2026. Per-variable values as summarised in the <a href="https://globaia.org/phc2026/organic/">PHC 2026 field guide</a> (Globaia).</li>
-    <li>Richardson K, et al. Earth beyond six of nine planetary boundaries. Sci Adv 2023;9:eadh2458.</li>
-    <li>Tennison I, et al. Health care's carbon footprint in England. Lancet Planet Health 2021;5:e84–92.</li>
-    <li>Ravishankara AR, et al. Nitrous oxide (N₂O): the dominant ozone-depleting substance emitted in the 21st century. Science 2009;326:123–5.</li>
-    <li>Marfella R, et al. Microplastics and nanoplastics in atheromas and cardiovascular events. N Engl J Med 2024;390:900–10.</li>
-    <li>Wilkinson JL, et al. Pharmaceutical pollution of the world's rivers. PNAS 2022;119:e2113947119.</li>
-    <li>Newman DJ, Cragg GM. Natural products as sources of new drugs over the nearly four decades from 01/1981 to 09/2019. J Nat Prod 2020;83:770–803.</li>
-    <li>IPBES. Workshop report on biodiversity and pandemics. 2020.</li>
-    <li>Tanner J, et al. Surgical hand antisepsis to reduce surgical site infection. Cochrane Database Syst Rev 2016;1:CD004288.</li>
-    <li>COMEAP. Statement on quantifying mortality associated with long-term exposure to PM2.5. 2022. UKHSA. Heat mortality monitoring report: 2022.</li>
-  </ol>
-  <p class="src">Figures update once a year with each Planetary Health Check (usually September). All values sit in one data block at the top of the script for easy updating.</p>
-</section></main>
-<footer><div class="wrap">Planetary boundary figures from the Planetary Health Check 2026 (Potsdam Institute for Climate Impact Research), updated each September. Health and theatre context draws on the sources listed above.</div></footer>
+<p class="src" style="padding:24px 0 56px">All 13 measurements, how to read the wheel and the sources are on the <a href="reading.html#planet">Additional reading</a> page.</p>
+</main>
+<footer><div class="wrap">Figures from the Planetary Health Check 2026 (Potsdam Institute for Climate Impact Research). <a href="reading.html#planet">Sources</a>.</div></footer>
+<script src="boundaries-data.js"></script>
 <script>
 {
-const C={safe:'var(--safe)',warn:'var(--amber)',high:'var(--high)'};
-const LBL={safe:'Safe',warn:'Zone of increasing risk',high:'High risk',breach:'Breached (not quantified)'};
-// ratio = distance from pre-industrial state, as a multiple of the safe distance (1 = at the boundary)
-const D=[
-{id:'climate',name:'Climate change',short:'Climate',trend:'Worsening',
- vars:[{m:'CO₂ concentration',b:'350 ppm',h:'450 ppm',v:'426 ppm',s:'warn',r:2.09,hr:2.43,note:'Pre-industrial ≈ 280 ppm'},
-       {m:'Radiative forcing',b:'1.0 W/m²',h:'1.5 W/m²',v:'3.1 W/m²',s:'high',r:3.1,hr:1.5,note:'Extra energy trapped per square metre of Earth'}],
- simple:'Greenhouse gases work like a duvet. We keep raising its tog rating, so the planet keeps warming; the extra heat trapped is now three times the safe level.',
- health:'Heat illness and excess deaths (UKHSA estimated around 3,000 heat-associated deaths in England in summer 2022), shifting ranges of vector-borne disease, floods that close hospitals and break supply chains. Health care is itself roughly 4–5% of global emissions; the health service is about 4% of England\'s footprint.',
- theatre:'Volatile anaesthetics are potent greenhouse gases: desflurane has a 100-year warming potential of about 2,500 times CO₂, compared with about 130 for sevoflurane, and was decommissioned across England from 2024. Nitrous oxide is about 273 times CO₂ and lasts over a century; audits of piped N₂O have found most of it is lost to leaks before reaching a patient. Regional anaesthesia, TIVA and low fresh gas flows cut this directly.',
- act:'Run low fresh gas flows; avoid N₂O where you can and support closing manifolds; consider regional or TIVA when clinically equivalent; switch theatre ventilation to set-back when empty.'},
-{id:'novel',name:'Novel entities',short:'Novel entities',trend:'Worsening',
- vars:[{m:'Synthetic chemicals, plastics, pharmaceuticals',b:'Not quantified',h:'',v:'Not quantified',s:'breach',r:null}],
- simple:'We release new chemicals faster than we can test them. It is like prescribing thousands of new drugs with no trials and no pharmacovigilance.',
- health:'Microplastics found in carotid plaques were linked to about 4.5 times the risk of heart attack, stroke or death over 34 months (observational, NEJM 2024). PFAS "forever chemicals" persist in blood. Pharmaceuticals were found in rivers worldwide, at levels harmful to aquatic life at over a quarter of sites, and antibiotic residues drive antimicrobial resistance.',
- theatre:'Operating theatres produce an outsized share of hospital waste, much of it single-use plastic. Fluorinated anaesthetics such as sevoflurane meet the broad OECD structural definition of PFAS and can break down to trifluoroacetic acid; how much this matters environmentally is still debated. Drawn-up but unused drugs, especially propofol, add pharmaceutical waste.',
- act:'Use reusables where evidence supports them (gowns, hats, trays); open kit only when needed; draw up what you will use; segregate waste correctly so less is incinerated.'},
-{id:'ozone',name:'Stratospheric ozone depletion',short:'Ozone',trend:'Recovering',
- vars:[{m:'Ozone column',b:'277 DU',h:'263 DU',v:'285.7 DU',s:'safe',r:0.42,hr:1.93,note:'Pre-industrial reference 292 DU'}],
- simple:'Proof it can be done: the world spotted the problem, agreed a treatment plan (the Montreal Protocol, 1987) and the patient is recovering.',
- health:'A thinner ozone layer means more UV-B, so more skin cancer and cataracts. The Montreal Protocol is estimated to have prevented millions of skin cancers. Moving inhalers off CFCs was part of that success.',
- theatre:'Nitrous oxide is now the largest ozone-depleting emission from human activity (Science 2009), and it is not controlled by the Montreal Protocol. Isoflurane also contains chlorine. Cutting N₂O helps both the climate and the ozone layer.',
- act:'Treat N₂O as a drug with an environmental side-effect: use it where it clearly adds value, and report manifold leaks.'},
-{id:'aerosol',name:'Atmospheric aerosol loading',short:'Aerosols',trend:'Global safe, regional breach',
- vars:[{m:'Global aerosol optical depth (interhemispheric)',b:'0.10',h:'0.25',v:'0.06',s:'safe',r:0.6,hr:2.5},
-       {m:'South Asia aerosol optical depth',b:'0.25',h:'0.50',v:'0.32',s:'warn',r:1.28,hr:2}],
- simple:'The global average looks fine, but it hides a regional critical value. It is like a normal average blood pressure on a ward with one patient in crisis.',
- health:'Fine particulate air pollution causes asthma, COPD, heart disease, stroke and low birth weight. In the UK, long-term exposure is linked to an estimated 29,000–43,000 deaths a year (COMEAP 2022); worldwide it is millions. Cleaning the air also removes some cooling haze, so climate action has to keep pace.',
- theatre:'Surgical diathermy plume is a local aerosol hazard containing fine particles; smoke evacuation protects staff. Patient and staff travel to hospital is a major source of local air pollution.',
- act:'Use smoke evacuation for diathermy; support active travel and car-sharing; avoid idling vehicles at hospital entrances.'},
-{id:'ocean',name:'Ocean acidification',short:'Ocean pH',trend:'Worsening, newly breached',
- vars:[{m:'Aragonite saturation state (Ωarag)',b:'2.86',h:'2.75',v:'2.85',s:'warn',r:1.01,hr:1.16,note:'Pre-industrial 3.57; lower is worse. First assessed as breached in 2025'}],
- simple:'The ocean is a buffer, like bicarbonate in blood. It has soaked up about a quarter of our CO₂ and its pH is falling: a slow metabolic acidosis of the sea.',
- health:'Shell-forming creatures and coral reefs struggle as carbonate becomes scarce. That threatens fisheries that billions of people rely on for protein and income, and reefs that protect coasts from storms.',
- theatre:'There is no separate lever: it is driven by the same CO₂ as climate change. Every kilogram of CO₂-equivalent avoided in theatre helps both.',
- act:'The same actions as for climate change.'},
-{id:'biogeo',name:'Biogeochemical flows',short:'N & P flows',trend:'Worsening',
- vars:[{m:'Nitrogen fixed for agriculture and industry',b:'62 Tg N/yr',h:'82 Tg N/yr',v:'165 Tg N/yr',s:'high',r:2.66,hr:1.32},
-       {m:'Phosphorus flow to farmland',b:'6.2 Tg P/yr',h:'11.2 Tg P/yr',v:'18.2 Tg P/yr',s:'high',r:2.94,hr:1.81}],
- simple:'We are over-fertilising the planet. Like a drip running at three times the prescribed rate, the excess spills into rivers and seas and causes oxygen-starved dead zones.',
- health:'Nitrate in drinking water (a cause of infant methaemoglobinaemia), toxic algal blooms, and ammonia from farming that forms fine particle air pollution. This is the most overshot boundary on the panel.',
- theatre:'This is mostly a food-system problem rather than a theatre emission. (Nitrous oxide counts under climate and ozone, not here.) Health care contributes through catering and food waste.',
- act:'Support plant-rich menus and cut food waste in hospital catering; choose sustainably farmed supplies.'},
-{id:'water',name:'Freshwater change',short:'Freshwater',trend:'Worsening',
- vars:[{m:'Blue water: river-flow disturbance',b:'12.9% of land',h:'50%',v:'22.6%',s:'warn',r:1.75,hr:3.9},
-       {m:'Green water: soil-moisture disturbance',b:'12.4% of land',h:'50%',v:'22.0%',s:'warn',r:1.77,hr:4.0}],
- simple:'Rivers are Earth\'s arteries and soil moisture is its tissue perfusion. Over a fifth of the land now has abnormal flow in both.',
- health:'Drought and floods disrupt safe water and sanitation, fuelling water-borne disease such as cholera, and threaten food supply. Hospitals cannot run without reliable water.',
- theatre:'Sterile services and surgical scrubbing use a lot of water. A Cochrane review found alcohol-based surgical hand rubs prevent surgical site infection as well as traditional scrubs, while using a fraction of the water.',
- act:'Use alcohol-based surgical rub where local policy allows; turn taps off; report leaks.'},
-{id:'land',name:'Land system change',short:'Land',trend:'Declining, more slowly',
- vars:[{m:'Forest cover (share of original)',b:'78%',h:'54%',v:'64%',s:'warn',r:1.64,hr:2.09,note:'Lower is worse'}],
- simple:'Forests are Earth\'s air-conditioning and rain-makers. We have cleared over a third of the original cover; the boundary is about a fifth.',
- health:'Clearing forests brings people, livestock and wildlife into closer contact, a major driver of new infectious diseases such as Nipah and Ebola (IPBES 2020). Forest loss also changes rainfall and malaria patterns.',
- theatre:'Theatre supply chains depend on land: natural rubber latex, cotton drapes and gowns, paper and pulp packaging.',
- act:'Ask suppliers about sourcing; favour durable reusables with credible life-cycle evidence.'},
-{id:'bio',name:'Biosphere integrity',short:'Biosphere',trend:'Not improving',
- vars:[{m:'Species extinction rate',b:'10 E/MSY',h:'100 E/MSY',v:'≈100 E/MSY',s:'high',r:10,hr:10,note:'Extinctions per million species-years'},
-       {m:'Human share of plant growth (HANPP)',b:'10%',h:'20%',v:'21%',s:'high',r:2.1,hr:2}],
- simple:'The library of life is losing books ten times faster than it should, and we have not yet read most of them.',
- health:'Nature is the original pharmacy: a large share of medicines approved since 1981 are natural products or derived from them (J Nat Prod 2020). Losing pollinators threatens nutrient-rich foods. Healthy ecosystems buffer us against disease spillover.',
- theatre:'Anaesthesia\'s toolkit came from nature: morphine (opium poppy), atropine (deadly nightshade), neuromuscular blockers (curare, the source of tubocurarine), and local anaesthetics, which descend from cocaine in the coca leaf.',
- act:'Support green spaces on site; reduce waste and its demand for land; use the drug-from-nature story in teaching.'}
-];
+const D=PB;
 const svg=document.getElementById('svg'),panel=document.getElementById('panel'),wheel=document.getElementById('wheel');
 const RS=110,RMAX=210,R0=22;
 const rad=r=>r==null?RMAX:r<=1?R0+(RS-R0)*r:RS+(RMAX-RS)*Math.min(1,Math.log(r)/Math.log(11));
@@ -275,11 +185,11 @@ svg.innerHTML=out;
 document.getElementById('chips').innerHTML=D.map((b,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><i class="dot" style="background:${C[worst(b)]||C.high}"></i>${b.short}</button>`).join('');
 const barFor=v=>{if(v.r==null)return'';const max=Math.max(3,v.hr||0,v.r)*1.05;const pc=x=>Math.min(100,x/max*100).toFixed(1);
   return `<span class="pbar" aria-hidden="true"><i style="width:${pc(v.r)}%;background:${C[v.s]}"></i><s style="left:${pc(1)}%"></s>${v.hr?`<s style="left:${pc(v.hr)}%;opacity:.45"></s>`:''}</span>`};
-const overview=()=>{panel.innerHTML=`<h2>Earth's latest results</h2><p>Seven of nine boundaries are transgressed: climate change, biosphere integrity, land system change, freshwater change, biogeochemical flows, novel entities and ocean acidification. Only ozone and global aerosol loading remain in the safe zone.</p><p>Each wedge's length shows how far a measure has moved from its pre-industrial state, scaled so the dashed ring is the boundary. Beyond the ring the scale is compressed so the largest overshoots fit.</p><div class="simple"><p><b>Say it simply:</b> nine vital signs for the planet; seven are now abnormal and trending the wrong way.</p></div><p style="margin-top:12px;color:var(--muted);font-size:14px">Choose a system to see its figure and why it matters clinically.</p>`};
+const overview=()=>{panel.innerHTML=`<h2>Earth's latest results</h2><div class="simple"><p>Nine vital signs for the planet. Seven are now outside the safe zone, and getting worse.</p></div><p>The good news: the ozone layer is healing, because the world agreed to fix it.</p><p style="margin-top:12px;color:var(--muted);font-size:14px">Tap a slice to find out more.</p>`};
 const show=i=>{const b=D[i],w=worst(b);
   panel.innerHTML=`<span class="spill" style="background:${w==='safe'?'var(--safe)':w==='warn'?'#b57405':'var(--high)'}">${b.vars.length>1&&b.vars.some(v=>v.s!==b.vars[0].s)?'Mixed: see below':LBL[b.vars[0].s]}</span><h2>${b.name}</h2><p style="color:var(--muted);font-size:14px">Trend: ${b.trend}</p>`+
   b.vars.map(v=>`<div class="fig-row"><span>${v.m}</span><b style="color:${v.s==='breach'?'var(--high)':C[v.s]}">${v.v}</b><small>Boundary ${v.b}${v.h?` · high risk ${v.h}`:''}${v.note?` · ${v.note}`:''}</small>${barFor(v)}</div>`).join('')+
-  `<div class="simple"><p><b>Say it simply:</b> ${b.simple}</p></div><h3>Why it matters for health</h3><p>${b.health}</p><h3>The theatre and anaesthesia link</h3><p>${b.theatre}</p><h3>What you can do</h3><p>${b.act}</p>`};
+  `<div class="simple"><p>${b.simple}</p></div><h3>What you can do</h3><p>${b.act}</p><details class="why"><summary>Why it matters for health and theatres</summary><p>${b.health}</p><p>${b.theatre}</p></details>`};
 const select=i=>{document.querySelectorAll('.seg').forEach(g=>g.classList.toggle('on',+g.dataset.i===i));
   document.querySelectorAll('#chips button').forEach(c=>c.setAttribute('aria-pressed',+c.dataset.i===i));
   wheel.classList.toggle('sel',i!=null);i==null?overview():show(i);
@@ -288,7 +198,7 @@ let cur=null;const pick=i=>{cur=cur===i?null:i;select(cur)};
 svg.addEventListener('click',e=>{const g=e.target.closest('.seg');if(g)pick(+g.dataset.i)});
 svg.addEventListener('keydown',e=>{const g=e.target.closest('.seg');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();pick(+g.dataset.i)}});
 document.getElementById('chips').addEventListener('click',e=>{const c=e.target.closest('button');if(c)pick(+c.dataset.i)});
-document.getElementById('tbody').innerHTML=D.flatMap(b=>b.vars.map(v=>`<tr><td>${b.short}</td><td>${v.m}</td><td>${v.b}${v.h?` (${v.h})`:''}</td><td class="n">${v.v}</td><td><span style="color:${v.s==='breach'?'var(--high)':C[v.s]};font-weight:600">${LBL[v.s]}</span></td></tr>`)).join('');
+if(document.getElementById('tbody'))document.getElementById('tbody').innerHTML=D.flatMap(b=>b.vars.map(v=>`<tr><td>${b.short}</td><td>${v.m}</td><td>${v.b}${v.h?` (${v.h})`:''}</td><td class="n">${v.v}</td><td><span style="color:${v.s==='breach'?'var(--high)':C[v.s]};font-weight:600">${LBL[v.s]}</span></td></tr>`)).join('');
 const h=location.hash.slice(1),hi=D.findIndex(b=>b.id===h);
 if(hi>=0){cur=hi;select(hi)}else overview();
 }

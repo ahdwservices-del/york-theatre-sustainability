@@ -80,6 +80,7 @@ section.block{padding:32px 0 0}
 .bar{display:flex;align-items:center;gap:12px;margin:18px 0 12px;font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .prog{flex:1;height:8px;background:var(--line);border-radius:999px;overflow:hidden}
 .prog i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .25s}
+.qcard:focus{outline:none}
 .qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px}
 .qkind{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
 .qtext{font-family:var(--display);font-size:clamp(1.3rem,3.6vw,1.7rem);font-weight:700;line-height:1.2}
@@ -87,7 +88,7 @@ section.block{padding:32px 0 0}
 .bins{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .binbtn{background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:8px 4px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink);font:600 .74rem var(--body);text-align:center;line-height:1.15}
 .binbtn svg{width:46px;height:56px;display:block}
-.binbtn:hover:not(:disabled){border-color:var(--accent)}
+@media (hover:hover){#app:not(.fresh) .binbtn:hover:not(:disabled){border-color:var(--accent)}}
 .binbtn:disabled{cursor:default}
 .binbtn.right{border-color:#16a34a;background:#dcfce7;color:#14532d}
 .binbtn.wrong{border-color:#dc2626;background:#fee2e2;color:#7f1d1d}
@@ -95,7 +96,7 @@ section.block{padding:32px 0 0}
 .tfrow,.mcrow{display:grid;gap:10px}
 .tfrow{grid-template-columns:1fr 1fr}
 .choice{font:700 1.05rem var(--body);padding:16px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
-.choice:hover:not(:disabled){border-color:var(--accent)}
+@media (hover:hover){#app:not(.fresh) .choice:hover:not(:disabled){border-color:var(--accent)}}
 .choice.right{border-color:#16a34a;background:#dcfce7;color:#14532d}
 .choice.wrong{border-color:#dc2626;background:#fee2e2;color:#7f1d1d}
 .fb{border-radius:10px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start}
@@ -133,6 +134,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
       <a href="index.html#low-flow">Low flow</a>
       <a href="propofol.html">Propofol</a>
       <a href="roadmap.html">Roadmap</a>
+      <a href="reading.html">Reading</a>
     </nav>
   </div>
 </header>
@@ -178,10 +180,10 @@ const KIND={bin:"Which bin?",tf:"Spot the mistake",mc:"Cost and carbon"};
 let round=[],i=0,score=0,missed=[],mode="practice";
 function shuffle(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
 function home(){
-  $("#app").innerHTML=`<div class="qhead"><span class="pill">Test yourself</span><h1>Which bin? quiz</h1><p>Pick the right bag or bin for each item. You'll see the answer and the rule straight after each one.</p></div>
+  $("#app").innerHTML=`<div class="qhead"><span class="pill">Test yourself</span><h1>Which bin? quiz</h1><p>Pick the right bag or bin. You'll see the answer straight away.</p></div>
   <div class="modes">
-   <button class="mode" type="button" id="m-practice"><b>Practice</b><span>10 random questions from all 40, including spot-the-mistake. Play as often as you like.</span></button>
-   <button class="mode" type="button" id="m-induction"><b>Induction</b><span>The same 15 core items every time, with a completion screen for your induction record.</span></button>
+   <button class="mode" type="button" id="m-practice"><b>Practice</b><span>10 random questions. Play as often as you like.</span></button>
+   <button class="mode" type="button" id="m-induction"><b>Induction</b><span>The same 15 questions every time. Screenshot your score for your induction record.</span></button>
   </div>
   <p class="ref" style="margin-top:16px">Prefer to look something up? <a href="index.html#waste-finder">Use the bin finder</a>.</p>`;
   $("#m-practice").onclick=()=>start("practice");
@@ -192,6 +194,9 @@ function start(m,list){
   round=list||(m==="induction"?QS.slice(0,15):shuffle(QS).slice(0,10));
   ask();
 }
+let px=null,py=null;
+document.addEventListener("pointermove",e=>{if(px===null){px=e.clientX;py=e.clientY;return}
+  if(Math.abs(e.clientX-px)+Math.abs(e.clientY-py)>4)$("#app").classList.remove("fresh")});
 function ask(){
   const q=round[i],pct=Math.round(i/round.length*100);
   let opts="";
@@ -206,7 +211,8 @@ function ask(){
    ${opts}<div id="fb" aria-live="polite"></div></div>`;
   document.querySelectorAll(".binbtn").forEach(b=>b.onclick=()=>answer(b.dataset.k,b));
   document.querySelectorAll(".choice").forEach(b=>b.onclick=()=>answer(b.dataset.v,b));
-  const first=document.querySelector(".binbtn,.choice");if(first)first.focus({preventScroll:true});
+  const qc=document.querySelector(".qcard");qc.tabIndex=-1;qc.focus({preventScroll:true});
+  $("#app").classList.add("fresh");px=null;
 }
 function answer(v,btn){
   const q=round[i];let ok,right;

@@ -143,6 +143,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
 .acts input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--accent);flex:none}
 .care{margin-top:14px;font-size:14px;background:var(--warn-soft);color:var(--ink);padding:10px 12px;border-radius:8px;max-width:none}
 .care b{color:var(--warn)}
+.why{margin-top:14px}.why summary{cursor:pointer;font-weight:600;color:var(--accent)}.why[open] summary{margin-bottom:8px}
 .nav2{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
 .nav2 .btn{font-size:.92rem;padding:9px 16px}
 .game{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px;margin-top:12px}
@@ -155,7 +156,8 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
 .gscore{grid-column:1/-1;font-weight:600}
 .mylist{margin-top:12px;max-width:760px}
 .mylist .acts li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
-@media print{header.top,footer,.blk:not(:has(#mylist)),.nav2{display:none!important}.blk{padding:0}}
+@media print{header.top,footer,.blk:not(:has(#mylist)),.why{margin-top:14px}.why summary{cursor:pointer;font-weight:600;color:var(--accent)}.why[open] summary{margin-bottom:8px}
+.nav2{display:none!important}.blk{padding:0}}
 </style>
 </head>
 <body>
@@ -171,12 +173,13 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
       <a href="index.html#low-flow">Low flow</a>
       <a href="propofol.html">Propofol</a>
       <a href="roadmap.html">Roadmap</a>
+      <a href="reading.html">Reading</a>
     </nav>
   </div>
 </header>
 <main class="wrap"><section class="blk">
-  <div class="pagehead" style="padding-top:8px"><h1>The 6 Rs: six questions that make every theatre list greener</h1></div>
-  <p class="lede">Rethink, refuse, reduce, reuse, recycle, research. They run in order of impact: the earlier the step, the more carbon, waste and money it saves. Choose your role, then tap a step to see why it matters in theatre and what you can do on your next list.</p>
+  <div class="pagehead" style="padding-top:8px"><h1>The 6 Rs</h1></div>
+  <p class="lede">Six steps to a greener list. Start at number 1: the earlier the step, the bigger the saving. Tap a step to see what you can do.</p>
 
   <div class="roles" role="group" aria-label="Choose your role">
     <span class="muted small">I work as:</span>
@@ -186,7 +189,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
   <div class="grid">
     <div>
       <div class="wheel" id="wheel"><svg id="svg" viewBox="-250 -250 500 500" role="img" aria-label="The 6 Rs wheel. Select a step."></svg></div>
-      <div class="key"><span><i class="dot" style="background:var(--r1)"></i>Highest impact</span><span><i class="dot" style="background:var(--r6)"></i>Lower direct impact</span><span>Go clockwise from the top.</span></div>
+      <div class="key"><span><i class="dot" style="background:var(--r1)"></i>Biggest saving</span><span><i class="dot" style="background:var(--r6)"></i>Smaller saving</span></div>
       <div class="chips" id="chips"></div>
       <div class="tally" id="tally" aria-live="polite"></div>
     </div>
@@ -196,40 +199,18 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
 
 <section class="blk">
   <h2>Which R is it?</h2>
-  <p class="lede">Six things that happen in theatre every week. Pick the R each one belongs to.</p>
+  <p class="lede">Pick the R for each one.</p>
   <div class="game" id="game"></div>
 </section>
 
 <section class="blk">
-  <h2>How to explain it to a colleague in 30 seconds</h2>
-  <div class="teach">
-    <div><h3>Prevention beats treatment</h3><p>Rethink and refuse are the pre-op assessment: they stop the problem before it starts. Recycling is the resus team. It is vital, but by the time you need it the item has already been made, shipped, opened and thrown away.</p></div>
-    <div><h3>Three questions before you open anything</h3><p>Do I need it? Can I use less of it? Can it be used again? If the answer to all three is no, then make sure it goes in the right bin.</p></div>
-    <div><h3>The bin you choose still matters</h3><p>The same bag of waste can carry up to fifty times more carbon depending on which stream it goes into. Clean packaging in a clinical bag is the costliest mistake, in both carbon and money.</p></div>
-  </div>
-</section>
-
-<section class="blk">
   <h2>My list for the next shift</h2>
-  <p class="lede">Actions you tick in the panel above collect here. They are saved only in this browser.</p>
+  <p class="lede">Ticked actions land here, ready to print.</p>
   <div class="mylist" id="mylist"></div>
 </section>
-
-<section class="blk">
-  <h2>Sources</h2>
-  <ol class="src">
-    <li>Moving towards green anaesthesia: strategies for environmental sustainability. Anaesthesia Tutorial of the Week 495. WFSA, 18 April 2023.</li>
-    <li>MacNeill AJ, Lillywhite R, Brown CJ. The impact of surgery on global climate: a carbon footprinting study of operating theatres in three health systems. Lancet Planet Health 2017;1:e381–8.</li>
-    <li>Rizan C, Bhutta MF, Reed M, Lillywhite R. The carbon footprint of waste streams in a UK hospital. J Clean Prod 2021;286:125446.</li>
-    <li>Seglenieks R, Wong A, Pearson F, McGain F. Discrepancy between procurement and clinical use of nitrous oxide: waste not, want not. Br J Anaesth 2022;128:e32–4.</li>
-    <li>Sulbaek Andersen MP, et al. Assessing the impact on global climate from general anesthetic gases. Anesth Analg 2012;114:1081–5.</li>
-    <li>Sherman JD, et al. Life cycle assessment and costing methods for device procurement: comparing reusable and single-use disposable laryngoscopes. Anesth Analg 2018;127:434–43.</li>
-    <li>Vozzola E, Overcash M, Griffing E. An environmental analysis of reusable and disposable surgical gowns. AORN J 2020;111:315–25.</li>
-    <li>National Institute for Health and Care Excellence. Routine preoperative tests for elective surgery (NG45). 2016.</li>
-  </ol>
-  <p class="src">Clinical decisions always come first. Every suggestion here applies only where it is clinically appropriate and fits local infection prevention and medicines policy.</p>
-</section></main>
-<footer><div class="wrap">The 6 Rs framework as described in Anaesthesia Tutorial of the Week 495 (WFSA, 2023). Theatre examples and figures draw on the sources listed above.</div></footer>
+<p class="src" style="padding:24px 0 56px">The evidence and sources behind each step are on the <a href="reading.html#sixrs">Additional reading</a> page.</p>
+</main>
+<footer><div class="wrap">The 6 Rs framework from Anaesthesia Tutorial of the Week 495 (WFSA, 2023). <a href="reading.html#sixrs">Sources and evidence</a>.</div></footer>
 <script>
 {
 const ROLES=[
@@ -357,16 +338,15 @@ const rolesEl=document.getElementById('roles');
 const drawRoles=()=>{rolesEl.innerHTML=ROLES.map(r=>`<button type="button" data-r="${r.id}" aria-pressed="${r.id===role}">${r.name}</button>`).join('')};
 const key=(d,j)=>d.id+':'+j;
 const visible=d=>d.acts.map((a,j)=>({...a,j})).filter(a=>role==='all'||a.r.includes(role)||a.r.includes('every'));
-const overview=()=>{panel.innerHTML=`<span class="spill" style="background:var(--accent)">Start here</span><h2>Six steps, in order of impact</h2><p>The first two steps stop waste existing at all. The middle two make what we use go further. Recycling deals with what is left, and research tells us what works.</p><div class="simple"><p><b>Say it simply:</b> do I need it, can I use less, can it be used again, and if not, which bin?</p></div><h3>Why theatres?</h3><p>Operating theatres are among the most carbon-intensive parts of a hospital: on average about 188 tonnes of CO₂ equivalent per theatre each year in one three-country study, mostly from energy, anaesthetic gases and single-use items.</p><p class="muted small" style="margin-top:12px">Choose a step on the wheel to see the evidence and what you can do on your next list.</p>`};
+const overview=()=>{panel.innerHTML=`<span class="spill" style="background:var(--accent)">Start here</span><h2>Four quick questions</h2><div class="simple"><p>Do I need it? Can I use less? Can it be used again? If not, which bin?</p></div><p class="muted small" style="margin-top:12px">Tap a step on the wheel.</p>`};
 const show=i=>{const d=D[i],acts=visible(d);
  panel.innerHTML=`<span class="spill" style="background:${d.col}">Step ${i+1} of 6</span><h2>${d.name}</h2><p class="muted">${d.tag}</p>
  <div class="simple"><p><b>Say it simply:</b> ${d.simple}</p></div>
- <h3>Why it matters in theatre</h3><p>${d.why}</p>
- <div class="facts">${d.facts.map(f=>`<div class="fact"><b>${f.n}</b><span>${f.t}${f.s?` <span class="cite">(${SRC[f.s]})</span>`:''}</span></div>`).join('')}</div>
- <h3>What it looks like in theatre</h3><ul class="eg">${d.eg.map(e=>`<li>${e}</li>`).join('')}</ul>
- <h3>What you can do on your next list${role!=='all'?` <span class="muted small">(${ROLES.find(r=>r.id===role).name})</span>`:''}</h3>
+ <h3>What you can do${role!=='all'?` <span class="muted small">(${ROLES.find(r=>r.id===role).name})</span>`:''}</h3>
  <ul class="acts">${acts.map(a=>`<li><label><input type="checkbox" data-k="${key(d,a.j)}" ${S.done[key(d,a.j)]?'checked':''}><span>${a.t}</span></label></li>`).join('')}</ul>
  <p class="care"><b>Safety first:</b> ${d.care}</p>
+ <details class="why"><summary>Why it matters</summary><p>${d.why}</p>
+ <div class="facts">${d.facts.map(f=>`<div class="fact"><b>${f.n}</b><span>${f.t}${f.s?` <span class="cite">(${SRC[f.s]})</span>`:''}</span></div>`).join('')}</div></details>
  <div class="nav2">${i>0?`<button type="button" class="btn line" data-go="${i-1}">← ${D[i-1].name}</button>`:'<span></span>'}${i<n-1?`<button type="button" class="btn solid" data-go="${i+1}">${D[i+1].name} →</button>`:''}</div>`};
 let cur=null;
 const select=i=>{cur=i;document.querySelectorAll('.seg').forEach(g=>g.classList.toggle('on',+g.dataset.i===i));

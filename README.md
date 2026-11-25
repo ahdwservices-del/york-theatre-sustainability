@@ -3,8 +3,12 @@
 Static site of operating theatre sustainability resources.
 
 - `index.html` – home, **Which bin?** waste finder (`#waste-finder`), low-flow findings (`#low-flow`)
-- `boundaries.html` – interactive planetary boundaries wheel (Planetary Health Check 2026 figures; update the `D` data block each September)
-- `roadmap.html` – Green Theatres Roadmap: 41 actions with case-example links and volunteer sign-up
+- `boundaries.html` – interactive planetary boundaries wheel (Planetary Health Check 2026 figures; update `boundaries-data.js` each September – it also feeds the table on the reading page)
+- `sixrs.html` – the 6 Rs wheel, quiz and printable action list
+- `quiz.html` – Which bin? quiz
+- `propofol.html` – Plan Your Propofol poster
+- `reading.html` – Additional reading: detail, evidence and sources kept off the main pages
+- `roadmap.html` – Green Theatres Roadmap: 42 actions with case-example links and volunteer sign-up
 - `apps-script/Code.gs` – Google Apps Script backend for volunteer sign-ups (emails the project lead, returns public names)
 
 Waste guidance follows HTM 07-01. Local waste policy and bin labels take precedence.
