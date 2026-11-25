@@ -64,6 +64,7 @@ section.block{padding:32px 0 0}
 .btn.primary{background:#5fd0c5;color:#062a28}
 .btn.ghost{border-color:rgba(255,255,255,.4);color:var(--hero-ink);background:transparent}
 .btn.solid{background:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
 .btn.line{border-color:var(--line);color:var(--ink);background:var(--surface)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
 .card .go{margin-top:auto;color:var(--accent);font-weight:600;font-size:.92rem;padding-top:6px}
@@ -115,6 +116,26 @@ section.block{padding:32px 0 0}
 @media (prefers-reduced-motion:reduce){.face,.face .sp{animation:none}}
 .tally{margin-top:14px;font-size:.92rem;color:var(--muted)}
 .tally b{color:var(--accent)}
+/* Refresher shown after a score under 70% */
+.rf{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:14px}
+.rfdots{display:flex;gap:6px}.rfdots i{flex:1;height:6px;border-radius:3px;background:var(--line)}.rfdots i.on{background:var(--accent)}
+.rf h2{font-size:1.5rem}
+.rfmiss{align-self:flex-start;font-size:.8rem;font-weight:700;background:#fee2e2;color:#7f1d1d;padding:3px 10px;border-radius:999px}
+.flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.flip{border:2px dashed var(--line);border-radius:12px;background:var(--bg);padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;color:var(--ink);font:600 .95rem var(--body);text-align:center;min-height:150px;justify-content:center}
+.flip svg{width:52px;height:62px}
+.flip .hint{font-size:.78rem;font-weight:600;color:var(--accent)}
+.flip.open{border-style:solid;border-color:var(--accent);background:var(--surface);cursor:default}
+.flip.open p{font-weight:500;font-size:.92rem;line-height:1.4}
+.flip.open{animation:flipin .35s ease-out}
+@keyframes flipin{from{transform:rotateY(90deg)}to{transform:none}}
+@media (prefers-reduced-motion:reduce){.flip.open{animation:none}}
+.tip{background:#fff7de;color:#5c4300;border-radius:10px;padding:12px 14px;font-size:.95rem}
+.chk{border-top:2px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.chk[hidden]{display:none}
+.chk .bins{grid-template-columns:repeat(3,1fr)}
+.rfgate{background:#fff7de;border-radius:12px;padding:16px;color:#5c4300}
+.rfgate b{display:block;font-size:1.1rem;color:#3d2e00;margin-bottom:4px}
 .score{font-family:var(--display);font-size:clamp(2.6rem,8vw,3.6rem);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
 .score small{font-size:1.1rem;color:var(--muted);font-weight:500}
 .cert{border:2px dashed var(--accent);border-radius:10px;padding:14px 16px;background:var(--accent-soft);color:var(--ink)}
@@ -148,7 +169,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
   </div>
 </header>
 <main class="qwrap" id="app"></main>
-<footer><div class="wrap">Answers follow HTM 07-01 and our theatre waste posters. Local bin labels take precedence. Nothing you enter here is recorded.</div></footer>
+<footer><div class="wrap">Answers follow HTM 07-01 and our theatre waste posters. Local bin labels take precedence. Only anonymous scores are counted: nothing that identifies you is recorded.</div></footer>
 
 <script>
 const STREAMS={"clear": {"name": "Clear bag"}, "black": {"name": "Black bag"}, "tiger": {"name": "Tiger bag"}, "orangebag": {"name": "Orange bag"}, "yellowbag": {"name": "Yellow bag"}, "orangesharps": {"name": "Orange-lid sharps bin"}, "yellowsharps": {"name": "Yellow-lid sharps bin"}, "purple": {"name": "Purple-lid bin"}, "blue": {"name": "Blue-lid burn bin"}, "red": {"name": "Red-lid burn bin"}};
@@ -197,6 +218,10 @@ function home(){
   <p class="ref" style="margin-top:16px">Prefer to look something up? <a href="index.html#waste-finder">Use the bin finder</a>.</p>`;
   $("#m-practice").onclick=()=>start("practice");
   $("#m-induction").onclick=()=>start("induction");
+  if(needRefresher()){
+    $(".modes").outerHTML=`<div class="rfgate"><b>Quick refresher before your next go</b>Your last round scored under 7 out of 10. Five short steps, about 3 minutes.</div><div class="acts" style="margin-top:12px"><button class="btn solid" type="button" id="rf">Start the refresher</button></div>`;
+    $("#rf").onclick=()=>refresher(0);
+  }
 }
 function start(m,list){isRetry=!!list;
   mode=m;i=0;score=0;missed=[];
@@ -255,16 +280,90 @@ function countRound(n,retry){
   fetch(COUNT_URL,{method:"POST",body:new URLSearchParams({kind:"quiz",mode,score:String(score),outOf:String(n),retry:retry?"1":"0"})})
     .then(r=>r.json()).then(j=>{const t=$("#tally");if(t&&j&&j.count>0)t.innerHTML=`You've just completed quiz number <b>${j.count.toLocaleString("en-GB")}</b> across our theatres.`}).catch(()=>{});
 }
+
+// ---- Refresher: required after a full round scoring under 70% ----
+const PASS=0.7;
+const LESSONS=[
+ {q:"Is it sharp?",rule:"Sharps always go in a sharps bin. The lid colour depends on what's on it.",
+  cards:{orangesharps:"Blood only, no drugs. The metal gets recycled from this bin.",yellowsharps:"It touched a drug: needles used to draw up or give.",purple:"Chemotherapy. Never the yellow lid."},
+  tip:"A line with a needle still on the end? The whole thing is a sharp.",
+  chk:{item:"Single-use metal scissors, no drugs on them",opts:["orangesharps","yellowsharps","purple"],a:"orangesharps",why:"No drugs, so the orange lid, where the metal is recovered."},
+  covers:["orangesharps","yellowsharps","purple"]},
+ {q:"Has a medicine touched it?",rule:"Not sharp, but a drug is on it? It goes to one of the medicine streams.",
+  cards:{blue:"Vials, ampoules, blister packs, and syringes with drug left in (needle off).",yellowbag:"IV bags, lines and circuits a drug was added to or run through."},
+  tip:"An empty vial is not a sharp. Sharps bins cost more to treat.",
+  chk:{item:"Empty propofol vial",opts:["yellowsharps","blue","yellowbag"],a:"blue",why:"A medicine container with no sharp goes in the blue-lid burn bin."},
+  covers:["blue","yellowbag"]},
+ {q:"Is the patient infectious?",rule:"Used on a patient, not sharp, no drugs? Now it only depends on infection.",
+  cards:{tiger:"Not infectious: gloves, aprons, swabs, drapes, LMAs, plain IV bags.",orangebag:"Infectious, or infection suspected: the same items go here instead."},
+  tip:"Blood alone does not make waste infectious. Suspected infection counts as infection.",
+  chk:{item:"Blood-stained swabs from a patient who isn't infectious",opts:["orangebag","tiger","yellowbag"],a:"tiger",why:"Blood alone doesn't make it infectious, so the tiger bag."},
+  covers:["tiger","orangebag"]},
+ {q:"Never touched a patient?",rule:"Clean waste is the cheapest to deal with. Keep it out of the patient bags.",
+  cards:{clear:"Clean card, paper, plastic wrappers, the outer layer of sterile wrap, empty bottles.",black:"Hand towels, coffee cups and food wrappers."},
+  tip:"Most packaging is opened before the patient arrives, so it's still clean.",
+  chk:{item:"Empty disposable coffee cup",opts:["clear","black","tiger"],a:"black",why:"Cups have a plastic lining that recycling can't take, so the black bag."},
+  covers:["clear","black"]},
+ {q:"Two last rules",rule:"Recognisable tissue goes in the red-lid bin. And no bag takes free liquid: solidify it first.",
+  cards:{red:"Recognisable human tissue that isn't going to the lab."},
+  tip:"The cost ladder: tiger is cheapest, orange costs more, yellow costs most. Using orange instead of tiger 'to be safe' just costs more.",
+  chk:{item:"Which bag usually costs most to dispose of?",opts:["tiger","orangebag","yellowbag"],a:"yellowbag",why:"Yellow goes to high-temperature incineration."},
+  covers:["red",null,"mc"]}
+];
+const NEED="yts-quiz-refresher";
+// Remembers (in this browser only) that a refresher is due, plus which questions were missed.
+const needRefresher=()=>{try{const v=JSON.parse(localStorage.getItem(NEED)||"null");if(v&&Array.isArray(v.ids)){rfMissed=QS.filter(q=>v.ids.includes(q.id));rfMode=v.mode||"practice";return true}}catch(e){}return false};
+const setNeed=v=>{try{v?localStorage.setItem(NEED,JSON.stringify({ids:rfMissed.map(q=>q.id),mode:rfMode})):localStorage.removeItem(NEED)}catch(e){}};
+let rfMissed=[],rfMode="practice";
+function lessonOf(q){const k=q.t==="bin"?q.a:q.t==="tf"?q.bin:"mc";return LESSONS.findIndex(L=>L.covers.includes(k))}
+function refresher(step){
+  const L=LESSONS[step],n=LESSONS.length;
+  const missN=rfMissed.filter(q=>lessonOf(q)===step).length;
+  const keys=Object.keys(L.cards);let opened=new Set();
+  $("#app").innerHTML=`<div class="rf">
+   <div class="rfdots" aria-label="Step ${step+1} of ${n}">${LESSONS.map((_,j)=>`<i class="${j<=step?"on":""}"></i>`).join("")}</div>
+   <span class="pill">Refresher · ${step+1} of ${n}</span>
+   <h2>${esc(L.q)}</h2>${missN?`<span class="rfmiss">You missed ${missN} like this</span>`:""}
+   <p>${esc(L.rule)}</p>
+   <div class="flips">${keys.map(k=>`<button type="button" class="flip" data-k="${k}">${ART[k]()}<span>${esc(STREAMS[k].name)}</span><span class="hint">Tap to see what goes in</span></button>`).join("")}</div>
+   <p class="tip">${esc(L.tip)}</p>
+   <div class="chk" id="chk" hidden><b>Quick check: ${esc(L.chk.item)}</b><div class="bins">${L.chk.opts.map(k=>`<button type="button" class="binbtn" data-k="${k}">${ART[k]()}${esc(STREAMS[k].name)}</button>`).join("")}</div><div id="cfb"></div></div>
+   <div style="display:flex;justify-content:flex-end"><button class="btn solid" type="button" id="rnx" disabled>${step+1<n?"Next":"Finish"}</button></div>
+  </div>`;
+  window.scrollTo(0,0);
+  document.querySelectorAll(".flip").forEach(b=>b.onclick=()=>{if(b.classList.contains("open"))return;const k=b.dataset.k;
+    b.classList.add("open");b.innerHTML=`${ART[k]()}<span>${esc(STREAMS[k].name)}</span><p>${esc(L.cards[k])}</p>`;opened.add(k);
+    if(opened.size===keys.length){$("#chk").hidden=false}});
+  document.querySelectorAll("#chk .binbtn").forEach(b=>b.onclick=()=>{
+    const ok=b.dataset.k===L.chk.a;
+    if(ok){document.querySelectorAll("#chk .binbtn").forEach(x=>{x.disabled=true;x.classList.toggle("right",x===b);x.classList.toggle("dim",x!==b)});$("#rnx").disabled=false}
+    else{b.classList.add("wrong");b.disabled=true}
+    $("#cfb").innerHTML=`<div class="fb ${ok?"ok":"no"}"><div><b>${ok?"Yes!":"Not quite, try again."}</b>${ok?`<p>${esc(L.chk.why)}</p>`:""}</div></div>`;
+  });
+  $("#rnx").onclick=()=>step+1<n?refresher(step+1):refresherDone();
+}
+function refresherDone(){
+  setNeed(false);
+  $("#app").innerHTML=`<div class="result">${face(1)}<div class="score" style="font-size:2rem">Refresher done</div><p style="text-align:center">Five questions to ask: is it sharp, has a drug touched it, is the patient infectious, has it touched a patient at all, and is it tissue? Ready for another go?</p>
+   <div class="acts">${rfMissed.length?`<button class="btn solid" type="button" id="rm">Retry the ${rfMissed.length} I missed</button>`:""}<button class="btn ${rfMissed.length?"line":"solid"}" type="button" id="nr">New round</button><button class="btn line" type="button" id="hm">Quiz menu</button></div></div>`;
+  window.scrollTo(0,0);
+  const rm=$("#rm");if(rm)rm.onclick=()=>start("practice",shuffle(rfMissed.slice()));
+  $("#nr").onclick=()=>start(rfMode);$("#hm").onclick=home;
+}
 function finish(){
   const n=round.length,d=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
-  const msg=score===n?"Perfect round.":score>=n*0.8?"Good. Check the ones you missed below.":"Worth another go. The rules behind each miss are below.";
+  const gate=!isRetry&&score/n<PASS;
+  const msg=gate?"Good try. Let's go over the rules you missed.":score===n?"Perfect round.":score>=n*0.8?"Good. Check the ones you missed below.":"Worth another go. The rules behind each miss are below.";
   $("#app").innerHTML=`<div class="bar"><span>Finished</span><div class="prog" aria-hidden="true"><i style="width:100%"></i></div><span>Score ${score}</span></div>
   <div class="result">${face(score/n)}<div class="score">${score}<small> / ${n}</small></div><p>${msg}</p><p class="tally" id="tally"></p>
+   ${gate?`<div class="rfgate"><b>Quick refresher before your next go</b>Five short steps, about 3 minutes. Tap the bins, then answer one quick check in each.</div>
+   <div class="acts"><button class="btn solid" type="button" id="rf">Start the refresher</button><button class="btn line" type="button" id="hm">Quiz menu</button></div>`:""}
    ${mode==="induction"?`<div class="cert"><b>Induction: theatre waste segregation</b><br>Scored ${score} out of ${n} on ${d}. Take a screenshot for your induction record.</div>`:""}
    ${missed.length?`<h2 style="font-size:1.2rem">Missed</h2><ul class="missed">${missed.map(q=>`<li><b>${esc(q.item)}${q.ctx?` (${esc(q.ctx)})`:""}</b><span>${esc(q.t==="bin"?STREAMS[q.a].name+". ":q.t==="tf"?(q.a?"Right. ":"Wrong. "):q.opts[q.a]+". ")}${esc(q.why)}</span></li>`).join("")}</ul>`:""}
-   <div class="acts">${missed.length?`<button class="btn solid" type="button" id="rm">Retry the ${missed.length} I missed</button>`:""}<button class="btn ${missed.length?"line":"solid"}" type="button" id="nr">${mode==="induction"?"Try induction again":"New round"}</button><button class="btn line" type="button" id="hm">Quiz menu</button></div></div>`;
-  const rm=$("#rm");if(rm){const m=missed.slice();rm.onclick=()=>start(mode==="induction"?"practice":mode,shuffle(m))}
-  $("#nr").onclick=()=>start(mode);$("#hm").onclick=home;
+   ${gate?"":`<div class="acts">${missed.length?`<button class="btn solid" type="button" id="rm">Retry the ${missed.length} I missed</button>`:""}<button class="btn ${missed.length?"line":"solid"}" type="button" id="nr">${mode==="induction"?"Try induction again":"New round"}</button><button class="btn line" type="button" id="hm">Quiz menu</button></div></div>`}${gate?"</div>":""}`;
+  if(gate){rfMissed=missed.slice();rfMode=mode;setNeed(true);$("#rf").onclick=()=>refresher(0);$("#hm").onclick=home}
+  else{const rm=$("#rm");if(rm){const m=missed.slice();rm.onclick=()=>start(mode==="induction"?"practice":mode,shuffle(m))}
+  $("#nr").onclick=()=>start(mode);$("#hm").onclick=home;}
   window.scrollTo(0,0);
   countRound(n,isRetry);
 }
