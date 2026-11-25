@@ -3,6 +3,7 @@
  * Bound to a Google Sheet. Receives sign-ups, stores them and emails you.
  * The site only learns which actions are taken: no names leave the sheet.
  * Also counts completed quiz rounds (quiz.html) in a "Quiz" tab: no personal data.
+ * Also stores anonymous staff feedback (feedback.html) in a "Feedback" tab: date only, no time, no identity.
  *
  * SET THIS: the inbox that should receive sign-up emails.
  */
@@ -37,6 +38,32 @@ function quizSheet_() {
   return sh;
 }
 
+function feedbackSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName('Feedback');
+  if (!sh) {
+    sh = ss.insertSheet('Feedback');
+    sh.appendRow(['Date', 'Topic', 'Where', 'What got in the way', 'What would make it easier']);
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+// Optional: run weekly from a time-driven trigger (Triggers → Add trigger → sendFeedbackDigest → Week timer).
+// A weekly batch, not one email per message, so the timing of an email can't hint at who sent it.
+function sendFeedbackDigest() {
+  const rows = feedbackSheet_().getDataRange().getValues().slice(1);
+  const since = Date.now() - 7 * 864e5;
+  const recent = rows.filter(r => new Date(r[0]).getTime() >= since);
+  if (!recent.length) return;
+  MailApp.sendEmail({
+    to: NOTIFY_EMAIL,
+    subject: 'Theatre sustainability feedback: ' + recent.length + ' new this week',
+    body: recent.map(r => '[' + r[1] + (r[2] ? ', ' + r[2] : '') + ']\nWhat got in the way: ' + r[3] + (r[4] ? '\nWhat would help: ' + r[4] : '')).join('\n\n') +
+          '\n\nAll feedback is in the Feedback tab of the sign-ups sheet.'
+  });
+}
+
 // GET ?quiz=1 → { count: 123 }  (completed quiz rounds)
 // GET ?list=1 → { taken: [3, 9, ...] }  (action numbers only)
 function doGet(e) {
@@ -51,6 +78,25 @@ function doGet(e) {
 function doPost(e) {
   const p = (e && e.parameter) || {};
   if (p.website) return json_({ ok: true });                  // bot filled the hidden field
+  if (p.kind === 'feedback') {                                 // anonymous feedback: date only
+    const topics = ['Waste and bins', 'Anaesthetic gases', 'Drugs and propofol', 'Reusable kit', 'Energy and lights', 'Something else'];
+    const places = ['Anaesthetic room', 'Theatre', 'Recovery', 'Somewhere else'];
+    const issue = clean_(p.issue, 1500);
+    if (issue.length < 5) return json_({ ok: false, error: 'invalid' });
+    const flock = LockService.getScriptLock();
+    flock.waitLock(10000);
+    try {
+      feedbackSheet_().appendRow([
+        Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd'),
+        topics.indexOf(p.topic) >= 0 ? p.topic : 'Something else',
+        places.indexOf(p.where) >= 0 ? p.where : '',
+        issue, clean_(p.idea, 800)
+      ]);
+    } finally {
+      flock.releaseLock();
+    }
+    return json_({ ok: true });
+  }
   if (p.kind === 'quiz') {                                     // anonymous quiz completion
     const mode = ['practice', 'induction'].indexOf(p.mode) >= 0 ? p.mode : 'practice';
     const outOf = Math.min(Math.max(parseInt(p.outOf, 10) || 0, 1), 50);
