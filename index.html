@@ -74,22 +74,14 @@ section.block{padding:32px 0 0}
 .binrow a{background:#fff;border-radius:var(--r);padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:#10302f;font-size:.74rem;font-weight:600;text-align:center;transition:transform .15s}
 .binrow a:hover{transform:translateY(-3px)}
 .binrow svg{height:74px;width:62px;display:block}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:-28px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px}
-.stat b{font-family:var(--display);font-size:2.1rem;display:block;line-height:1;font-variant-numeric:tabular-nums}
-.stat span{display:block;margin-top:8px;font-size:.92rem}
-.stat small{display:block;color:var(--muted);margin-top:6px;font-size:.78rem}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
 a.card:hover{border-color:var(--accent)}
 .card .go{margin-top:auto;color:var(--accent);font-weight:600;font-size:.92rem;padding-top:6px}
 .pill{align-self:flex-start;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
 .pill.plan{background:var(--warn-soft);color:var(--warn)}
-.band{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
-.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.lane{border-left:4px solid var(--accent);padding:4px 0 4px 12px}
-.lane b{display:block;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
-.lane ul{margin:6px 0 0;padding:0;list-style:none;font-size:.88rem;display:flex;flex-direction:column;gap:4px}
+.help{background:var(--accent-soft);border-radius:var(--r);padding:24px 26px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.help p{margin-top:6px}
 
 /* finder */
 .finder{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:24px;align-items:start}
@@ -98,7 +90,8 @@ a.card:hover{border-color:var(--accent)}
 .search:focus{border-color:var(--accent);outline:none}
 .items{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;max-height:232px;overflow:auto}
 .chip{font:500 .9rem var(--body);padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip:active{border-color:var(--accent);color:var(--accent)}
+@media (hover:hover){.chip:hover{border-color:var(--accent);color:var(--accent)}}
 .or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.85rem;margin:20px 0 14px}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 .q{font-family:var(--display);font-size:1.3rem;font-weight:700;margin:0 0 4px}
@@ -107,7 +100,10 @@ a.card:hover{border-color:var(--accent)}
 .opts.two{grid-template-columns:1fr 1fr}
 .opt{text-align:left;font:600 1rem var(--body);padding:14px 16px;border-radius:var(--r);border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
 .opt small{display:block;font-weight:400;color:var(--muted);margin-top:2px;font-size:.85rem}
-.opt:hover{border-color:var(--accent);background:var(--accent-soft)}
+.opt:active{border-color:var(--accent);background:var(--accent-soft)}
+/* Hover only on real mouse devices, and not until the pointer moves after a new question appears,
+   so the button under the finger or cursor is not pre-highlighted. */
+@media (hover:hover){#flow:not(.fresh) .opt:hover{border-color:var(--accent);background:var(--accent-soft)}}
 .trail{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
 .trail span{font-size:.8rem;background:var(--accent-soft);color:var(--accent);padding:3px 10px;border-radius:999px;font-weight:600}
 .tools{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
@@ -122,6 +118,9 @@ a.card:hover{border-color:var(--accent)}
 .rbody{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
 .note{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:10px 14px;font-size:.92rem;font-weight:500}
 .rbody h4{margin:0 0 6px;font:700 .78rem var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.more summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.more[open] summary{margin-bottom:10px}
+.more>div+div{margin-top:12px}
 .rbody ul{margin:0;padding-left:18px;font-size:.93rem;display:flex;flex-direction:column;gap:4px}
 .empty{color:var(--muted);text-align:center;padding:38px 16px}
 .tiger{background:repeating-linear-gradient(135deg,#ffd400 0 16px,#141414 16px 32px)!important}
@@ -173,12 +172,11 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
 @media (max-width:820px){
   header.top{position:static}
   .items{max-height:none;overflow:visible}
-  .hero .wrap,.finder,.cols,.band{grid-template-columns:1fr}
-  .lanes{grid-template-columns:1fr}
+  .hero .wrap,.finder,.cols{grid-template-columns:1fr}
   .bar{grid-template-columns:110px 1fr 60px}
-  .stats{margin-top:16px}
 }
 @media (max-width:420px){.opts.two{grid-template-columns:1fr}.rhead{flex-wrap:wrap}}
+@media (max-width:520px){.cards{grid-template-columns:1fr 1fr;gap:10px}.cards .card{padding:16px}.cards .card h3{font-size:1rem}.cards .card p{font-size:.9rem}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -195,6 +193,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
       <a href="#low-flow" data-nav="low-flow">Low flow</a>
       <a href="propofol.html">Propofol</a>
       <a href="roadmap.html">Roadmap</a>
+      <a href="reading.html">Reading</a>
     </nav>
   </div>
 </header>
@@ -205,51 +204,35 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
   <div class="hero">
     <div class="wrap">
       <div>
-        <h1>Greener operating theatres, one change at a time</h1>
-        <p>Operating theatres are among the most resource-hungry places in a hospital. This site collects practical tools and project outputs from our theatre sustainability work, starting with getting waste into the right bin.</p>
+        <h1>Greener theatres, one small change at a time</h1>
+        <p>Quick tools to help every theatre team waste less.</p>
         <div class="cta">
-          <a class="btn primary" href="#waste-finder">Which bin does this go in?</a>
-          <a class="btn ghost" href="#projects">What else is here</a>
+          <a class="btn primary" href="#waste-finder">Which bin?</a>
+          <a class="btn ghost" href="quiz.html">Try the quiz</a>
         </div>
       </div>
-      <div class="binrow" id="heroBins" aria-label="The nine theatre waste streams"></div>
+      <div class="binrow" id="heroBins" aria-label="The theatre waste streams"></div>
     </div>
   </div>
   <div class="wrap">
-    <div class="stats">
-      <div class="stat"><b>10</b><span>waste streams in every theatre, each with a different cost and carbon footprint</span><small>Bags and bins covered by the finder</small></div>
-      <div class="stat"><b>10.8 → 5.5</b><span>kgCO<sub>2</sub>e per case: low-flow sevoflurane compared with spinal anaesthesia</span><small>Lechani et al, Br J Anaesth 2026; single-centre LCA, operative hysteroscopy</small></div>
-      <div class="stat"><b>60%</b><span>of healthcare waste should be offensive (tiger) waste, the national target in HTM 07-01</span><small>HTM 07-01, 2022 edition</small></div>
-    </div>
-
     <section class="block stack" id="projects">
-      <h2>Projects</h2>
+      <h2>Pick one</h2>
       <div class="cards">
-        <a class="card" href="#waste-finder"><span class="pill">Live tool</span><h3>Which bin?</h3><p>Tell the finder what is in your hand and it names the right bag or bin for the anaesthetic room, theatre and recovery.</p><span class="go">Open the bin finder →</span></a>
-        <a class="card" href="#low-flow"><span class="pill">Early findings</span><h3>Low flow, less waste</h3><p>What our anaesthetic machines recorded about sevoflurane and fresh gas flow, and three changes that cut the waste.</p><span class="go">See the findings →</span></a>
-        <a class="card" href="boundaries.html"><span class="pill">Interactive</span><h3>Planetary boundaries</h3><p>Earth's nine vital signs with the latest figures. Tap each one to see why it matters for health and where theatres and anaesthesia come in.</p><span class="go">Open the wheel →</span></a>
-        <a class="card" href="sixrs.html"><span class="pill">Interactive</span><h3>The 6 Rs</h3><p>Rethink, refuse, reduce, reuse, recycle, research: the evidence for each step and what you can do on your next list, by role.</p><span class="go">Open the 6 Rs →</span></a>
-        <div class="card"><span class="pill plan">Coming soon</span><h3>Reusable theatre caps</h3><p>The evidence on reusable headwear and a simple home-laundering standard.</p></div>
+        <a class="card" href="#waste-finder"><h3>Which bin?</h3><p>Not sure where it goes? Ask the finder.</p><span class="go">Find the bin →</span></a>
+        <a class="card" href="quiz.html"><h3>Bin quiz</h3><p>10 questions. How many can you get right?</p><span class="go">Play →</span></a>
+        <a class="card" href="#low-flow"><h3>Low flow</h3><p>Less gas wasted, same anaesthetic.</p><span class="go">See how →</span></a>
+        <a class="card" href="propofol.html"><h3>Plan your propofol</h3><p>Draw up what you need, not more.</p><span class="go">See how →</span></a>
+        <a class="card" href="sixrs.html"><h3>The 6 Rs</h3><p>Six steps. The first ones save the most.</p><span class="go">Spin the wheel →</span></a>
+        <a class="card" href="boundaries.html"><h3>Planet health check</h3><p>Earth's nine vital signs in one wheel.</p><span class="go">Take a look →</span></a>
+        <a class="card" href="roadmap.html"><h3>Roadmap</h3><p>42 ideas for greener theatres. Put your name to one.</p><span class="go">Pick an idea →</span></a>
+        <div class="card"><span class="pill plan">Coming soon</span><h3>Reusable theatre caps</h3><p>Wash it, wear it again.</p></div>
       </div>
     </section>
 
-    <section class="block stack">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap"><h2>The roadmap</h2><a href="roadmap.html" style="font-weight:600">See all 42 actions and volunteer →</a></div>
-      <div class="band" style="grid-template-columns:1fr">
-        <div class="lanes">
-          <div class="lane"><b>Easy wins</b><ul><li>Low flow and end-tidal control</li><li>Rubbing not scrubbing</li><li>IV to oral paracetamol</li><li>Waste segregation</li></ul></div>
-          <div class="lane"><b>Next up</b><ul><li>Reusable hats, gowns, masks</li><li>Lean surgical trays</li><li>Reusable sharps bins</li><li>Metal recycling</li></ul></div>
-          <div class="lane"><b>Longer term</b><ul><li>Entonox manifold</li><li>Remanufactured instruments</li><li>Volatile capture</li><li>AGSS review</li></ul></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="block stack">
-      <h2>Get involved</h2>
-      <div class="cards">
-        <div class="card"><h3>Pick an easy win</h3><p>Choose one action from the roadmap for your own list. Put a name and a date against it.</p></div>
-        <div class="card"><h3>Bring a project</h3><p>Audits, QI projects and posters from any theatre role are welcome once they are ready to share publicly.</p></div>
-        <div class="card"><h3>Tell us what is missing</h3><p>If the bin finder cannot place an item you see every day, let the theatre sustainability team know so the tool can be updated.</p></div>
+    <section class="block">
+      <div class="help">
+        <div><h2>Want to help?</h2><p>Pick an idea from the roadmap and put your name to it. Found an item the bin finder can't place? Tell the theatre sustainability team.</p></div>
+        <a class="btn solid" href="roadmap.html">See the roadmap</a>
       </div>
     </section>
   </div>
@@ -260,7 +243,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
   <div class="wrap">
     <div class="pagehead">
       <h1>Which bin?</h1>
-      <p>Search for the item, or answer up to four questions. Answers follow HTM 07-01 waste segregation for the anaesthetic room, theatre and recovery.</p>
+      <p>Search for it, or answer a few quick questions.</p>
       <p style="margin-top:12px"><a class="btn line" href="quiz.html">Test yourself: Which bin? quiz →</a></p>
     </div>
     <section class="block finder">
@@ -273,7 +256,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
       </div>
       <div id="resultBox" aria-live="polite"></div>
     </section>
-    <p class="small muted" style="margin-top:20px">This tool is a quick guide. Your organisation's waste policy and local bin labels take precedence. If an item is not covered, ask the person in charge of the theatre before you bin it.</p>
+    <p class="small muted" style="margin-top:20px">A quick guide. Local bin labels come first. Still not sure? Ask the person in charge.</p>
   </div>
 </div>
 
@@ -335,7 +318,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
 </div>
 </main>
 
-<footer><div class="wrap">Theatre sustainability resources. Waste guidance is based on HTM 07-01 (2022 edition) and pharmaceutical waste guidance. Local waste policy and bin labels take precedence. Contains no patient or organisational data.</div></footer>
+<footer><div class="wrap">Waste guidance follows HTM 07-01. Local bin labels come first. Contains no patient or organisational data. <a href="reading.html">Additional reading</a></div></footer>
 
 <script>
 const AIRN="Airway kit follows the HTM 07-01 rule for items contaminated with body fluids: offensive waste unless the patient is infectious or the item carries medicine.";
@@ -486,15 +469,20 @@ const ART={
 };
 const art=k=>ART[k]();
 function head(k,big){const s=S[k];return `<div class="rhead${s.tiger?" tiger":""}" style="--sc:${s.c};--st:${s.t}"><div class="ph" aria-label="${esc(s.name)}">${art(k)}</div><div>${big?`<div class="lab">Put it in the</div>`:""}<h3>${esc(s.name)}</h3><div class="sub">${esc(s.sub)}</div></div></div>`}
-function lists(k){const s=S[k];return `<div><h4>Goes in</h4><ul>${s.yes.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div><h4>Keep out</h4><ul>${s.no.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`}
+function lists(k){const s=S[k];return `<details class="more"><summary>What else goes in this ${s.kind}?</summary><div><h4>Goes in</h4><ul>${s.yes.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div><h4>Keep out</h4><ul>${s.no.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></details>`}
 function notes(k){const s=S[k];let n=[];if(s.nosharps)n.push("No sharps in this bin.");if(s.fill)n.push("Never fill past the fill line.");return n}
 function go(dest,label){
   if(label)trail.push(label);
   if(dest[0]==="="){showResult(dest.slice(1));cur=null;renderFlow();return}
   cur=dest;renderFlow();
 }
+let px=null,py=null;
+document.addEventListener("pointermove",e=>{const f=$("#flow");
+  if(px===null){px=e.clientX;py=e.clientY;return}
+  if(Math.abs(e.clientX-px)+Math.abs(e.clientY-py)>4)f.classList.remove("fresh")});
 function renderFlow(){
-  const f=$("#flow");
+  const f=$("#flow");f.classList.add("fresh");px=null;
+  if(document.activeElement&&f.contains(document.activeElement))document.activeElement.blur();
   const t=trail.length?`<div class="trail">${trail.map(x=>`<span>${esc(x)}</span>`).join("")}</div>`:"";
   if(!cur){f.innerHTML=t+`<div class="tools"><button class="btn solid" id="again" type="button">Check another item</button></div>`;$("#again").onclick=reset;return}
   const n=N[cur];let o;
@@ -512,13 +500,13 @@ function showResult(k){
   if(window.innerWidth<820)$("#resultBox").scrollIntoView({behavior:"smooth",block:"start"});
 }
 function reset(){trail=[];cur="start";itemNote="";$("#itemSearch").value="";renderItems("");renderFlow();
-  $("#resultBox").innerHTML=`<div class="panel empty"><p style="margin:0 auto">Your answer appears here, with the bin, what else belongs in it and what to keep out.</p></div>`}
+  $("#resultBox").innerHTML=`<div class="panel empty"><p style="margin:0 auto">Your bin will appear here.</p></div>`}
 function renderItems(q){
   q=q.trim().toLowerCase();
   let m=ITEMS.filter(x=>!q||(x[0]+" "+x[1]).toLowerCase().includes(q));
   const small=window.innerWidth<820, more=!q&&small?m.length-8:0;
   if(more>0)m=m.slice(0,8);
-  $("#itemList").innerHTML=m.length?m.map(x=>`<button class="chip" type="button" data-n="${esc(x[0])}">${esc(x[0])}</button>`).join("")+(more>0?`<p class="small muted" style="width:100%;margin:4px 0 0">Type to search ${more} more items.</p>`:""):`<p class="small muted">Not on the list yet. Use the questions below, or ask the person in charge of the theatre.</p>`;
+  $("#itemList").innerHTML=m.length?m.map(x=>`<button class="chip" type="button" data-n="${esc(x[0])}">${esc(x[0])}</button>`).join("")+(more>0?`<p class="small muted" style="width:100%;margin:4px 0 0">Type to search ${more} more items.</p>`:""):`<p class="small muted">Not on the list yet. Try the questions below.</p>`;
   $("#itemList").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{const it=ITEMS.find(x=>x[0]===b.dataset.n);trail=[];itemNote=it[3]||"";$("#resultBox").innerHTML="";go(it[2],it[0]);if(cur)$("#resultBox").innerHTML=`<div class="panel empty"><p style="margin:0 auto">Answer the question to place your ${esc(it[0].toLowerCase())}.</p></div>`});
 }
 $("#itemSearch").addEventListener("input",e=>renderItems(e.target.value));

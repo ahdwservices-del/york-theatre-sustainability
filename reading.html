@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Additional reading · York Theatre Sustainability</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Additional reading: the detail, evidence and sources moved off the main pages. */
+:root{
+  --bg:#f1f5f4; --surface:#ffffff; --ink:#10302f; --muted:#51696a; --line:#d3dedc;
+  --accent:#0b6e69; --accent-ink:#ffffff; --accent-soft:#dcefec; --hero:#0c3f3d; --hero-ink:#eef7f5;
+  --warn:#9a3412; --warn-soft:#fdeee4;
+  --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+    --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5;
+    --warn:#fdba8c; --warn-soft:#3a2416; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+  --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5;
+  --warn:#fdba8c; --warn-soft:#3a2416; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:var(--display);line-height:1.12;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3.3rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0;max-width:65ch}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+
+/* masthead */
+header.top{background:var(--hero);color:var(--hero-ink);position:sticky;top:0;z-index:5}
+.topbar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:12px 20px;max-width:1120px;margin:0 auto}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--hero-ink);text-decoration:none;margin-right:auto;display:flex;gap:10px;align-items:center}
+.brand i{width:14px;height:14px;border-radius:50%;background:#5fd0c5;display:inline-block}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav a{color:var(--hero-ink);text-decoration:none;padding:7px 12px;border-radius:999px;font-size:.92rem;font-weight:500;opacity:.85}
+nav a:hover{opacity:1;background:rgba(255,255,255,.1)}
+nav a[aria-current="page"]{background:#5fd0c5;color:#062a28;opacity:1;font-weight:600}
+
+.view{display:none;padding:0 0 72px}
+.view.on{display:block}
+.pagehead{padding:40px 0 8px}
+.pagehead p{color:var(--muted);margin-top:10px;font-size:1.05rem}
+section.block{padding:32px 0 0}
+
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 1rem var(--body);padding:12px 20px;border-radius:999px;border:2px solid transparent;cursor:pointer;text-decoration:none}
+.btn.primary{background:#5fd0c5;color:#062a28}
+.btn.ghost{border-color:rgba(255,255,255,.4);color:var(--hero-ink);background:transparent}
+.btn.solid{background:var(--accent);color:var(--accent-ink)}
+.btn.line{border-color:var(--line);color:var(--ink);background:var(--surface)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
+.card .go{margin-top:auto;color:var(--accent);font-weight:600;font-size:.92rem;padding-top:6px}
+.pill{align-self:flex-start;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.pill.plan{background:var(--warn-soft);color:var(--warn)}
+.lede{color:var(--muted);font-size:17px}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:start;margin-top:18px}
+.wheel svg{width:100%;height:auto;display:block}
+.seg{cursor:pointer;transition:opacity .2s}
+.seg:focus{outline:none}
+.seg:focus-visible path.v,.seg.on path.v{stroke:var(--ink);stroke-width:3}
+.wheel.sel .seg:not(.on){opacity:.35}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips button{font:inherit;font-size:14px;min-height:44px;padding:6px 12px;border-radius:22px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:7px}
+.chips button[aria-pressed=true]{border-color:var(--ink);font-weight:600}
+.chips button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.pbpanel{background:var(--surface);border-radius:14px;padding:clamp(18px,2.4vw,28px);position:sticky;top:76px}
+.spill{display:inline-block;font-size:13px;font-weight:600;padding:3px 10px;border-radius:12px;color:#fff;margin-bottom:8px}
+.fig-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.fig-row b{font-size:20px;white-space:nowrap;text-align:right}
+.fig-row small{grid-column:1/-1;color:var(--muted);font-size:13px}
+.pbar{grid-column:1/-1;height:8px;border-radius:4px;background:var(--line);position:relative;margin-top:4px}
+.pbar i{position:absolute;inset:0 auto 0 0;border-radius:4px}
+.pbar s{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.simple{border-left:4px solid var(--accent);padding:8px 12px;margin:14px 0 4px;background:var(--bg);border-radius:0 8px 8px 0}
+.simple p{margin:0}
+.key{display:flex;flex-wrap:wrap;gap:14px;font-size:14px;color:var(--muted);margin-top:12px}
+.key span{display:flex;align-items:center;gap:6px}
+.teach{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px;margin-top:12px}
+.teach div{background:var(--surface);border-radius:12px;padding:16px 18px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin-top:12px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{text-align:right;white-space:nowrap}
+th{font-size:13px;color:var(--muted);font-weight:600}
+.src{font-size:13px;color:var(--muted)}
+.src li{margin-bottom:4px}
+:root{--safe:#1f9d55;--amber:#e39a0b;--high:#d7263d}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:.85rem}
+.blk{padding:32px 0 0}.blk:last-of-type{padding-bottom:56px}
+.blk h2{margin-bottom:8px}.pbpanel h2{font-size:1.5rem;margin-bottom:6px}
+.pbpanel p,.teach p{margin-bottom:8px}.lede{margin-top:6px}
+.pbpanel{border:1px solid var(--line)}
+.teach div{border:1px solid var(--line)}
+.rt{border-collapse:collapse;width:100%;font-size:15px;margin-top:12px}
+.rt th,.rt td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.rt td.n{text-align:right;white-space:nowrap}.rt th{font-size:13px;color:var(--muted);font-weight:600}
+.src{padding-left:20px}
+.pbpanel h3,.teach h3{margin:16px 0 4px;color:var(--accent);font-size:1.05rem}.teach h3{margin-top:0}
+@media(max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}.pbpanel{position:static}}
+@media(max-width:600px){.rt{font-size:13px}.rt thead{display:none}.rt tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.rt td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.rt td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--muted)}.rt td:empty{display:none}.rt td.n{text-align:start}}
+@media(prefers-reduced-motion:reduce){.seg{transition:none}}
+
+
+:root{--r1:#0b4f4c;--r2:#0b6e69;--r3:#148a7f;--r4:#2c9f8c;--r5:#62bd9c;--r6:#98d6b4}
+.wheel svg{max-width:480px;margin:0 auto}
+.wn{font:700 30px var(--display);text-anchor:middle;fill:#fff;pointer-events:none}
+.wl{font:600 17px var(--body);text-anchor:middle;fill:#fff;pointer-events:none}
+.seg:nth-of-type(5) text,.seg:nth-of-type(6) text{fill:#06302c}
+.wc{font:700 40px var(--display);text-anchor:middle;fill:var(--ink)}
+.wcs{font:500 15px var(--body);text-anchor:middle;fill:var(--muted)}
+.seg:focus-visible path.v,.seg.on path.v{stroke:var(--ink);stroke-width:4}
+.roles{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:18px}
+.roles .chips{margin-top:0}
+.roles button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tally{margin-top:14px;font-size:15px;color:var(--muted)}
+.tally b{color:var(--ink);font-size:18px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px;margin:12px 0 4px}
+.fact{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.fact b{font:700 1.6rem var(--display);color:var(--accent);line-height:1.1}
+.cite{color:var(--muted);font-size:12px;white-space:nowrap}
+.eg{margin:4px 0 0;padding-left:20px}.eg li{margin-bottom:4px}
+.acts{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.acts li{display:flex;gap:10px;align-items:flex-start}
+.acts label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;padding:8px 10px;border:1px solid var(--line);border-radius:8px;width:100%;background:var(--surface)}
+.acts label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.acts input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--accent);flex:none}
+.care{margin-top:14px;font-size:14px;background:var(--warn-soft);color:var(--ink);padding:10px 12px;border-radius:8px;max-width:none}
+.care b{color:var(--warn)}
+.nav2{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.nav2 .btn{font-size:.92rem;padding:9px 16px}
+.game{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px;margin-top:12px}
+.gq{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.gopts{display:flex;flex-wrap:wrap;gap:6px}
+.gopts button{font:inherit;font-size:14px;min-height:40px;padding:6px 12px;border-radius:20px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.gopts button.right{background:var(--safe);border-color:var(--safe);color:#fff;font-weight:600}
+.gopts button.wrong{border-color:var(--high);color:var(--high);text-decoration:line-through}
+.gfb{font-size:14px;min-height:1.2em}
+.gscore{grid-column:1/-1;font-weight:600}
+.mylist{margin-top:12px;max-width:760px}
+.mylist .acts li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+@media print{header.top,footer,.blk:not(:has(#mylist)),.nav2{display:none!important}.blk{padding:0}}
+
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.toc a{padding:7px 14px;border-radius:999px;background:var(--accent-soft);text-decoration:none;font-weight:600;font-size:.92rem}
+.rd{padding-top:40px;scroll-margin-top:70px}
+.rd>h2{padding-bottom:6px;border-bottom:2px solid var(--line);margin-bottom:6px}
+.rd h3.sub{margin:24px 0 4px;font-size:1.15rem;color:var(--ink)}
+.rd p{margin-top:8px}
+.rd ul.plain{max-width:70ch;padding-left:20px}.rd ul.plain li{margin-bottom:6px}
+.tag{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 7px;border-radius:999px}
+.t-Study{background:#dbeafe;color:#1e3a8a}.t-Service{background:#d9f2e3;color:#14532d}.t-Guidance{background:#ede9fe;color:#4c1d95}.t-CSH{background:#ccfbf1;color:#134e4a}.t-Trade{background:#fde68a;color:#78350f}
+.star{color:#c98a00}
+
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.rt td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<header class="top">
+  <div class="topbar">
+    <a class="brand" href="index.html#home"><i></i>York Theatre Sustainability</a>
+    <nav aria-label="Main">
+      <a href="index.html#home">Home</a>
+      <a href="boundaries.html">Planet</a>
+      <a href="sixrs.html">6 Rs</a>
+      <a href="index.html#waste-finder">Which bin?</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="index.html#low-flow">Low flow</a>
+      <a href="propofol.html">Propofol</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="reading.html" aria-current="page">Reading</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<div class="pagehead"><h1>Additional reading</h1>
+<p>The detail, evidence and sources behind the rest of the site, for anyone who wants to dig deeper.</p>
+<div class="toc"><a href="#waste">Waste</a><a href="#planet">Planet health check</a><a href="#sixrs">The 6 Rs</a><a href="#roadmap">Roadmap</a></div></div>
+
+<section class="rd" id="waste">
+  <h2>Waste</h2>
+  <h3 class="sub">Key numbers</h3>
+  <div class="facts">
+    <div class="fact"><b>10</b><span>waste streams in theatre, each with a different cost and carbon footprint.</span></div>
+    <div class="fact"><b>60%</b><span>of healthcare waste should be offensive (tiger) waste: the national target, with 20% alternative treatment and 20% incineration. <span class="cite">(HTM 07-01, 2022)</span></span></div>
+    <div class="fact"><b>Up to 50×</b><span>more carbon per tonne when waste is incinerated (1,074 kg CO₂e) rather than recycled (21–65 kg CO₂e). <span class="cite">(Rizan 2021)</span></span></div>
+  </div>
+  <h3 class="sub">Why the bin you choose matters</h3>
+  <p>The same bag of waste can carry up to fifty times more carbon depending on which stream it goes into. Clean packaging in a clinical bag is the costliest mistake, in both carbon and money. Most packaging is opened before the patient arrives, so it is clean and can be recycled.</p>
+  <p>The Which bin? finder follows HTM 07-01 waste segregation for the anaesthetic room, theatre and recovery, and pharmaceutical waste guidance. Your organisation's waste policy and local bin labels take precedence.</p>
+  <h3 class="sub">Carbon per anaesthetic</h3>
+  <p>For the same operation (operative hysteroscopy), one life cycle assessment estimated 5.5 kg CO₂e per case for spinal anaesthesia, 6.6 kg for TIVA and 10.8 kg for low-flow sevoflurane. <span class="cite">(Lechani et al, Br J Anaesth 2026; single centre)</span></p>
+</section>
+
+<section class="rd" id="planet">
+  <h2>Planet health check</h2>
+  <h3 class="sub">Explaining it to a colleague in 30 seconds</h3>
+  <div class="teach">
+    <div><h3>It's a blood panel for the planet</h3><p>Nine tests, each with a reference range set by science. Inside the range, Earth stays in the stable state that let human civilisation develop. Seven results are now flagged abnormal; several are critical values.</p></div>
+    <div><h3>The results interact</h3><p>Like a patient's renal and cardiac function, the systems feed each other. The CO₂ that warms the climate also acidifies the ocean; forest loss worsens both climate and biodiversity. You can't treat one value in isolation.</p></div>
+    <div><h3>Abnormal is not yet irreversible</h3><p>A boundary is a precaution line, not a cliff edge, much like a reference range. Crossing it raises risk. The ozone layer shows a flagged result can recover when the world agrees a treatment plan and sticks to it.</p></div>
+  </div>
+  <h3 class="sub">How to read the wheel</h3>
+  <p>Each slice's length shows how far a measure has moved from its pre-industrial state, scaled so the dashed ring is the boundary. Beyond the ring the scale is compressed so the largest overshoots fit. The short dark tick on a slice marks its high-risk line. A hatched slice with a question mark (novel entities) is judged breached but has no single number yet.</p>
+  <h3 class="sub">All 13 measurements</h3>
+  <p>Boundary value, with the high-risk line in brackets. Novel entities has no single number yet; it is judged breached because thousands of new chemicals are released without safety testing.</p>
+  <table class="rt"><thead><tr><th>System</th><th>Measure</th><th>Boundary (high risk)</th><th>2026 value</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table>
+  <h3 class="sub">Sources</h3>
+  <ol class="src">
+    <li>Planetary Boundaries Science Lab. <a href="https://www.planetaryhealthcheck.org">Planetary Health Check 2026</a>. Potsdam Institute for Climate Impact Research, 2026. Per-variable values as summarised in the <a href="https://globaia.org/phc2026/organic/">PHC 2026 field guide</a> (Globaia).</li>
+    <li>Richardson K, et al. Earth beyond six of nine planetary boundaries. Sci Adv 2023;9:eadh2458.</li>
+    <li>Tennison I, et al. Health care's carbon footprint in England. Lancet Planet Health 2021;5:e84–92.</li>
+    <li>Ravishankara AR, et al. Nitrous oxide (N₂O): the dominant ozone-depleting substance emitted in the 21st century. Science 2009;326:123–5.</li>
+    <li>Marfella R, et al. Microplastics and nanoplastics in atheromas and cardiovascular events. N Engl J Med 2024;390:900–10.</li>
+    <li>Wilkinson JL, et al. Pharmaceutical pollution of the world's rivers. PNAS 2022;119:e2113947119.</li>
+    <li>Newman DJ, Cragg GM. Natural products as sources of new drugs over the nearly four decades from 01/1981 to 09/2019. J Nat Prod 2020;83:770–803.</li>
+    <li>IPBES. Workshop report on biodiversity and pandemics. 2020.</li>
+    <li>Tanner J, et al. Surgical hand antisepsis to reduce surgical site infection. Cochrane Database Syst Rev 2016;1:CD004288.</li>
+    <li>COMEAP. Statement on quantifying mortality associated with long-term exposure to PM2.5. 2022. UKHSA. Heat mortality monitoring report: 2022.</li>
+  </ol>
+</section>
+
+<section class="rd" id="sixrs">
+  <h2>The 6 Rs</h2>
+  <h3 class="sub">Why theatres?</h3>
+  <p>The six steps run in order of impact. Rethink and refuse stop waste existing at all; reduce and reuse make what we use go further; recycling deals with what is left, and research tells us what works.</p>
+  <p>Operating theatres are among the most carbon-intensive parts of a hospital: on average about 188 tonnes of CO₂ equivalent per theatre each year in one three-country study, mostly from energy, anaesthetic gases and single-use items. <span class="cite">(MacNeill 2017)</span></p>
+  <h3 class="sub">Explaining it to a colleague in 30 seconds</h3>
+  <div class="teach">
+    <div><h3>Prevention beats treatment</h3><p>Rethink and refuse are the pre-op assessment: they stop the problem before it starts. Recycling is the resus team. It is vital, but by the time you need it the item has already been made, shipped, opened and thrown away.</p></div>
+    <div><h3>Three questions before you open anything</h3><p>Do I need it? Can I use less of it? Can it be used again? If the answer to all three is no, then make sure it goes in the right bin.</p></div>
+    <div><h3>The bin you choose still matters</h3><p>The same bag of waste can carry up to fifty times more carbon depending on which stream it goes into. Clean packaging in a clinical bag is the costliest mistake, in both carbon and money.</p></div>
+  </div>
+  <h3 class="sub">Sources</h3>
+  <ol class="src">
+    <li>Moving towards green anaesthesia: strategies for environmental sustainability. Anaesthesia Tutorial of the Week 495. WFSA, 18 April 2023.</li>
+    <li>MacNeill AJ, Lillywhite R, Brown CJ. The impact of surgery on global climate: a carbon footprinting study of operating theatres in three health systems. Lancet Planet Health 2017;1:e381–8.</li>
+    <li>Rizan C, Bhutta MF, Reed M, Lillywhite R. The carbon footprint of waste streams in a UK hospital. J Clean Prod 2021;286:125446.</li>
+    <li>Seglenieks R, Wong A, Pearson F, McGain F. Discrepancy between procurement and clinical use of nitrous oxide: waste not, want not. Br J Anaesth 2022;128:e32–4.</li>
+    <li>Sulbaek Andersen MP, et al. Assessing the impact on global climate from general anesthetic gases. Anesth Analg 2012;114:1081–5.</li>
+    <li>Sherman JD, et al. Life cycle assessment and costing methods for device procurement: comparing reusable and single-use disposable laryngoscopes. Anesth Analg 2018;127:434–43.</li>
+    <li>Vozzola E, Overcash M, Griffing E. An environmental analysis of reusable and disposable surgical gowns. AORN J 2020;111:315–25.</li>
+    <li>National Institute for Health and Care Excellence. Routine preoperative tests for elective surgery (NG45). 2016.</li>
+  </ol>
+  <p class="src">Clinical decisions always come first. Every suggestion applies only where it is clinically appropriate and fits local infection prevention and medicines policy.</p>
+</section>
+
+<section class="rd" id="roadmap">
+  <h2>Roadmap</h2>
+  <h3 class="sub">How the ratings work</h3>
+  <ul class="plain">
+    <li><b>Individual &amp; team</b>: you, your list or your theatre team can start without new infrastructure.</li>
+    <li><b>System changes</b>: needs procurement, pharmacy, estates, IPC, catering or organisation-level decisions.</li>
+    <li><b>Easy wins</b>: within your own practice or team, little or no cost, no approvals needed. <b>Next up</b>: needs a team agreement, a small purchase, or one other department on board. <b>Longer-term</b>: capital, estates or engineering, contracts, multi-stakeholder sign-off, or an assessment first.</li>
+    <li><span class="star">★</span> <b>Big hitter</b>: high climate impact per unit or per case (potent gases, or well-documented waste). This is an indicative flag; check it against your own usage data.</li>
+    <li>Ease ratings are a first-pass judgement. Re-sort anything that is easier or harder where you work.</li>
+  </ul>
+  <h3 class="sub">Evidence key for case examples</h3>
+  <p><span class="tag t-Study">Study</span> peer-reviewed paper, audit or LCA. <span class="tag t-Service">Service</span> NHS or overseas health service case. <span class="tag t-Guidance">Guidance</span> policy, colleges, toolkits. <span class="tag t-CSH">CSH</span> Centre for Sustainable Healthcare network (some pages need a free login). <span class="tag t-Trade">Trade</span> vendor-authored or press; treat with caution.</p>
+  <h3 class="sub">Read before you commit</h3>
+  <p>Where the published evidence is mixed, thin or contested. Worth knowing before you build a business case.</p>
+  <table class="rt"><thead><tr><th>Action</th><th>Read before you commit</th><th>Source</th></tr></thead><tbody><tr><td><b>#33 N2O manifolds</b></td><td>Strongest consensus in the set: UK anaesthetic bodies recommend removal of pipeline N2O, to be complete by the end of 2026/27. Entonox is unaffected.</td><td><a href="https://rcoa.ac.uk/news/leading-anaesthetic-organisations-call-removal-pipeline-nitrous-oxide-uk-ireland" target="_blank" rel="noopener">Open source ↗</a></td></tr><tr><td><b>#38 Volatile capture</b></td><td>Scotland&#x27;s HTA body found insufficient evidence to buy VCT (2024). Bench capture ~95%, patient studies ~25% and ~51%, and no established recycling route.</td><td><a href="https://shtg.scot/media/2470/20240529-vct-recommendation-v10.pdf" target="_blank" rel="noopener">Open source ↗</a></td></tr><tr><td><b>#4 IV to oral paracetamol</b></td><td>Carbon and cost case is strong, but teaching alone did not change prescribing at Royal Preston. Use a default, pathway or order-set change.</td><td><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12426579" target="_blank" rel="noopener">Open source ↗</a></td></tr><tr><td><b>#5 Rubbing not scrubbing</b></td><td>First scrub of the list remains aqueous per the BOA summary of WHO/NICE. Alcohol rub applies to subsequent cases.</td><td><a href="https://www.boa.ac.uk/resource/greener-orthopaedics-sustainability-by-saving-the-substance-of-life-water.html" target="_blank" rel="noopener">Open source ↗</a></td></tr><tr><td><b>#10 Induction in theatres</b></td><td>Little sustainability-specific evidence. NAP7 cardiac arrest analysis is safety context to read before changing pathways.</td><td><a href="https://rcoa.ac.uk/media/39026" target="_blank" rel="noopener">Open source ↗</a></td></tr><tr><td><b>#11 Phone / video</b></td><td>Carbon saving depends on travel distance (net benefit above roughly 7.2 km by car) and can widen inequity if it is the only option.</td><td><a href="https://www.bmj.com/content/381/bmj.p1169" target="_blank" rel="noopener">Open source ↗</a></td></tr><tr><td><b>#34 Reusable ports</b></td><td>Swedish LCA favours reusables, but a UK cost analysis found no saving at observed volumes. Processing cost and utilisation decide it.</td><td><a href="https://openresearch.surrey.ac.uk/permalink/44SUR_INST/15d8lgh/alma991115567502346" target="_blank" rel="noopener">Open source ↗</a></td></tr><tr><td><b>#36 ChloraPrep alternative</b></td><td>Contested. Derriford switched to bottled prep, the manufacturer cites an LCA favouring the applicator, and forum posts raise anecdotal safety concerns. Get IPC and pharmacy input.</td><td><a href="https://www.plymouthhospitals.nhs.uk/positively-green/derriford-hospital-theatres-makes-skin-preparation-sustainable-9117" target="_blank" rel="noopener">Open source ↗</a></td></tr><tr><td><b>#20, #29, #39, #40, #41</b></td><td>No independent published examples found (thermometers, cleaning chemicals, full AGSS decommissioning, 7 bar air, central vacuum). Treat as local assessments.</td><td>n/a</td></tr><tr><td><b>#42 Decommission Entonox manifolds</b></td><td>The UK and Ireland consensus on removing pipeline nitrous oxide explicitly excludes Entonox. Evidence on Entonox manifold loss is thinner than for pure nitrous oxide, and switching maternity to cylinders changes storage, handling and supply. Measure procurement against clinical use first, with maternity and estates involved.</td><td><a href="https://rcoa.ac.uk/news/leading-anaesthetic-organisations-call-removal-pipeline-nitrous-oxide-uk-ireland" target="_blank" rel="noopener">Open source ↗</a></td></tr></tbody></table>
+  <h3 class="sub">For action leads: keep a log</h3>
+  <p>One line per step is enough: date, action number, what was done, the result or impact, and the next step. Dates and numbers make the best evidence later.</p>
+  <h3 class="sub">Questions for each quarterly review</h3>
+  <ul class="plain">
+    <li>What moved since last review?</li><li>What is stuck, and who can unblock it?</li>
+    <li>Which easy win are we ready to extend to more lists or sites?</li><li>Which moderate action should move up next?</li>
+    <li>Any evidence to share (usage data, cost, carbon, staff feedback)?</li><li>Who else needs to hear about this?</li>
+  </ul>
+  <p class="src" style="padding-bottom:56px">NGTP guidance links are from the original roadmap document (Centre for Sustainable Delivery, Net Zero Green Theatre Programme). Case example links were gathered on 28 September 2026 and were not all read in full. Check each source before quoting figures.</p>
+</section>
+</main>
+<footer><div class="wrap">Theatre sustainability resources. External links belong to their publishers. Contains no patient or organisational data.</div></footer>
+<script src="boundaries-data.js"></script>
+<script>
+document.getElementById('tbody').innerHTML=PB.flatMap(b=>b.vars.map(v=>`<tr><td>${b.short}</td><td>${v.m}</td><td>${v.b}${v.h?` (${v.h})`:''}</td><td class="n">${v.v}</td><td><span style="color:${v.s==='breach'?'var(--high)':C[v.s]};font-weight:600">${LBL[v.s]}</span></td></tr>`)).join('');
+</script>
+</body>
+</html>
