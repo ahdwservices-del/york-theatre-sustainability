@@ -3,6 +3,7 @@
 Static site of operating theatre sustainability resources.
 
 - `index.html` – home, **Which bin?** waste finder (`#waste-finder`), York low flow project (`#low-flow`), Scarborough low flow project (`#low-flow-scarborough`), Bridlington low flow project (`#low-flow-bridlington`); posters in `img/`
+- `why-bother.html` – Why should I bother? Climate and health for patients, staff, hospital and community; the triple win (update the headline figures when UKHSA/Lancet Countdown publish)
 - `boundaries.html` – interactive planetary boundaries wheel (Planetary Health Check 2026 figures; update `boundaries-data.js` each September – it also feeds the table on the reading page)
 - `sixrs.html` – the 6 Rs wheel, quiz and printable action list
 - `quiz.html` – Which bin? quiz
