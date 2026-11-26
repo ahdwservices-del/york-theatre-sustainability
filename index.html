@@ -159,6 +159,14 @@ a.card:hover{border-color:var(--accent)}
 footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:.85rem}
 
 /* low flow poster page */
+.lf-switch{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.lf-switch a{font-weight:600;font-size:.92rem;padding:8px 16px;border-radius:999px;border:2px solid var(--line);color:var(--ink);text-decoration:none;background:var(--surface)}
+.lf-switch a[aria-current]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.lf-poster{margin:0;max-width:900px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:10px}
+.lf-poster img{width:100%;height:auto;display:block;border-radius:8px}
+.lf-poster figcaption{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-weight:600}
+.lf-poster figcaption a{font-weight:500;font-size:.9rem}
+
 .lf-now{background:var(--hero);color:var(--hero-ink);border-radius:var(--r);padding:22px}
 .lf-now h2{color:var(--hero-ink)}
 .lf-now .sub{opacity:.85;margin-top:4px}
@@ -202,7 +210,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
       <a href="sixrs.html">6 Rs</a>
       <a href="#waste-finder" data-nav="waste-finder">Which bin?</a>
       <a href="quiz.html">Quiz</a>
-      <a href="#low-flow" data-nav="low-flow">Low flow</a>
+      <a href="#low-flow" data-nav="low-flow" data-nav2="low-flow-scarborough low-flow-bridlington">Low flow</a>
       <a href="propofol.html">Propofol</a>
       <a href="roadmap.html">Roadmap</a>
       <a href="reading.html">Reading</a>
@@ -240,7 +248,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
       <div class="cards">
         <a class="card" href="#waste-finder"><h3>Which bin?</h3><p>Not sure where it goes? Ask the finder.</p><span class="go">Find the bin →</span></a>
         <a class="card" href="quiz.html"><h3>Bin quiz</h3><p>10 questions. How many can you get right?</p><span class="go">Play →</span></a>
-        <a class="card" href="#low-flow"><h3>Low flow</h3><p>Less gas wasted, same anaesthetic.</p><span class="go">See how →</span></a>
+        <a class="card" href="#low-flow"><h3>Low flow</h3><p>Less gas wasted, same anaesthetic. York, Scarborough and Bridlington.</p><span class="go">See how →</span></a>
         <a class="card" href="propofol.html"><h3>Plan your propofol</h3><p>Draw up what you need, not more.</p><span class="go">See how →</span></a>
         <a class="card" href="sixrs.html"><h3>The 6 Rs</h3><p>Six steps. The first ones save the most.</p><span class="go">Spin the wheel →</span></a>
         <a class="card" href="boundaries.html"><h3>Planet health check</h3><p>Earth's nine vital signs in one wheel.</p><span class="go">Take a look →</span></a>
@@ -286,8 +294,13 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
   <div class="wrap">
     <div class="pagehead">
       <span class="pill">Early findings</span>
-      <h1 style="margin-top:10px">Low flow, less waste</h1>
-      <p>What our anaesthetic machines recorded about sevoflurane use, January to November 2026.</p>
+      <h1 style="margin-top:10px">York low flow project</h1>
+      <p>Low flow, less waste. What our anaesthetic machines recorded about sevoflurane use, January to November 2026.</p>
+      <nav class="lf-switch" aria-label="Low flow projects">
+        <a href="#low-flow" data-nav="low-flow">York</a>
+        <a href="#low-flow-scarborough" data-nav="low-flow-scarborough">Scarborough</a>
+        <a href="#low-flow-bridlington" data-nav="low-flow-bridlington">Bridlington</a>
+      </nav>
     </div>
     <section class="block stack">
       <div class="lf-now">
@@ -336,6 +349,49 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
     </section>
   </div>
 </div>
+
+<!-- LOW FLOW: SCARBOROUGH -->
+<div class="view" id="v-low-flow-scarborough">
+  <div class="wrap">
+    <div class="pagehead">
+      <span class="pill">Audit findings</span>
+      <h1 style="margin-top:10px">Scarborough low flow project</h1>
+      <nav class="lf-switch" aria-label="Low flow projects">
+        <a href="#low-flow" data-nav="low-flow">York</a>
+        <a href="#low-flow-scarborough" data-nav="low-flow-scarborough">Scarborough</a>
+        <a href="#low-flow-bridlington" data-nav="low-flow-bridlington">Bridlington</a>
+      </nav>
+    </div>
+    <section class="block stack">
+      <figure class="lf-poster">
+        <a href="img/sgh-low-flow-poster.jpg" target="_blank" rel="noopener"><picture><source srcset="img/sgh-low-flow-poster.webp" type="image/webp"><img src="img/sgh-low-flow-poster.jpg" width="1199" height="1312" alt="Scarborough audit poster. 51.2 L of sevoflurane recorded; about 76% of cases used sevoflurane. 15 L/min was 38.3% of all flow changes. 65.9% of cases had a 15 L/min setting (median 5.9 min) and 9.4% a 6 L/min setting (median 2.3 min). 55.6% of cases starting above 2 L/min were reduced to 2 L/min or less, a median of 4.6 min from case start (25% by 1.9 min, 75% by 7.5 min). Actions: reduce flow earlier after induction, reinforce low-flow anaesthesia when appropriate, re-audit."></picture></a>
+        <figcaption>Scarborough departmental audit poster <a href="img/sgh-low-flow-poster.jpg" target="_blank" rel="noopener">Open full size</a></figcaption>
+      </figure>
+    </section>
+  </div>
+</div>
+
+<!-- LOW FLOW: BRIDLINGTON -->
+<div class="view" id="v-low-flow-bridlington">
+  <div class="wrap">
+    <div class="pagehead">
+      <span class="pill">Audit findings</span>
+      <h1 style="margin-top:10px">Bridlington low flow project</h1>
+      <nav class="lf-switch" aria-label="Low flow projects">
+        <a href="#low-flow" data-nav="low-flow">York</a>
+        <a href="#low-flow-scarborough" data-nav="low-flow-scarborough">Scarborough</a>
+        <a href="#low-flow-bridlington" data-nav="low-flow-bridlington">Bridlington</a>
+      </nav>
+    </div>
+    <section class="block stack">
+      <figure class="lf-poster">
+        <a href="img/bdh-low-flow-poster.jpg" target="_blank" rel="noopener"><picture><source srcset="img/bdh-low-flow-poster.webp" type="image/webp"><img src="img/bdh-low-flow-poster.jpg" width="1199" height="1312" alt="Bridlington audit poster. 1,673 recorded cases, June 2025 to November 2026. 82.2% of cases spent some time at 2 L/min or less; overall mean fresh gas flow 5.03 L/min; time-weighted, 34% of time above 5 L/min. 63.6% of cases had a 15 L/min setting (median 4.9 min) and 59.7% a 6 L/min setting (median 2.5 min). Median 4.4 min to reach 2 L/min or less. 18.32 L sevoflurane consumed, about 32% recorded as patient uptake. Actions: shorten time at high flows, reach 2 L/min earlier when appropriate, tailor to case type such as sedation versus general anaesthesia."></picture></a>
+        <figcaption>Bridlington departmental audit poster <a href="img/bdh-low-flow-poster.jpg" target="_blank" rel="noopener">Open full size</a></figcaption>
+      </figure>
+    </section>
+  </div>
+</div>
+
 </main>
 
 <dialog class="bin" id="binDlg" aria-label="What goes in this bin"></dialog>
@@ -555,11 +611,11 @@ function binInfo(k){
 $("#binDlg").addEventListener("click",e=>{if(e.target.id==="binDlg")e.target.close()});
 $("#heroBins").innerHTML=Object.keys(S).map(k=>`<button type="button" data-k="${k}" aria-haspopup="dialog">${art(k)}${esc(S[k].name)}</button>`).join("");
 $("#heroBins").addEventListener("click",e=>{const b=e.target.closest("button[data-k]");if(b)binInfo(b.dataset.k)});
-const VIEWS=["home","waste-finder","low-flow"];
+const VIEWS=["home","waste-finder","low-flow","low-flow-scarborough","low-flow-bridlington"];
 function route(){
   let h=location.hash.slice(1),v=VIEWS.includes(h)?h:"home";
   VIEWS.forEach(x=>document.getElementById("v-"+x).classList.toggle("on",x===v));
-  document.querySelectorAll("nav a").forEach(a=>a.dataset.nav===v?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current"));
+  document.querySelectorAll("nav a").forEach(a=>(a.dataset.nav===v||(a.dataset.nav2||"").split(" ").includes(v))?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current"));
   if(h==="projects"){document.getElementById("projects").scrollIntoView()}else window.scrollTo(0,0);
 }
 window.addEventListener("hashchange",route);
