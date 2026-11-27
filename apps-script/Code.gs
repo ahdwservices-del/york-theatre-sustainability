@@ -4,6 +4,7 @@
  * The site only learns which actions are taken: no names leave the sheet.
  * Also counts completed quiz rounds (quiz.html) in a "Quiz" tab: no personal data.
  * Also stores anonymous staff feedback (feedback.html) in a "Feedback" tab: date only, no time, no identity.
+ * Also logs the drug waste audit (drug-waste.html) in a "Drug waste" tab: site, theatre, drug, time. No identity.
  *
  * SET THIS: the inbox that should receive sign-up emails.
  */
@@ -49,6 +50,77 @@ function feedbackSheet_() {
   return sh;
 }
 
+// Drug waste audit (drug-waste.html): one row per drug (and propofol volume band) per entry. No personal data.
+const DW_SITES = {
+  'York': ['1','2','3','4','5','6','7','8','9','10','11','12','DC1','DC2','DC3','DC4','DC5','DC6'],
+  'Scarborough': ['1','2','3','4','5','6'],
+  'Bridlington': ['1','2']
+};
+const DW_DRUGS = ['Propofol', 'Ephedrine', 'Metaraminol', 'Rocuronium', 'Atracurium', 'Suxamethonium'];
+const DW_GROUP = { Propofol: 'Induction agent', Ephedrine: 'Vasopressor', Metaraminol: 'Vasopressor',
+                   Rocuronium: 'Neuromuscular blocker', Atracurium: 'Neuromuscular blocker', Suxamethonium: 'Neuromuscular blocker' };
+const DW_VOLS = ['<5 mL', '5–10 mL', '>10 mL'];
+const DW_REASONS = ['Drawn up "just in case"', 'Case cancelled or changed', 'Contaminated or dropped', 'Expired / time limit', 'Other'];
+const DW_HEADERS = ['Received', 'Logged at', 'Date', 'Time', 'Weekday', 'Site', 'Theatre', 'Drug', 'Drug group',
+                    'Propofol volume', 'Syringes', 'Reason', 'Entry ID'];
+
+function drugSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName('Drug waste');
+  if (!sh) {
+    sh = ss.insertSheet('Drug waste');
+    sh.appendRow(DW_HEADERS);
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+function drugWaste_(p) {
+  const sheetSafe = s => /^[=+\-@]/.test(s) ? "'" + s : s;          // no formula injection
+  const site = Object.prototype.hasOwnProperty.call(DW_SITES, p.site) ? p.site : '';
+  if (!site) return json_({ ok: false, error: 'invalid' });
+  let theatre = clean_(p.theatre, 40);
+  if (DW_SITES[site].indexOf(theatre) < 0) theatre = 'Other: ' + sheetSafe(theatre);
+  let items;
+  try { items = JSON.parse(p.items || '[]'); } catch (x) { return json_({ ok: false, error: 'invalid' }); }
+  if (!Array.isArray(items) || !items.length || items.length > 12) return json_({ ok: false, error: 'invalid' });
+  const id = clean_(p.id, 20).replace(/[^a-z0-9]/gi, '');
+
+  // time the button was pressed (allow up to 14 days of offline queueing); otherwise time received
+  const now = new Date();
+  let at = new Date(p.ts);
+  if (isNaN(at) || at > new Date(now.getTime() + 5 * 6e4) || at < new Date(now.getTime() - 14 * 864e5)) at = now;
+  const tz = Session.getScriptTimeZone();
+
+  const rows = [];
+  items.forEach(it => {
+    const n = Math.min(Math.max(parseInt(it && it.n, 10) || 0, 0), 50);
+    if (!n) return;
+    let drug = clean_(it.drug, 50);
+    if (DW_DRUGS.indexOf(drug) < 0) drug = 'Other: ' + sheetSafe(drug.replace(/^Other:\s*/, ''));
+    const vol = drug === 'Propofol' && DW_VOLS.indexOf(it.vol) >= 0 ? it.vol : '';
+    rows.push([now, at, Utilities.formatDate(at, tz, 'yyyy-MM-dd'), Utilities.formatDate(at, tz, 'HH:mm'),
+               Utilities.formatDate(at, tz, 'EEE'), site, theatre, drug, DW_GROUP[drug] || 'Other', vol, n,
+               DW_REASONS.indexOf(p.reason) >= 0 ? p.reason : '', id]);
+  });
+  if (!rows.length) return json_({ ok: false, error: 'invalid' });
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const sh = drugSheet_();
+    if (id && sh.getLastRow() > 1) {                                // ignore re-sent entries
+      const dup = sh.getRange(2, DW_HEADERS.length, sh.getLastRow() - 1, 1)
+                    .createTextFinder(id).matchEntireCell(true).findNext();
+      if (dup) return json_({ ok: true, duplicate: true });
+    }
+    sh.getRange(sh.getLastRow() + 1, 1, rows.length, DW_HEADERS.length).setValues(rows);
+  } finally {
+    lock.releaseLock();
+  }
+  return json_({ ok: true });
+}
+
 // Optional: run weekly from a time-driven trigger (Triggers → Add trigger → sendFeedbackDigest → Week timer).
 // A weekly batch, not one email per message, so the timing of an email can't hint at who sent it.
 function sendFeedbackDigest() {
@@ -78,6 +150,7 @@ function doGet(e) {
 function doPost(e) {
   const p = (e && e.parameter) || {};
   if (p.website) return json_({ ok: true });                  // bot filled the hidden field
+  if (p.kind === 'drugwaste') return drugWaste_(p);           // drug waste audit: no personal data
   if (p.kind === 'feedback') {                                 // anonymous feedback: date only
     const topics = ['Waste and bins', 'Anaesthetic gases', 'Drugs and propofol', 'Reusable kit', 'Energy and lights', 'Something else'];
     const places = ['Anaesthetic room', 'Theatre', 'Recovery', 'Somewhere else'];

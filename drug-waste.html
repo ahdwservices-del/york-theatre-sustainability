@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drug waste audit · York Theatre Sustainability</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600;700&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+<style>
+/* Drug waste audit: log syringes drawn up and not used. Tiles follow ISO 26825 syringe label colours. */
+:root{
+  --bg:#f1f5f4; --surface:#ffffff; --ink:#10302f; --muted:#51696a; --line:#d3dedc;
+  --accent:#0b6e69; --accent-ink:#ffffff; --accent-soft:#dcefec; --hero:#0c3f3d; --hero-ink:#eef7f5;
+  --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --label:"Barlow Condensed","Arial Narrow",sans-serif;
+  --yellow:#ffe14a; --violet:#c9a8ec; --red:#ff5a4e; --other:#eef2f1;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+    --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5; --other:#1b302f; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
+  --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5; --other:#1b302f; color-scheme:dark;
+}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;overflow-x:clip}
+h1,h2{font-family:var(--display);line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.9rem,5vw,2.6rem);font-weight:700;letter-spacing:-.02em}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+header.top{background:var(--hero);color:var(--hero-ink)}
+.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 20px;max-width:1120px;margin:0 auto}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--hero-ink);text-decoration:none;margin-right:auto;display:flex;gap:10px;align-items:center}
+.brand i{width:14px;height:14px;border-radius:50%;background:#5fd0c5;display:inline-block}
+.toplink{color:var(--hero-ink);opacity:.85;font-size:.92rem}
+
+.wrap{max-width:680px;margin:0 auto;padding:22px 16px 130px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.sub{color:var(--muted);margin:8px 0 0}
+.clock{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px;text-align:right;font-size:13px;color:var(--muted)}
+.clock b{display:block;color:var(--ink);font-size:18px;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.step{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
+.step h2{font-family:var(--body);font-size:1.05rem;margin:0 0 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--line);color:var(--ink);font-size:14px;flex:none}
+.step.done .num{background:var(--accent);color:var(--accent-ink)}
+.hint{font-weight:400;color:var(--muted);font-size:.9rem;margin-left:auto}
+.group{font-size:.85rem;color:var(--muted);font-weight:600;margin:12px 0 6px}
+.group:first-child{margin-top:0}
+
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:8px}
+.seg button,.chip{font:600 1rem var(--body);min-height:50px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;padding:8px 6px}
+.seg button{min-height:56px}
+.seg button[aria-pressed=true],.chip[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft)}
+.chip.wide{grid-column:span 2}
+
+.drugs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tile{position:relative;font:inherit;text-align:left;cursor:pointer;border:0;border-radius:14px;padding:13px 14px 12px;min-height:118px;color:#111;display:flex;flex-direction:column;justify-content:space-between;gap:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08),0 2px 0 rgba(0,0,0,.14);transition:transform .12s;width:100%}
+.tile:active{transform:scale(.97)}
+.tile .cls{font-size:12px;font-weight:700;opacity:.75;padding-right:40px}
+.tile .name{font:700 clamp(17px,4.6vw,26px)/1.05 var(--label);text-transform:uppercase;overflow-wrap:normal;word-break:normal;max-width:100%}
+.tile .strip{height:8px;border-radius:4px;background:repeating-linear-gradient(90deg,#111 0 6px,transparent 6px 12px);opacity:.85}
+.y{background:var(--yellow)}.v{background:var(--violet)}.r{background:var(--red)}
+.tile.r .strip{background:repeating-linear-gradient(-45deg,#111 0 5px,transparent 5px 10px)}
+.tile .more{font-size:12px;font-weight:700}
+.tile[aria-expanded=true]{box-shadow:0 0 0 3px var(--ink)}
+.tile.o{background:var(--other);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line);grid-column:1/-1;min-height:64px;flex-direction:row;align-items:center}
+.badge{position:absolute;top:10px;right:10px;min-width:34px;height:34px;padding:0 9px;border-radius:17px;background:#111;color:#fff;font-weight:700;display:none;place-items:center;font-size:17px}
+.has>.badge{display:grid}
+.minus{display:block;visibility:hidden;width:100%;height:40px;margin-top:6px;border-radius:10px;border:0;background:var(--line);color:var(--ink);font:700 22px/1 sans-serif;cursor:pointer}
+.cell{position:relative}.spacer{height:46px}.cell.full{grid-column:1/-1}
+.cell.has .minus{visibility:visible}
+.cell.full .minus{display:none}.cell.full.has .minus{display:block}
+
+.panel{grid-column:1/-1;border-radius:14px;padding:14px;border:2px solid var(--ink);background:var(--surface)}
+.panel p{margin:0 0 10px;font-weight:700}
+.panel .opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.opt{min-height:84px;padding:10px 6px}
+
+.opt{align-items:center;justify-content:center;text-align:center}
+.opts.list{grid-template-columns:minmax(0,1fr)}
+.opts.list .cell{display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:8px;align-items:stretch}
+.opts.list .opt{min-height:58px;flex-direction:row;justify-content:space-between;text-align:left;padding:8px 14px}
+.opts.list .opt .name{font-size:22px}
+.opts.list .opt .badge{margin:0}
+.opts.list .minus{margin:0;height:auto}
+.opt .badge{position:static;margin-top:4px}
+.opt .name{font-size:clamp(15px,4.2vw,21px);text-transform:none;max-width:100%}
+.tile .name.long{font-size:clamp(15px,4vw,23px)}
+
+.otherbox{display:none;margin-top:10px}
+.otherbox.show{display:block}
+input[type=text]{font:inherit;font-size:16px;width:100%;min-height:48px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 12px}
+details{margin-top:6px}
+summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center;color:var(--accent)}
+#reasons{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom));z-index:4}
+.bar .in{max-width:680px;margin:0 auto;display:flex;gap:12px;align-items:center}
+.summary{flex:1;font-size:14px;color:var(--muted);line-height:1.3}
+.summary b{color:var(--ink)}
+.go{font:700 1.05rem var(--body);min-height:54px;padding:0 26px;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);cursor:pointer;white-space:nowrap}
+.go:disabled{opacity:.35;cursor:not-allowed}
+
+.toast{position:fixed;inset:0;display:none;place-items:center;background:color-mix(in srgb,var(--bg) 88%,transparent);z-index:9;padding:20px}
+.toast.show{display:grid}
+.toast .box{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:28px;max-width:380px;text-align:center}
+.tick{width:72px;height:72px;margin:0 auto 12px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
+.toast h2{font-size:1.8rem;margin-bottom:6px}
+.toast p{margin:0 0 18px;color:var(--muted)}
+.status{font-size:13px;color:var(--muted);text-align:center;margin-top:18px}
+.status b{color:var(--ink)}
+@media(max-width:380px){.tile{min-height:104px}.seg button{font-size:.92rem}.opt{min-height:76px}}
+@media(prefers-reduced-motion:reduce){.tile{transition:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topbar">
+    <a class="brand" href="index.html#home"><i></i>York Theatre Sustainability</a>
+    <a class="toplink" href="index.html#home">Home</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="head">
+    <div>
+      <h1>Drawn up, not used</h1>
+      <p class="sub">Log any syringe that was drawn up and then thrown away. It takes 10 seconds and is completely anonymous.</p>
+    </div>
+    <div class="clock">Logged at<b id="clock">--:--</b><span id="date"></span></div>
+  </div>
+
+  <section class="step" id="s1">
+    <h2><span class="num">1</span>Site</h2>
+    <div class="seg" id="sites"></div>
+  </section>
+
+  <section class="step" id="s2">
+    <h2><span class="num">2</span>Theatre <span class="hint" id="th-hint">Pick a site first</span></h2>
+    <div id="theatres"></div>
+    <div class="otherbox" id="th-other"><input type="text" id="th-other-in" placeholder="Type the theatre or location" maxlength="40" aria-label="Other theatre or location"></div>
+  </section>
+
+  <section class="step" id="s3">
+    <h2><span class="num">3</span>Drug wasted <span class="hint">Tap once per syringe</span></h2>
+    <div class="drugs" id="drugs"></div>
+    <div class="otherbox" id="drug-other"><input type="text" id="drug-other-in" placeholder="Which drug?" maxlength="40" aria-label="Other drug name"></div>
+    <details>
+      <summary>Why was it wasted? (optional)</summary>
+      <div class="chips" id="reasons"></div>
+    </details>
+  </section>
+
+  <p class="status" id="status"></p>
+</div>
+
+<div class="bar"><div class="in">
+  <div class="summary" id="sum">Choose site, theatre and drug</div>
+  <button class="go" id="go" disabled>Submit</button>
+</div></div>
+
+<div class="toast" id="toast" role="dialog" aria-modal="true" aria-labelledby="t-h">
+  <div class="box">
+    <div class="tick"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h2 id="t-h">Logged, thank you</h2>
+    <p id="t-p"></p>
+    <button class="go" id="again">Log another</button>
+  </div>
+</div>
+
+<script>
+{
+// Same Google Apps Script as the roadmap sign-up, quiz counter and feedback. Stored in a "Drug waste" tab.
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbxEQPqamiguEbDLKV2ZvQZ3RA0U3_Bdva9_Xpro1Q4Bt6QA6K_49Laz9ImgqdjGjA/exec";
+
+// Theatres per site, in groups. Edit names here (keep in step with SITES in apps-script/Code.gs).
+const SITES = {
+  "York": [
+    {label:"Main theatres", list:["1","2","3","4","5","6","7","8","9","10","11","12"]},
+    {label:"Day case theatres", list:["DC1","DC2","DC3","DC4","DC5","DC6"]}
+  ],
+  "Scarborough": [{label:"", list:["1","2","3","4","5","6"]}],
+  "Bridlington": [{label:"", list:["1","2"]}]
+};
+// Tiles. c = ISO 26825 label colour: y induction (yellow), v vasopressor (violet), r neuromuscular blocker (red)
+const TILES = [
+  {id:"Propofol", cls:"Induction agent", c:"y", ask:"How much propofol was thrown away?", opts:["<5 mL","5–10 mL",">10 mL"], optIs:"vol"},
+  {id:"Ephedrine", cls:"Vasopressor", c:"v"},
+  {id:"Metaraminol", cls:"Vasopressor", c:"v"},
+  {id:"NMB", name:"Neuromuscular blocker", cls:"Muscle relaxant", c:"r", ask:"Which neuromuscular blocker?", opts:["Rocuronium","Atracurium","Suxamethonium"], optIs:"drug"}
+];
+const REASONS = ['Drawn up "just in case"', "Case cancelled or changed", "Contaminated or dropped", "Expired / time limit", "Other"];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const allTheatres = s => SITES[s].flatMap(g => g.list);
+
+// counts keyed "Drug|volume"
+const state = {site:null, theatre:null, counts:{}, other:0, open:null, reason:null};
+const last = store.get("dwa-last", {});
+
+function tick(){
+  const n = new Date();
+  $("clock").textContent = n.toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit"});
+  $("date").textContent = n.toLocaleDateString("en-GB", {weekday:"short", day:"numeric", month:"short"});
+}
+tick(); const clockTimer = setInterval(tick, 15000);
+
+function keyFor(t, opt){
+  if(!t.opts) return t.id + "|";
+  return t.optIs === "vol" ? t.id + "|" + opt : opt + "|";
+}
+function tileTotal(t){
+  return t.opts ? t.opts.reduce((a, o) => a + (state.counts[keyFor(t, o)] || 0), 0) : (state.counts[keyFor(t)] || 0);
+}
+
+function renderSites(){
+  $("sites").innerHTML = Object.keys(SITES).map(s =>
+    `<button type="button" data-s="${esc(s)}" aria-pressed="${state.site === s}">${esc(s)}</button>`).join("");
+}
+function renderTheatres(){
+  if(!state.site){ $("theatres").innerHTML = ""; $("th-hint").textContent = "Pick a site first"; $("th-other").classList.remove("show"); return; }
+  $("th-hint").textContent = state.site;
+  const chip = t => `<button type="button" class="chip" data-t="${esc(t)}" aria-pressed="${state.theatre === t}">${esc(t)}</button>`;
+  $("theatres").innerHTML = SITES[state.site].map((g, i, arr) =>
+    (g.label ? `<div class="group">${esc(g.label)}</div>` : "") +
+    `<div class="chips">${g.list.map(chip).join("")}${i === arr.length - 1 ? `<button type="button" class="chip wide" data-t="__other" aria-pressed="${state.theatre === "__other"}">Other</button>` : ""}</div>`
+  ).join("");
+  $("th-other").classList.toggle("show", state.theatre === "__other");
+}
+function renderDrugs(){
+  let html = "";
+  TILES.forEach((t, i) => {
+    const n = tileTotal(t), name = t.name || t.id;
+    if(t.opts){
+      html += `<div class="cell ${n ? "has" : ""}"><button type="button" class="tile ${t.c} ${n ? "has" : ""}" data-open="${esc(t.id)}" aria-expanded="${state.open === t.id}" aria-label="${esc(name)}, ${n} logged, choose ${t.optIs === "vol" ? "amount" : "drug"}">
+        <span class="cls">${esc(t.cls)}</span><span class="name ${name.length > 12 ? "long" : ""}">${esc(name)}</span><span class="more">${state.open === t.id ? "Choose below ▾" : (t.optIs === "vol" ? "Tap to choose amount" : "Tap to choose drug")}</span>
+        <span class="badge">${n}</span></button><div class="spacer" aria-hidden="true"></div></div>`;
+    } else {
+      html += `<div class="cell ${n ? "has" : ""}"><button type="button" class="tile ${t.c} ${n ? "has" : ""}" data-k="${esc(keyFor(t))}" aria-label="${esc(name)}, ${n} logged">
+        <span class="cls">${esc(t.cls)}</span><span class="name">${esc(name)}</span><span class="strip"></span>
+        <span class="badge">${n}</span></button>
+        <button type="button" class="minus" data-m="${esc(keyFor(t))}" aria-label="Remove one ${esc(name)}">−</button></div>`;
+    }
+    // panel sits under the row containing the open tile
+    const open = TILES.find(x => x.id === state.open);
+    if(open && i % 2 === 1 && Math.floor(TILES.indexOf(open) / 2) === Math.floor(i / 2)){
+      html += `<div class="panel"><p>${esc(open.ask)}</p><div class="opts ${open.optIs === "drug" ? "list" : ""}">${open.opts.map(o => {
+        const k = keyFor(open, o), c = state.counts[k] || 0;
+        return `<div class="cell ${c ? "has" : ""}"><button type="button" class="tile opt ${open.c} ${c ? "has" : ""}" data-k="${esc(k)}" aria-label="${esc(o)}, ${c} logged">
+          <span class="name">${esc(o)}</span><span class="badge">${c}</span></button>
+          <button type="button" class="minus" data-m="${esc(k)}" aria-label="Remove one ${esc(o)}">−</button></div>`;
+      }).join("")}</div></div>`;
+    }
+  });
+  html += `<div class="cell full ${state.other ? "has" : ""}"><button type="button" class="tile o ${state.other ? "has" : ""}" data-k="__other" aria-label="Other drug, ${state.other} logged">
+    <span class="name" style="font-size:22px">Other drug</span><span class="badge">${state.other}</span></button>
+    <button type="button" class="minus" data-m="__other" aria-label="Remove one other drug">−</button></div>`;
+  $("drugs").innerHTML = html;
+  $("drug-other").classList.toggle("show", state.other > 0);
+  fitNames();
+}
+// shrink any drug name that doesn't fit its tile (e.g. if the label font fails to load)
+function fitNames(){
+  document.querySelectorAll("#drugs .tile .name").forEach(el => {
+    el.style.fontSize = "";
+    const box = el.closest(".tile"), pad = 12;
+    let size = parseFloat(getComputedStyle(el).fontSize);
+    while(size > 12 && (el.scrollWidth > el.clientWidth + 1 || el.getBoundingClientRect().right > box.getBoundingClientRect().right - pad / 2)){
+      size -= 1; el.style.fontSize = size + "px";
+    }
+  });
+}
+const fitRO = new ResizeObserver(() => fitNames());
+fitRO.observe(document.body);
+if(document.fonts) document.fonts.ready.then(fitNames);
+function renderReasons(){
+  $("reasons").innerHTML = REASONS.map(r =>
+    `<button type="button" class="chip" data-r="${esc(r)}" aria-pressed="${state.reason === r}">${esc(r)}</button>`).join("");
+}
+
+function theatreName(){ return state.theatre === "__other" ? $("th-other-in").value.trim() : state.theatre; }
+function items(){
+  const out = [];
+  for(const [k, n] of Object.entries(state.counts)){
+    if(!n) continue;
+    const [drug, vol] = k.split("|");
+    out.push({drug, vol, n});
+  }
+  if(state.other) out.push({drug:"Other: " + ($("drug-other-in").value.trim() || "unspecified"), vol:"", n:state.other});
+  return out;
+}
+function update(){
+  const th = theatreName(), it = items();
+  const total = it.reduce((a, b) => a + b.n, 0);
+  const ok = state.site && th && total > 0 && (!state.other || $("drug-other-in").value.trim());
+  $("go").disabled = !ok;
+  $("s1").classList.toggle("done", !!state.site);
+  $("s2").classList.toggle("done", !!th);
+  $("s3").classList.toggle("done", total > 0);
+  if(!state.site) $("sum").textContent = "Choose site, theatre and drug";
+  else $("sum").innerHTML = `<b>${esc(state.site)}${th ? " · Theatre " + esc(th) : ""}</b><br>${total} syringe${total === 1 ? "" : "s"}`;
+}
+
+$("sites").addEventListener("click", e => {
+  const b = e.target.closest("[data-s]"); if(!b) return;
+  state.site = b.dataset.s;
+  state.theatre = (last.site === state.site && allTheatres(state.site).includes(last.theatre)) ? last.theatre : null;
+  renderSites(); renderTheatres(); update();
+});
+$("theatres").addEventListener("click", e => {
+  const b = e.target.closest("[data-t]"); if(!b) return;
+  state.theatre = b.dataset.t; renderTheatres(); update();
+  if(state.theatre === "__other") $("th-other-in").focus();
+});
+$("drugs").addEventListener("click", e => {
+  const m = e.target.closest("[data-m]");
+  if(m){
+    const k = m.dataset.m;
+    if(k === "__other") state.other = Math.max(0, state.other - 1);
+    else state.counts[k] = Math.max(0, (state.counts[k] || 0) - 1);
+    renderDrugs(); update(); return;
+  }
+  const o = e.target.closest("[data-open]");
+  if(o){ state.open = state.open === o.dataset.open ? null : o.dataset.open; renderDrugs(); return; }
+  const b = e.target.closest("[data-k]"); if(!b) return;
+  const k = b.dataset.k;
+  if(k === "__other"){ state.other++; renderDrugs(); if(state.other === 1) $("drug-other-in").focus(); }
+  else { state.counts[k] = (state.counts[k] || 0) + 1; renderDrugs(); }
+  update();
+});
+$("reasons").addEventListener("click", e => {
+  const b = e.target.closest("[data-r]"); if(!b) return;
+  state.reason = state.reason === b.dataset.r ? null : b.dataset.r; renderReasons();
+});
+$("th-other-in").addEventListener("input", update);
+$("drug-other-in").addEventListener("input", update);
+
+/* sending, with a queue for entries made without signal */
+const queue = () => store.get("dwa-queue", []);
+async function send(en){
+  try{
+    const r = await fetch(ENDPOINT, {method:"POST", body:new URLSearchParams({
+      kind:"drugwaste", id:en.id, ts:en.ts, site:en.site, theatre:en.theatre, reason:en.reason, items:JSON.stringify(en.items), website:""
+    })});
+    const j = await r.json();
+    return !!j.ok;
+  }catch(x){ return false; }
+}
+let flushing = false;
+async function flush(){
+  if(flushing) return; flushing = true;
+  const left = [];
+  for(const en of queue()){ if(!(await send(en))) left.push(en); }
+  store.set("dwa-queue", left); flushing = false; showStatus();
+}
+function showStatus(){
+  const q = queue().length, n = store.get("dwa-count", 0);
+  let s = `<b>${n}</b> entr${n === 1 ? "y" : "ies"} logged from this device.`;
+  if(q) s += ` <b>${q}</b> waiting to upload, will retry automatically.`;
+  $("status").innerHTML = s;
+}
+
+$("go").addEventListener("click", async () => {
+  const now = new Date();
+  const entry = {
+    id: now.getTime().toString(36) + Math.random().toString(36).slice(2, 7),
+    ts: now.toISOString(), site: state.site, theatre: theatreName(), items: items(), reason: state.reason || ""
+  };
+  $("go").disabled = true; $("go").textContent = "Sending…";
+  const ok = await send(entry);
+  if(!ok){ const q = queue(); q.push(entry); store.set("dwa-queue", q); }
+  store.set("dwa-count", store.get("dwa-count", 0) + 1);
+  Object.assign(last, {site:entry.site, theatre:state.theatre}); store.set("dwa-last", last);
+  const total = entry.items.reduce((a, b) => a + b.n, 0);
+  $("t-p").textContent = `${total} syringe${total === 1 ? "" : "s"} · ${entry.site}, theatre ${entry.theatre} · ${now.toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit"})}` +
+    (ok ? "" : ". Saved on this phone and will upload automatically.");
+  $("go").textContent = "Submit";
+  $("toast").classList.add("show"); $("again").focus();
+  showStatus();
+});
+$("again").addEventListener("click", () => {
+  state.counts = {}; state.other = 0; state.reason = null; state.open = null;
+  $("drug-other-in").value = "";
+  $("toast").classList.remove("show");
+  renderDrugs(); renderReasons(); update(); window.scrollTo({top:0, behavior:"smooth"});
+  flush();
+});
+
+// one tap to repeat from the same theatre
+if(last.site && SITES[last.site]){ state.site = last.site; if(allTheatres(last.site).includes(last.theatre)) state.theatre = last.theatre; }
+renderSites(); renderTheatres(); renderDrugs(); renderReasons(); update(); showStatus();
+window.addEventListener("online", flush); flush();
+}
+</script>
+</body>
+</html>

@@ -10,6 +10,7 @@ Static site of operating theatre sustainability resources.
 - `propofol.html` – Plan Your Propofol poster
 - `reading.html` – Additional reading: detail, evidence and sources kept off the main pages
 - `roadmap.html` – Green Theatres Roadmap: 42 actions with case-example links and volunteer sign-up
+- `drug-waste.html` – Drug waste audit: logs syringes drawn up but not used (site, theatre, drug, propofol volume, optional reason) to the "Drug waste" tab of the Apps Script sheet. Not in the main nav; reach it by QR code. Theatre lists live in both the page and `Code.gs`
 - `apps-script/Code.gs` – Google Apps Script backend for volunteer sign-ups (emails the project lead, returns public names)
 
 Waste guidance follows HTM 07-01. Local waste policy and bin labels take precedence.
