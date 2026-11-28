@@ -131,6 +131,8 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
 .reason{min-height:84px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px;padding:12px 14px;text-align:left;line-height:1.25}
 .reason svg{width:28px;height:28px;color:var(--accent)}
 .reason[aria-pressed=true] svg{color:var(--accent-ink)}
+.reason small{display:block;font-weight:500;font-size:.84rem;opacity:.8;margin-top:3px}
+.note{margin:12px 2px 0;font-size:.9rem;color:var(--muted)}
 .reason.wide{grid-column:1/-1;min-height:60px;flex-direction:row;align-items:center;justify-content:flex-start}
 @media (max-width:340px){.reasons{grid-template-columns:minmax(0,1fr)}}
 
@@ -202,6 +204,7 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
   <section class="step" id="s4">
     <h2><span class="num">4</span>Why was it wasted?</h2>
     <div class="reasons" id="reasons"></div>
+    <p class="note">Different reasons for different drugs? Submit them separately.</p>
   </section>
 
   <p class="status" id="status"></p>
@@ -251,8 +254,9 @@ const REASONS = [
   {v:"Case cancelled or changed", label:"Case cancelled or changed", icon:ICON('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M10 14l4 4M14 14l-4 4"/>')},
   {v:"Contaminated or dropped", label:"Contaminated or dropped", icon:ICON('<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/><path d="M4 4l16 16"/>')},
   {v:"Expired / time limit", label:"Expired or past its time limit", icon:ICON('<path d="M6 3h12M6 21h12M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9"/>')},
-  {v:"Not required", label:"Not required", icon:ICON('<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>')},
-  {v:"Other", label:"Other reason", icon:ICON('<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>')}
+  {v:"Not required", label:"Not required", icon:ICON('<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>'), wide:true},
+  {v:"Vial bigger than needed", label:"Vial bigger than needed", sub:"Knew in advance we wouldn't use it all (e.g. 2 mg remi vial)", icon:ICON('<path d="M9 2h6M10 2v3M14 2v3"/><rect x="7" y="5" width="10" height="17" rx="2"/><path d="M7 15h10"/>'), wide:true},
+  {v:"Other", label:"Other reason", icon:ICON('<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>'), wide:true}
 ];
 
 const $ = id => document.getElementById(id);
@@ -357,7 +361,7 @@ if(document.fonts) document.fonts.ready.then(fitNames);
 
 function renderReasons(){
   $("reasons").innerHTML = REASONS.map(r =>
-    `<button type="button" class="pick reason ${r.wide ? "wide" : ""}" data-r="${esc(r.v)}" aria-pressed="${state.reason === r.v}">${r.icon}<span>${esc(r.label)}</span></button>`).join("");
+    `<button type="button" class="pick reason ${r.wide ? "wide" : ""}" data-r="${esc(r.v)}" aria-pressed="${state.reason === r.v}">${r.icon}<span>${esc(r.label)}${r.sub ? `<small>${esc(r.sub)}</small>` : ""}</span></button>`).join("");
 }
 
 function theatreName(){ return state.theatre === "__other" ? $("th-other-in").value.trim() : state.theatre; }

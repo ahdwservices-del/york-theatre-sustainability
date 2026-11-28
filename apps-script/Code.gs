@@ -61,7 +61,7 @@ const DW_GROUP = { Propofol: 'Induction agent', Remifentanil: 'Opioid', Ephedrin
                    Rocuronium: 'Neuromuscular blocker', Atracurium: 'Neuromuscular blocker', Suxamethonium: 'Neuromuscular blocker' };
 const DW_AMOUNTS = { Propofol: ['<50 mg', '50–100 mg', '>100 mg'],
                      Remifentanil: ['<0.5 mg', '0.5–1 mg', '1–1.5 mg', '>1.5 mg'] };
-const DW_REASONS = ['Drawn up "just in case"', 'Case cancelled or changed', 'Contaminated or dropped', 'Expired / time limit', 'Not required', 'Other'];
+const DW_REASONS = ['Drawn up "just in case"', 'Case cancelled or changed', 'Contaminated or dropped', 'Expired / time limit', 'Not required', 'Vial bigger than needed', 'Other'];
 const DW_HEADERS = ['Received', 'Logged at', 'Date', 'Time', 'Weekday', 'Site', 'Theatre', 'Drug', 'Drug group',
                     'Amount (mg)', 'Syringes', 'Reason', 'Entry ID'];
 
