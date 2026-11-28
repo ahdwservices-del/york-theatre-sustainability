@@ -80,10 +80,14 @@ function drugSheet_() {
 }
 
 // End-of-list check (drug-waste.html#end-of-list): the denominator. One row per list.
+// The five emergency drugs are counted ONLY here; the waste log covers propofol, remifentanil,
+// rocuronium, atracurium and other drugs, so nothing is counted twice.
 const DL_DRUGS = ['Ephedrine', 'Metaraminol', 'Atropine', 'Glycopyrrolate', 'Suxamethonium'];
 const DL_HEADERS = ['Received', 'Logged at', 'Date', 'Time', 'Weekday', 'Site', 'Theatre', 'Cases']
   .concat(...DL_DRUGS.map(d => [d + ' drawn up', d + ' used', d + ' never given']))
-  .concat(['Entry ID']);
+  .concat(['Entry ID', 'Never-given reason']);
+const DL_ID_COL = 8 + DL_DRUGS.length * 3 + 1;                     // 'Entry ID' (1-based); reason added after it
+const DL_REASONS = ['Drawn up "just in case"', 'Case cancelled or changed', 'Contaminated or dropped', 'Other'];
 
 function drugList_(p) {
   const sheetSafe = s => /^[=+\-@]/.test(s) ? "'" + s : s;
@@ -108,7 +112,7 @@ function drugList_(p) {
     const used = Math.min(Math.max(parseInt(v[1], 10) || 0, 0), drawn);
     row.push(drawn, used, drawn - used);
   });
-  row.push(id);
+  row.push(id, DL_REASONS.indexOf(p.reason) >= 0 ? p.reason : '');
 
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
@@ -117,7 +121,7 @@ function drugList_(p) {
     let sh = ss.getSheetByName('Drug waste lists');
     if (!sh) { sh = ss.insertSheet('Drug waste lists'); sh.appendRow(DL_HEADERS); sh.setFrozenRows(1); }
     if (id && sh.getLastRow() > 1) {
-      const dup = sh.getRange(2, DL_HEADERS.length, sh.getLastRow() - 1, 1)
+      const dup = sh.getRange(2, DL_ID_COL, sh.getLastRow() - 1, 1)
                     .createTextFinder(id).matchEntireCell(true).findNext();
       if (dup) return json_({ ok: true, duplicate: true });
     }

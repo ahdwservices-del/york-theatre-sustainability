@@ -133,6 +133,8 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
 .reason[aria-pressed=true] svg{color:var(--accent-ink)}
 .reason small{display:block;font-weight:500;font-size:.84rem;opacity:.8;margin-top:3px}
 .note{margin:12px 2px 0;font-size:.9rem;color:var(--muted)}
+.redirect{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--accent-soft);font-size:.92rem;line-height:1.4}
+.linkbtn{font:inherit;font-weight:700;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
 .reason.wide{grid-column:1/-1;min-height:60px;flex-direction:row;align-items:center;justify-content:flex-start}
 @media (max-width:340px){.reasons{grid-template-columns:minmax(0,1fr)}}
 
@@ -227,6 +229,7 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
     <h2><span class="num">3</span>Drug wasted <span class="hint">Tap once per syringe</span></h2>
     <div class="drugs" id="drugs"></div>
     <div class="otherbox" id="drug-other"><input type="text" id="drug-other-in" placeholder="Which drug?" maxlength="40" aria-label="Other drug name"></div>
+    <div class="redirect"><b>Ephedrine, metaraminol, atropine, glycopyrrolate or suxamethonium?</b> Don't log them here. They're counted in the <button type="button" class="linkbtn" id="to-list">End-of-list check</button>.</div>
   </section>
 
   <section class="step w" id="s4">
@@ -250,6 +253,11 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
     <h2><span class="num">4</span>Emergency drugs on this list</h2>
     <p class="note" style="margin:-4px 0 12px">Count every syringe drawn up today, and how many were used even partly. Leave at 0 if not drawn up.</p>
     <div id="lrows"></div>
+  </section>
+
+  <section class="step l" id="l5" hidden>
+    <h2><span class="num">5</span>Why were the unused ones drawn up?</h2>
+    <div class="reasons" id="lreasons"></div>
   </section>
 
   <p class="status" id="status"></p>
@@ -288,11 +296,7 @@ const SITES = {
 const TILES = [
   {id:"Propofol", cls:"Induction agent", c:"y", ask:"How much propofol was thrown away?", opts:["<50 mg","50–100 mg",">100 mg"], optIs:"vol"},
   {id:"Remifentanil", cls:"Opioid", c:"b", ask:"How much remifentanil was thrown away?", opts:["<0.5 mg","0.5–1 mg","1–1.5 mg",">1.5 mg"], optIs:"vol"},
-  {id:"Ephedrine", cls:"Vasopressor", c:"v"},
-  {id:"Metaraminol", cls:"Vasopressor", c:"v"},
-  {id:"Atropine", cls:"Anticholinergic", c:"g"},
-  {id:"Glycopyrrolate", cls:"Anticholinergic", c:"g"},
-  {id:"NMB", name:"Neuromuscular blocker", cls:"Muscle relaxant", c:"r", ask:"Which neuromuscular blocker?", opts:["Rocuronium","Atracurium","Suxamethonium"], optIs:"drug", full:true}
+  {id:"NMB", name:"Neuromuscular blocker", cls:"Muscle relaxant", c:"r", ask:"Which neuromuscular blocker?", opts:["Rocuronium","Atracurium"], optIs:"drug", full:true}
 ];
 // value must match DW_REASONS in Code.gs
 const ICON = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
@@ -315,8 +319,9 @@ const store = {
 const allTheatres = s => SITES[s].flatMap(g => g.list);
 
 // counts keyed "Drug|volume"
-const state = {site:null, theatre:null, counts:{}, other:0, open:null, reason:null, given:null, mode:"waste", cases:0, lc:{}};
+const state = {site:null, theatre:null, counts:{}, other:0, open:null, reason:null, given:null, mode:"waste", cases:0, lc:{}, lreason:null};
 const GIVEN = [{v:"None given", sub:"Drawn up, never used"}, {v:"Part used", sub:"Some given, rest thrown away"}];
+const LIST_REASONS = ['Drawn up "just in case"', "Case cancelled or changed", "Contaminated or dropped", "Other"];
 const LIST_DRUGS = [{id:"Ephedrine", c:"v"}, {id:"Metaraminol", c:"v"}, {id:"Atropine", c:"g"}, {id:"Glycopyrrolate", c:"g"}, {id:"Suxamethonium", c:"r"}];
 LIST_DRUGS.forEach(d => state.lc[d.id] = [0, 0]);
 const last = store.get("dwa-last", {});
@@ -437,15 +442,22 @@ function renderList(){
     return `<div class="lrow"><span class="lname ${d.c}">${esc(d.id)}</span><div class="pair">${st(0, dr, "Drawn up")}${st(1, us, "Used")}</div>
       ${dr ? `<div class="never">Never given: <b>${dr - us}</b></div>` : ""}</div>`;
   }).join("");
+  const never = Object.values(state.lc).reduce((a, v) => a + v[0] - v[1], 0);
+  $("l5").hidden = state.mode !== "list" || !never;
+  $("lreasons").innerHTML = LIST_REASONS.map(r => {
+    const icon = (REASONS.find(x => x.v === r) || {}).icon || "";
+    return `<button type="button" class="pick reason" data-lr="${esc(r)}" aria-pressed="${state.lreason === r}">${icon}<span>${esc(r === 'Drawn up "just in case"' ? "Drawn up just in case" : r === "Other" ? "Other reason" : r)}</span></button>`;
+  }).join("");
 }
 function setMode(m){
   state.mode = m;
   document.querySelectorAll(".modes button").forEach(b => b.setAttribute("aria-selected", b.dataset.mode === m));
   document.querySelectorAll(".step.w").forEach(x => x.hidden = m !== "waste");
   document.querySelectorAll(".step.l").forEach(x => x.hidden = m !== "list");
+  renderList();
   document.querySelector(".sub").textContent = m === "waste"
-    ? "Drew up a syringe and didn't use it? Log it here. A few taps, completely anonymous."
-    : "At the end of each list: how many patients, and which emergency drugs were drawn up and used. Log it even if nothing was wasted.";
+    ? "Binned propofol, remifentanil, a muscle relaxant or another drug you drew up? Log it here. A few taps, completely anonymous."
+    : "At the end of each list: how many patients, and which emergency drugs were drawn up and used. This is the only place emergency drugs are counted, so log it even if nothing was wasted.";
   update();
 }
 function update(){
@@ -456,8 +468,10 @@ function update(){
   if(state.mode === "list"){
     const drawn = Object.values(state.lc).reduce((a, v) => a + v[0], 0);
     $("l3").classList.toggle("done", state.cases > 0);
+    const never = Object.values(state.lc).reduce((a, v) => a + v[0] - v[1], 0);
     $("l4").classList.toggle("done", true);
-    next = !state.site ? "choose a site" : !th ? "choose a theatre" : !(state.cases || drawn) ? "enter the number of patients" : "";
+    $("l5").classList.toggle("done", !!state.lreason);
+    next = !state.site ? "choose a site" : !th ? "choose a theatre" : !(state.cases || drawn) ? "enter the number of patients" : (never && !state.lreason) ? "why were they drawn up?" : "";
     ok = !next;
     line = `${state.cases} patient${state.cases === 1 ? "" : "s"} · ${drawn} drawn up`;
   } else {
@@ -490,6 +504,11 @@ $("l3").addEventListener("click", e => {
   const b = e.target.closest("[data-c]"); if(!b) return;
   state.cases = Math.min(40, Math.max(0, state.cases + Number(b.dataset.c))); renderList(); update();
 });
+$("lreasons").addEventListener("click", e => {
+  const b = e.target.closest("[data-lr]"); if(!b) return;
+  state.lreason = b.dataset.lr; renderList(); update();
+});
+$("to-list").addEventListener("click", () => { history.replaceState(null, "", "#end-of-list"); setMode("list"); window.scrollTo({top:0, behavior:"smooth"}); });
 $("lrows").addEventListener("click", e => {
   const b = e.target.closest("[data-l]"); if(!b) return;
   const [d, w, step] = b.dataset.l.split("|"), v = state.lc[d];
@@ -563,7 +582,8 @@ $("go").addEventListener("click", async () => {
   const entry = {id: now.getTime().toString(36) + Math.random().toString(36).slice(2, 7), ts: now.toISOString()};
   let msg;
   if(state.mode === "list"){
-    entry.p = {kind:"drugwaste_list", site:state.site, theatre:th, cases:String(state.cases), counts:JSON.stringify(state.lc)};
+    const never = Object.values(state.lc).reduce((a, v) => a + v[0] - v[1], 0);
+    entry.p = {kind:"drugwaste_list", site:state.site, theatre:th, cases:String(state.cases), counts:JSON.stringify(state.lc), reason: never ? state.lreason : ""};
     const drawn = Object.values(state.lc).reduce((a, v) => a + v[0], 0);
     msg = `List check: ${state.cases} patient${state.cases === 1 ? "" : "s"}, ${drawn} emergency syringe${drawn === 1 ? "" : "s"} drawn up`;
   } else {
@@ -586,7 +606,7 @@ $("go").addEventListener("click", async () => {
 });
 $("again").addEventListener("click", () => {
   state.counts = {}; state.other = 0; state.reason = null; state.open = null; state.given = null;
-  state.cases = 0; LIST_DRUGS.forEach(d => state.lc[d.id] = [0, 0]);
+  state.cases = 0; state.lreason = null; LIST_DRUGS.forEach(d => state.lc[d.id] = [0, 0]);
   $("drug-other-in").value = "";
   $("toast").classList.remove("show");
   renderDrugs(); renderReasons(); renderGiven(); renderList(); update(); window.scrollTo({top:0, behavior:"smooth"});
