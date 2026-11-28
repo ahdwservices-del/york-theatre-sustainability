@@ -50,7 +50,7 @@ function feedbackSheet_() {
   return sh;
 }
 
-// Drug waste audit (drug-waste.html): one row per drug (and propofol/remifentanil amount band) per entry. No personal data.
+// Drug waste audit (drug-waste.html): one row per drug (and propofol/remifentanil mg band) per entry. No personal data.
 const DW_SITES = {
   'York': ['1','2','3','4','5','6','7','8','9','10','11','12','DC1','DC2','DC3','DC4','DC5','DC6','Eye 1','Eye 2'],
   'Scarborough': ['1','2','3','4','5','6'],
@@ -59,11 +59,11 @@ const DW_SITES = {
 const DW_DRUGS = ['Propofol', 'Remifentanil', 'Ephedrine', 'Metaraminol', 'Rocuronium', 'Atracurium', 'Suxamethonium'];
 const DW_GROUP = { Propofol: 'Induction agent', Remifentanil: 'Opioid', Ephedrine: 'Vasopressor', Metaraminol: 'Vasopressor',
                    Rocuronium: 'Neuromuscular blocker', Atracurium: 'Neuromuscular blocker', Suxamethonium: 'Neuromuscular blocker' };
-const DW_AMOUNTS = { Propofol: ['<5 mL', '5–10 mL', '>10 mL'],
+const DW_AMOUNTS = { Propofol: ['<50 mg', '50–100 mg', '>100 mg'],
                      Remifentanil: ['<0.5 mg', '0.5–1 mg', '1–1.5 mg', '>1.5 mg'] };
 const DW_REASONS = ['Drawn up "just in case"', 'Case cancelled or changed', 'Contaminated or dropped', 'Expired / time limit', 'Not required', 'Other'];
 const DW_HEADERS = ['Received', 'Logged at', 'Date', 'Time', 'Weekday', 'Site', 'Theatre', 'Drug', 'Drug group',
-                    'Amount (propofol mL / remifentanil mg)', 'Syringes', 'Reason', 'Entry ID'];
+                    'Amount (mg)', 'Syringes', 'Reason', 'Entry ID'];
 
 function drugSheet_() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();

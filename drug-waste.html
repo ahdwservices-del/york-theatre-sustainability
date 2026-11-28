@@ -114,7 +114,7 @@ nav a[aria-current="page"]{background:#5fd0c5;color:#062a28;opacity:1;font-weigh
 .opts.quad{grid-template-columns:repeat(2,minmax(0,1fr))}
 .opts.quad .opt{min-height:88px}
 .opts.list .opt,.tile.o{min-height:60px;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;padding:10px 60px 10px 16px}
-.opts.list .opt .name{font-size:22px}
+.opts.list .opt .name{font-size:22px;white-space:nowrap}
 .opts.list .opt .badge,.tile.o .badge{top:50%;bottom:auto;margin-top:-16px;right:12px}
 .opts.list .minus,.cell.full .minus{left:auto;right:56px;top:50%;margin-top:-20px;bottom:auto}
 .opts.list .cell.has .opt,.tile.o.has{padding-right:108px}
@@ -238,7 +238,7 @@ const SITES = {
 };
 // c = ISO 26825 label colour: y induction (yellow), b opioid (blue), v vasopressor (violet), r neuromuscular blocker (red)
 const TILES = [
-  {id:"Propofol", cls:"Induction agent", c:"y", ask:"How much propofol was thrown away?", opts:["<5 mL","5–10 mL",">10 mL"], optIs:"vol"},
+  {id:"Propofol", cls:"Induction agent", c:"y", ask:"How much propofol was thrown away?", opts:["<50 mg","50–100 mg",">100 mg"], optIs:"vol"},
   {id:"Remifentanil", cls:"Opioid", c:"b", ask:"How much remifentanil was thrown away?", opts:["<0.5 mg","0.5–1 mg","1–1.5 mg",">1.5 mg"], optIs:"vol"},
   {id:"Ephedrine", cls:"Vasopressor", c:"v"},
   {id:"Metaraminol", cls:"Vasopressor", c:"v"},
@@ -327,7 +327,7 @@ function renderDrugs(){
     }
     // panel opens under the row holding its tile (tiles pair up two per row unless full width)
     if(open && i === rowEnd(TILES.indexOf(open))){
-      html += `<div class="panel"><p>${esc(open.ask)}</p><div class="opts ${open.optIs === "drug" ? "list" : open.opts.length === 4 ? "quad" : ""}">${open.opts.map(o => {
+      html += `<div class="panel"><p>${esc(open.ask)}</p><div class="opts list">${open.opts.map(o => {
         const k = keyFor(open, o);
         return counter(k, o, state.counts[k] || 0, "opt " + open.c, `<span class="name">${esc(o)}</span>`);
       }).join("")}</div></div>`;
