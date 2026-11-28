@@ -133,6 +133,8 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
 .reason[aria-pressed=true] svg{color:var(--accent-ink)}
 .reason small{display:block;font-weight:500;font-size:.84rem;opacity:.8;margin-top:3px}
 .note{margin:12px 2px 0;font-size:.9rem;color:var(--muted)}
+.testbar{background:#ff5a4e;color:#111;font-weight:700;text-align:center;padding:8px 12px;font-size:.9rem}
+.version{font-size:12px;color:var(--muted);text-align:center;margin-top:6px}
 .redirect{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--accent-soft);font-size:.92rem;line-height:1.4}
 .linkbtn{font:inherit;font-weight:700;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
 .reason.wide{grid-column:1/-1;min-height:60px;flex-direction:row;align-items:center;justify-content:flex-start}
@@ -261,6 +263,7 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
   </section>
 
   <p class="status" id="status"></p>
+  <p class="version">Form version <span id="ver"></span></p>
 </div>
 
 <div class="bar"><div class="in">
@@ -281,6 +284,11 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
 {
 // Same Google Apps Script as the roadmap sign-up, quiz counter and feedback. Stored in a "Drug waste" tab.
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbxEQPqamiguEbDLKV2ZvQZ3RA0U3_Bdva9_Xpro1Q4Bt6QA6K_49Laz9ImgqdjGjA/exec";
+
+// Bump when the form changes; stored with every entry so data from different versions can be separated.
+const FORM_VERSION = "1.0";
+// Open the page with ?test=1 to send entries to separate TEST tabs (for checking devices before launch).
+const TEST = /[?&]test=1/.test(location.search);
 
 // Theatres per site, in groups. Edit names here (keep in step with DW_SITES in apps-script/Code.gs).
 const SITES = {
@@ -558,7 +566,7 @@ async function send(en){
   // older queued entries have no p
   const p = en.p || {kind:"drugwaste", site:en.site, theatre:en.theatre, reason:en.reason, items:JSON.stringify(en.items)};
   try{
-    const r = await fetch(ENDPOINT, {method:"POST", body:new URLSearchParams(Object.assign({id:en.id, ts:en.ts, website:""}, p))});
+    const r = await fetch(ENDPOINT, {method:"POST", body:new URLSearchParams(Object.assign({id:en.id, ts:en.ts, website:"", v:en.v || "", test:en.test ? "1" : ""}, p))});
     const j = await r.json();
     return !!j.ok;
   }catch(x){ return false; }
@@ -579,7 +587,7 @@ function showStatus(){
 
 $("go").addEventListener("click", async () => {
   const now = new Date(), th = theatreName();
-  const entry = {id: now.getTime().toString(36) + Math.random().toString(36).slice(2, 7), ts: now.toISOString()};
+  const entry = {id: now.getTime().toString(36) + Math.random().toString(36).slice(2, 7), ts: now.toISOString(), v: FORM_VERSION, test: TEST};
   let msg;
   if(state.mode === "list"){
     const never = Object.values(state.lc).reduce((a, v) => a + v[0] - v[1], 0);
@@ -615,6 +623,12 @@ $("again").addEventListener("click", () => {
 
 // one tap to repeat from the same theatre
 if(last.site && SITES[last.site]){ state.site = last.site; if(allTheatres(last.site).includes(last.theatre)) state.theatre = last.theatre; }
+$("ver").textContent = FORM_VERSION;
+if(TEST){
+  const b = document.createElement("div");
+  b.className = "testbar"; b.textContent = "TEST MODE: entries go to the TEST tabs, not the audit data";
+  document.body.prepend(b);
+}
 renderSites(); renderTheatres(); renderDrugs(); renderReasons(); renderGiven(); renderList(); showStatus();
 setMode(location.hash === "#end-of-list" ? "list" : "waste");
 window.addEventListener("online", flush); flush();

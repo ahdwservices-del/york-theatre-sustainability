@@ -64,15 +64,17 @@ const DW_AMOUNTS = { Propofol: ['<50 mg', '50–100 mg', '>100 mg'],
                      Remifentanil: ['<0.5 mg', '0.5–1 mg', '1–1.5 mg', '>1.5 mg'] };
 const DW_REASONS = ['Drawn up "just in case"', 'Case cancelled or changed', 'Contaminated or dropped', 'Expired / time limit', 'Not required', 'Vial bigger than needed', 'Other'];
 const DW_HEADERS = ['Received', 'Logged at', 'Date', 'Time', 'Weekday', 'Site', 'Theatre', 'Drug', 'Drug group',
-                    'Amount (mg)', 'Syringes', 'Reason', 'Entry ID', 'Given'];
+                    'Amount (mg)', 'Syringes', 'Reason', 'Entry ID', 'Given', 'Form version'];
 const DW_ID_COL = 13;                                               // 'Entry ID' column (1-based); 'Given' added after it
 const DW_GIVEN = ['None given', 'Part used'];
 
-function drugSheet_() {
+// ?test=1 on the page sends test:'1' -> separate TEST tabs, so devices can be checked without touching real data
+function drugSheet_(test) {
+  const name = 'Drug waste' + (test ? ' TEST' : '');
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sh = ss.getSheetByName('Drug waste');
+  let sh = ss.getSheetByName(name);
   if (!sh) {
-    sh = ss.insertSheet('Drug waste');
+    sh = ss.insertSheet(name);
     sh.appendRow(DW_HEADERS);
     sh.setFrozenRows(1);
   }
@@ -85,9 +87,17 @@ function drugSheet_() {
 const DL_DRUGS = ['Ephedrine', 'Metaraminol', 'Atropine', 'Glycopyrrolate', 'Suxamethonium'];
 const DL_HEADERS = ['Received', 'Logged at', 'Date', 'Time', 'Weekday', 'Site', 'Theatre', 'Cases']
   .concat(...DL_DRUGS.map(d => [d + ' drawn up', d + ' used', d + ' never given']))
-  .concat(['Entry ID', 'Never-given reason']);
+  .concat(['Entry ID', 'Never-given reason', 'Form version']);
 const DL_ID_COL = 8 + DL_DRUGS.length * 3 + 1;                     // 'Entry ID' (1-based); reason added after it
 const DL_REASONS = ['Drawn up "just in case"', 'Case cancelled or changed', 'Contaminated or dropped', 'Other'];
+
+function listSheet_(test) {
+  const name = 'Drug waste lists' + (test ? ' TEST' : '');
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(name);
+  if (!sh) { sh = ss.insertSheet(name); sh.appendRow(DL_HEADERS); sh.setFrozenRows(1); }
+  return sh;
+}
 
 function drugList_(p) {
   const sheetSafe = s => /^[=+\-@]/.test(s) ? "'" + s : s;
@@ -112,14 +122,12 @@ function drugList_(p) {
     const used = Math.min(Math.max(parseInt(v[1], 10) || 0, 0), drawn);
     row.push(drawn, used, drawn - used);
   });
-  row.push(id, DL_REASONS.indexOf(p.reason) >= 0 ? p.reason : '');
+  row.push(id, DL_REASONS.indexOf(p.reason) >= 0 ? p.reason : '', clean_(p.v, 10));
 
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    let sh = ss.getSheetByName('Drug waste lists');
-    if (!sh) { sh = ss.insertSheet('Drug waste lists'); sh.appendRow(DL_HEADERS); sh.setFrozenRows(1); }
+    const sh = listSheet_(p.test === '1');
     if (id && sh.getLastRow() > 1) {
       const dup = sh.getRange(2, DL_ID_COL, sh.getLastRow() - 1, 1)
                     .createTextFinder(id).matchEntireCell(true).findNext();
@@ -159,14 +167,14 @@ function drugWaste_(p) {
     rows.push([now, at, Utilities.formatDate(at, tz, 'yyyy-MM-dd'), Utilities.formatDate(at, tz, 'HH:mm'),
                Utilities.formatDate(at, tz, 'EEE'), site, theatre, drug, DW_GROUP[drug] || 'Other', vol, n,
                DW_REASONS.indexOf(p.reason) >= 0 ? p.reason : '', id,
-               DW_GIVEN.indexOf(p.given) >= 0 ? p.given : '']);
+               DW_GIVEN.indexOf(p.given) >= 0 ? p.given : '', clean_(p.v, 10)]);
   });
   if (!rows.length) return json_({ ok: false, error: 'invalid' });
 
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    const sh = drugSheet_();
+    const sh = drugSheet_(p.test === '1');
     if (id && sh.getLastRow() > 1) {                                // ignore re-sent entries
       const dup = sh.getRange(2, DW_ID_COL, sh.getLastRow() - 1, 1)
                     .createTextFinder(id).matchEntireCell(true).findNext();
@@ -177,6 +185,82 @@ function drugWaste_(p) {
     lock.releaseLock();
   }
   return json_({ ok: true });
+}
+
+// ---- Drug waste audit: monitoring and analysis ----
+
+// Run DAILY during the audit (Triggers -> Add trigger -> dailyDrugWasteSummary -> Day timer, 7-8pm).
+// Emails yesterday-to-now totals by site and flags patterns that look like errors or fake entries.
+function dailyDrugWasteSummary() {
+  const since = Date.now() - 864e5;
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const w = ss.getSheetByName('Drug waste'), l = ss.getSheetByName('Drug waste lists');
+  const wRows = w ? w.getDataRange().getValues().slice(1).filter(r => new Date(r[0]).getTime() >= since) : [];
+  const lRows = l ? l.getDataRange().getValues().slice(1).filter(r => new Date(r[0]).getTime() >= since) : [];
+  const lines = [], flags = [];
+  Object.keys(DW_SITES).forEach(site => {
+    const ws = wRows.filter(r => r[5] === site), ls = lRows.filter(r => r[5] === site);
+    const syr = ws.reduce((a, r) => a + Number(r[10] || 0), 0);
+    let drawn = 0, never = 0;
+    ls.forEach(r => DL_DRUGS.forEach((d, i) => { drawn += Number(r[8 + i * 3] || 0); never += Number(r[10 + i * 3] || 0); }));
+    lines.push(site + ': ' + ls.length + ' end-of-list checks (' + ls.reduce((a, r) => a + Number(r[7] || 0), 0) + ' patients), ' +
+               'emergency syringes ' + never + ' never given of ' + drawn + ' drawn up; ' + syr + ' other syringes logged as waste.');
+  });
+  // bursts: more than 5 submissions from one theatre within 10 minutes
+  const byTheatre = {};
+  wRows.concat(lRows).forEach(r => { const k = r[5] + ' / ' + r[6]; (byTheatre[k] = byTheatre[k] || []).push(new Date(r[0]).getTime()); });
+  Object.keys(byTheatre).forEach(k => {
+    const t = byTheatre[k].sort();
+    for (let i = 5; i < t.length; i++) if (t[i] - t[i - 5] < 10 * 6e4) { flags.push('Burst of entries from ' + k); break; }
+  });
+  lRows.forEach(r => { if (Number(r[7]) > 15) flags.push('List with ' + r[7] + ' patients at ' + r[5] + ' / ' + r[6]); });
+  wRows.forEach(r => { if (Number(r[10]) > 10) flags.push(r[10] + ' syringes of ' + r[7] + ' in one entry at ' + r[5] + ' / ' + r[6]); });
+  MailApp.sendEmail({
+    to: NOTIFY_EMAIL,
+    subject: 'Drug waste audit: last 24 h (' + lRows.length + ' lists, ' + wRows.length + ' waste entries)',
+    body: lines.join('\n') + '\n\n' + (flags.length ? 'Check these:\n- ' + flags.join('\n- ') : 'Nothing unusual.') +
+          '\n\nFull totals: Drug waste summary tab.'
+  });
+}
+
+// Run ONCE (select setupDrugWasteSummary -> Run). Builds a 'Drug waste summary' tab of live formulas:
+// emergency-drug waste rates by site (end-of-list check), other waste by drug and site, and reasons.
+function setupDrugWasteSummary() {
+  drugSheet_(false); listSheet_(false);
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName('Drug waste summary') || ss.insertSheet('Drug waste summary');
+  sh.clear();
+  const col = n => { let s = ''; for (n++; n > 0; n = Math.floor((n - 1) / 26)) s = String.fromCharCode(65 + (n - 1) % 26) + s; return s; };
+  const L = "'Drug waste lists'!", W = "'Drug waste'!", sites = Object.keys(DW_SITES);
+  const out = [];
+  out.push(['Emergency drugs: end-of-list check', '', '', '', '']);
+  out.push(['', ...sites, 'All sites']);
+  out.push(['Lists checked', ...sites.map(s => '=COUNTIF(' + L + 'F:F,"' + s + '")'), '=COUNTA(' + L + 'F2:F)']);
+  out.push(['Patients', ...sites.map(s => '=SUMIFS(' + L + 'H:H,' + L + 'F:F,"' + s + '")'), '=SUM(' + L + 'H2:H)']);
+  DL_DRUGS.forEach((d, i) => {
+    const dr = col(8 + i * 3), nv = col(10 + i * 3);
+    out.push([d + ': % never given',
+      ...sites.map(s => '=IFERROR(SUMIFS(' + L + nv + ':' + nv + ',' + L + 'F:F,"' + s + '")/SUMIFS(' + L + dr + ':' + dr + ',' + L + 'F:F,"' + s + '"),"")'),
+      '=IFERROR(SUM(' + L + nv + '2:' + nv + ')/SUM(' + L + dr + '2:' + dr + '),"")']);
+    out.push([d + ': never given / drawn up',
+      ...sites.map(s => '=SUMIFS(' + L + nv + ':' + nv + ',' + L + 'F:F,"' + s + '")&" / "&SUMIFS(' + L + dr + ':' + dr + ',' + L + 'F:F,"' + s + '")'),
+      '=SUM(' + L + nv + '2:' + nv + ')&" / "&SUM(' + L + dr + '2:' + dr + ')']);
+  });
+  out.push(['', '', '', '', '']);
+  out.push(['Other drugs: syringes logged as waste', ...sites, 'All sites']);
+  ['Propofol', 'Remifentanil', 'Rocuronium', 'Atracurium'].forEach(d => out.push([d,
+    ...sites.map(s => '=SUMIFS(' + W + 'K:K,' + W + 'H:H,"' + d + '",' + W + 'F:F,"' + s + '")'),
+    '=SUMIFS(' + W + 'K:K,' + W + 'H:H,"' + d + '")']));
+  out.push(['Other drugs (any)', ...sites.map(s => '=SUMIFS(' + W + 'K:K,' + W + 'H:H,"Other*",' + W + 'F:F,"' + s + '")'), '=SUMIFS(' + W + 'K:K,' + W + 'H:H,"Other*")']);
+  out.push(['', '', '', '', '']);
+  out.push(['Reasons (syringes, waste log)', '', '', '', 'All sites']);
+  DW_REASONS.forEach(r => out.push([r, '', '', '', '=SUMIFS(' + W + 'K:K,' + W + 'L:L,"' + r.replace(/"/g, '""') + '")']));
+  out.push(['Reasons (lists with never-given emergency drugs)', '', '', '', '']);
+  DL_REASONS.forEach(r => out.push([r, '', '', '', '=COUNTIF(' + L + col(DL_HEADERS.length - 2) + ':' + col(DL_HEADERS.length - 2) + ',"' + r.replace(/"/g, '""') + '")']));
+  sh.getRange(1, 1, out.length, 5).setValues(out);
+  sh.getRange('A:A').setFontWeight('bold');
+  sh.setColumnWidth(1, 300);
+  out.forEach((r, i) => { if (/% never given/.test(r[0])) sh.getRange(i + 1, 2, 1, 4).setNumberFormat('0%'); });
 }
 
 // Optional: run weekly from a time-driven trigger (Triggers → Add trigger → sendFeedbackDigest → Week timer).
