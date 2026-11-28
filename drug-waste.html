@@ -230,7 +230,8 @@ const ENDPOINT = "https://script.google.com/macros/s/AKfycbxEQPqamiguEbDLKV2ZvQZ
 const SITES = {
   "York": [
     {label:"Main theatres", list:["1","2","3","4","5","6","7","8","9","10","11","12"]},
-    {label:"Day case theatres", list:["DC1","DC2","DC3","DC4","DC5","DC6"]}
+    {label:"Day case theatres", list:["DC1","DC2","DC3","DC4","DC5","DC6"]},
+    {label:"Eye theatres", list:["Eye 1","Eye 2"]}
   ],
   "Scarborough": [{label:"", list:["1","2","3","4","5","6"]}],
   "Bridlington": [{label:"", list:["1","2"]}]
@@ -250,7 +251,8 @@ const REASONS = [
   {v:"Case cancelled or changed", label:"Case cancelled or changed", icon:ICON('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M10 14l4 4M14 14l-4 4"/>')},
   {v:"Contaminated or dropped", label:"Contaminated or dropped", icon:ICON('<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/><path d="M4 4l16 16"/>')},
   {v:"Expired / time limit", label:"Expired or past its time limit", icon:ICON('<path d="M6 3h12M6 21h12M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9"/>')},
-  {v:"Other", label:"Other reason", icon:ICON('<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>'), wide:true}
+  {v:"Not required", label:"Not required", icon:ICON('<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>')},
+  {v:"Other", label:"Other reason", icon:ICON('<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>')}
 ];
 
 const $ = id => document.getElementById(id);
