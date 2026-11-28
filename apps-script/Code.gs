@@ -56,14 +56,17 @@ const DW_SITES = {
   'Scarborough': ['1','2','3','4','5','6'],
   'Bridlington': ['1','2']
 };
-const DW_DRUGS = ['Propofol', 'Remifentanil', 'Ephedrine', 'Metaraminol', 'Rocuronium', 'Atracurium', 'Suxamethonium'];
+const DW_DRUGS = ['Propofol', 'Remifentanil', 'Ephedrine', 'Metaraminol', 'Atropine', 'Glycopyrrolate', 'Rocuronium', 'Atracurium', 'Suxamethonium'];
 const DW_GROUP = { Propofol: 'Induction agent', Remifentanil: 'Opioid', Ephedrine: 'Vasopressor', Metaraminol: 'Vasopressor',
+                   Atropine: 'Anticholinergic', Glycopyrrolate: 'Anticholinergic',
                    Rocuronium: 'Neuromuscular blocker', Atracurium: 'Neuromuscular blocker', Suxamethonium: 'Neuromuscular blocker' };
 const DW_AMOUNTS = { Propofol: ['<50 mg', '50–100 mg', '>100 mg'],
                      Remifentanil: ['<0.5 mg', '0.5–1 mg', '1–1.5 mg', '>1.5 mg'] };
 const DW_REASONS = ['Drawn up "just in case"', 'Case cancelled or changed', 'Contaminated or dropped', 'Expired / time limit', 'Not required', 'Vial bigger than needed', 'Other'];
 const DW_HEADERS = ['Received', 'Logged at', 'Date', 'Time', 'Weekday', 'Site', 'Theatre', 'Drug', 'Drug group',
-                    'Amount (mg)', 'Syringes', 'Reason', 'Entry ID'];
+                    'Amount (mg)', 'Syringes', 'Reason', 'Entry ID', 'Given'];
+const DW_ID_COL = 13;                                               // 'Entry ID' column (1-based); 'Given' added after it
+const DW_GIVEN = ['None given', 'Part used'];
 
 function drugSheet_() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -74,6 +77,55 @@ function drugSheet_() {
     sh.setFrozenRows(1);
   }
   return sh;
+}
+
+// End-of-list check (drug-waste.html#end-of-list): the denominator. One row per list.
+const DL_DRUGS = ['Ephedrine', 'Metaraminol', 'Atropine', 'Glycopyrrolate', 'Suxamethonium'];
+const DL_HEADERS = ['Received', 'Logged at', 'Date', 'Time', 'Weekday', 'Site', 'Theatre', 'Cases']
+  .concat(...DL_DRUGS.map(d => [d + ' drawn up', d + ' used', d + ' never given']))
+  .concat(['Entry ID']);
+
+function drugList_(p) {
+  const sheetSafe = s => /^[=+\-@]/.test(s) ? "'" + s : s;
+  const site = Object.prototype.hasOwnProperty.call(DW_SITES, p.site) ? p.site : '';
+  if (!site) return json_({ ok: false, error: 'invalid' });
+  let theatre = clean_(p.theatre, 40);
+  if (DW_SITES[site].indexOf(theatre) < 0) theatre = 'Other: ' + sheetSafe(theatre);
+  const cases = Math.min(Math.max(parseInt(p.cases, 10) || 0, 0), 40);
+  let counts;
+  try { counts = JSON.parse(p.counts || '{}'); } catch (x) { return json_({ ok: false, error: 'invalid' }); }
+  if (!counts || typeof counts !== 'object') return json_({ ok: false, error: 'invalid' });
+  const id = clean_(p.id, 20).replace(/[^a-z0-9]/gi, '');
+  const now = new Date();
+  let at = new Date(p.ts);
+  if (isNaN(at) || at > new Date(now.getTime() + 5 * 6e4) || at < new Date(now.getTime() - 14 * 864e5)) at = now;
+  const tz = Session.getScriptTimeZone();
+  const row = [now, at, Utilities.formatDate(at, tz, 'yyyy-MM-dd'), Utilities.formatDate(at, tz, 'HH:mm'),
+               Utilities.formatDate(at, tz, 'EEE'), site, theatre, cases];
+  DL_DRUGS.forEach(d => {
+    const v = Array.isArray(counts[d]) ? counts[d] : [0, 0];
+    const drawn = Math.min(Math.max(parseInt(v[0], 10) || 0, 0), 30);
+    const used = Math.min(Math.max(parseInt(v[1], 10) || 0, 0), drawn);
+    row.push(drawn, used, drawn - used);
+  });
+  row.push(id);
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sh = ss.getSheetByName('Drug waste lists');
+    if (!sh) { sh = ss.insertSheet('Drug waste lists'); sh.appendRow(DL_HEADERS); sh.setFrozenRows(1); }
+    if (id && sh.getLastRow() > 1) {
+      const dup = sh.getRange(2, DL_HEADERS.length, sh.getLastRow() - 1, 1)
+                    .createTextFinder(id).matchEntireCell(true).findNext();
+      if (dup) return json_({ ok: true, duplicate: true });
+    }
+    sh.getRange(sh.getLastRow() + 1, 1, 1, DL_HEADERS.length).setValues([row]);
+  } finally {
+    lock.releaseLock();
+  }
+  return json_({ ok: true });
 }
 
 function drugWaste_(p) {
@@ -102,7 +154,8 @@ function drugWaste_(p) {
     const vol = DW_AMOUNTS[drug] && DW_AMOUNTS[drug].indexOf(it.vol) >= 0 ? it.vol : '';
     rows.push([now, at, Utilities.formatDate(at, tz, 'yyyy-MM-dd'), Utilities.formatDate(at, tz, 'HH:mm'),
                Utilities.formatDate(at, tz, 'EEE'), site, theatre, drug, DW_GROUP[drug] || 'Other', vol, n,
-               DW_REASONS.indexOf(p.reason) >= 0 ? p.reason : '', id]);
+               DW_REASONS.indexOf(p.reason) >= 0 ? p.reason : '', id,
+               DW_GIVEN.indexOf(p.given) >= 0 ? p.given : '']);
   });
   if (!rows.length) return json_({ ok: false, error: 'invalid' });
 
@@ -111,7 +164,7 @@ function drugWaste_(p) {
   try {
     const sh = drugSheet_();
     if (id && sh.getLastRow() > 1) {                                // ignore re-sent entries
-      const dup = sh.getRange(2, DW_HEADERS.length, sh.getLastRow() - 1, 1)
+      const dup = sh.getRange(2, DW_ID_COL, sh.getLastRow() - 1, 1)
                     .createTextFinder(id).matchEntireCell(true).findNext();
       if (dup) return json_({ ok: true, duplicate: true });
     }
@@ -151,7 +204,8 @@ function doGet(e) {
 function doPost(e) {
   const p = (e && e.parameter) || {};
   if (p.website) return json_({ ok: true });                  // bot filled the hidden field
-  if (p.kind === 'drugwaste') return drugWaste_(p);           // drug waste audit: no personal data
+  if (p.kind === 'drugwaste') return drugWaste_(p);
+  if (p.kind === 'drugwaste_list') return drugList_(p);         // end-of-list counts: no personal data           // drug waste audit: no personal data
   if (p.kind === 'feedback') {                                 // anonymous feedback: date only
     const topics = ['Waste and bins', 'Anaesthetic gases', 'Drugs and propofol', 'Reusable kit', 'Energy and lights', 'Something else'];
     const places = ['Anaesthetic room', 'Theatre', 'Recovery', 'Somewhere else'];

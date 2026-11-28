@@ -14,7 +14,7 @@
   --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
   --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --label:"Barlow Condensed","Arial Narrow",sans-serif;
-  --yellow:#ffe14a; --blue:#8ecbf5; --violet:#c9a8ec; --red:#ff5a4e; --other:#eef2f1;
+  --yellow:#ffe14a; --blue:#8ecbf5; --green:#86d6a0; --violet:#c9a8ec; --red:#ff5a4e; --other:#eef2f1;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -95,7 +95,7 @@ nav a[aria-current="page"]{background:#5fd0c5;color:#062a28;opacity:1;font-weigh
 .tile.has .foot{padding-right:44px}
 .strip{width:100%;height:8px;border-radius:4px;background:repeating-linear-gradient(90deg,#111 0 6px,transparent 6px 12px);opacity:.85}
 .r .strip{background:repeating-linear-gradient(-45deg,#111 0 5px,transparent 5px 10px)}
-.y{background:var(--yellow)}.b{background:var(--blue)}.v{background:var(--violet)}.r{background:var(--red)}
+.y{background:var(--yellow)}.g{background:var(--green)}.b{background:var(--blue)}.v{background:var(--violet)}.r{background:var(--red)}
 .tile[aria-expanded=true]{box-shadow:0 0 0 3px var(--ink)}
 .badge{position:absolute;bottom:13px;right:10px;min-width:32px;height:32px;padding:0 8px;border-radius:16px;background:#111;color:#fff;font:700 16px/32px var(--body);text-align:center;display:none}
 .has>.badge{display:block}
@@ -135,6 +135,29 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
 .note{margin:12px 2px 0;font-size:.9rem;color:var(--muted)}
 .reason.wide{grid-column:1/-1;min-height:60px;flex-direction:row;align-items:center;justify-content:flex-start}
 @media (max-width:340px){.reasons{grid-template-columns:minmax(0,1fr)}}
+
+/* mode switch */
+.modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;background:var(--line);padding:4px;border-radius:16px;margin:0 0 16px}
+.modes button{font:700 .98rem var(--body);min-height:48px;border:0;border-radius:12px;background:transparent;color:var(--ink);cursor:pointer;padding:6px 8px;line-height:1.2}
+.modes button[aria-selected=true]{background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+[hidden]{display:none!important}
+/* given */
+.given{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.given .pick{min-height:72px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:10px 14px;text-align:left}
+.given small{font-weight:500;font-size:.84rem;opacity:.8}
+/* end-of-list counters */
+.ctr{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.step2{display:flex;align-items:center;gap:6px;flex:none}
+.step2 button{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--ink);font:700 22px/1 var(--body);cursor:pointer}
+.step2 output{min-width:36px;text-align:center;font:700 1.35rem var(--body);font-variant-numeric:tabular-nums}
+.lrow{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px}
+.lrow .lname{display:inline-block;font:700 18px/1 var(--label);text-transform:uppercase;color:#111;padding:6px 10px;border-radius:8px;margin-bottom:8px}
+.lrow .pair{display:grid;gap:6px}
+.lrow .pair > div{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.lrow .pair label{font-size:1rem;font-weight:600}
+.lrow .never{font-size:.85rem;color:var(--muted);margin-top:6px}
+.lrow .never b{color:var(--ink)}
+.cases{font-size:1.05rem;font-weight:600}
 
 /* submit bar */
 .bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom));z-index:4;box-shadow:0 -6px 20px rgba(0,0,0,.06)}
@@ -181,7 +204,12 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
   <div class="intro">
     <h1>Drug waste audit</h1>
     <p class="sub">Drew up a syringe and didn't use it? Log it here. A few taps, completely anonymous.</p>
-    <span class="stamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Auto time-stamp <b id="clock">--:--</b></span>
+    <span class="stamp" id="stamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Auto time-stamp <b id="clock">--:--</b></span>
+  </div>
+
+  <div class="modes" role="tablist" aria-label="What are you logging?">
+    <button type="button" role="tab" id="m-waste" data-mode="waste" aria-selected="true">Log wasted syringe</button>
+    <button type="button" role="tab" id="m-list" data-mode="list" aria-selected="false">End-of-list check</button>
   </div>
 
   <section class="step" id="s1">
@@ -195,16 +223,33 @@ input[type=text]:focus{border-color:var(--accent);outline:none}
     <div class="otherbox" id="th-other"><input type="text" id="th-other-in" placeholder="Type the theatre or location" maxlength="40" aria-label="Other theatre or location"></div>
   </section>
 
-  <section class="step" id="s3">
+  <section class="step w" id="s3">
     <h2><span class="num">3</span>Drug wasted <span class="hint">Tap once per syringe</span></h2>
     <div class="drugs" id="drugs"></div>
     <div class="otherbox" id="drug-other"><input type="text" id="drug-other-in" placeholder="Which drug?" maxlength="40" aria-label="Other drug name"></div>
   </section>
 
-  <section class="step" id="s4">
-    <h2><span class="num">4</span>Why was it wasted?</h2>
+  <section class="step w" id="s4">
+    <h2><span class="num">4</span>Was any of it given?</h2>
+    <div class="given" id="given"></div>
+  </section>
+
+  <section class="step w" id="s5">
+    <h2><span class="num">5</span>Why was it wasted?</h2>
     <div class="reasons" id="reasons"></div>
-    <p class="note">Different reasons for different drugs? Submit them separately.</p>
+    <p class="note">Different answers for different drugs? Submit them separately.</p>
+  </section>
+
+  <section class="step l" id="l3" hidden>
+    <h2><span class="num">3</span>Cases on this list</h2>
+    <div class="ctr"><span class="cases">Number of patients</span>
+      <span class="step2"><button type="button" data-c="-1" aria-label="One fewer case">−</button><output id="cases">0</output><button type="button" data-c="1" aria-label="One more case">+</button></span></div>
+  </section>
+
+  <section class="step l" id="l4" hidden>
+    <h2><span class="num">4</span>Emergency drugs on this list</h2>
+    <p class="note" style="margin:-4px 0 12px">Count every syringe drawn up today, and how many were used even partly. Leave at 0 if not drawn up.</p>
+    <div id="lrows"></div>
   </section>
 
   <p class="status" id="status"></p>
@@ -239,12 +284,14 @@ const SITES = {
   "Scarborough": [{label:"", list:["1","2","3","4","5","6"]}],
   "Bridlington": [{label:"", list:["1","2"]}]
 };
-// c = ISO 26825 label colour: y induction (yellow), b opioid (blue), v vasopressor (violet), r neuromuscular blocker (red)
+// c = ISO 26825 label colour: y induction (yellow), b opioid (blue), v vasopressor (violet), g anticholinergic (green), r neuromuscular blocker (red)
 const TILES = [
   {id:"Propofol", cls:"Induction agent", c:"y", ask:"How much propofol was thrown away?", opts:["<50 mg","50–100 mg",">100 mg"], optIs:"vol"},
   {id:"Remifentanil", cls:"Opioid", c:"b", ask:"How much remifentanil was thrown away?", opts:["<0.5 mg","0.5–1 mg","1–1.5 mg",">1.5 mg"], optIs:"vol"},
   {id:"Ephedrine", cls:"Vasopressor", c:"v"},
   {id:"Metaraminol", cls:"Vasopressor", c:"v"},
+  {id:"Atropine", cls:"Anticholinergic", c:"g"},
+  {id:"Glycopyrrolate", cls:"Anticholinergic", c:"g"},
   {id:"NMB", name:"Neuromuscular blocker", cls:"Muscle relaxant", c:"r", ask:"Which neuromuscular blocker?", opts:["Rocuronium","Atracurium","Suxamethonium"], optIs:"drug", full:true}
 ];
 // value must match DW_REASONS in Code.gs
@@ -268,7 +315,10 @@ const store = {
 const allTheatres = s => SITES[s].flatMap(g => g.list);
 
 // counts keyed "Drug|volume"
-const state = {site:null, theatre:null, counts:{}, other:0, open:null, reason:null};
+const state = {site:null, theatre:null, counts:{}, other:0, open:null, reason:null, given:null, mode:"waste", cases:0, lc:{}};
+const GIVEN = [{v:"None given", sub:"Drawn up, never used"}, {v:"Part used", sub:"Some given, rest thrown away"}];
+const LIST_DRUGS = [{id:"Ephedrine", c:"v"}, {id:"Metaraminol", c:"v"}, {id:"Atropine", c:"g"}, {id:"Glycopyrrolate", c:"g"}, {id:"Suxamethonium", c:"r"}];
+LIST_DRUGS.forEach(d => state.lc[d.id] = [0, 0]);
 const last = store.get("dwa-last", {});
 
 $("menubtn").addEventListener("click", () => {
@@ -375,20 +425,79 @@ function items(){
   if(state.other) out.push({drug:"Other: " + ($("drug-other-in").value.trim() || "unspecified"), vol:"", n:state.other});
   return out;
 }
+function renderGiven(){
+  $("given").innerHTML = GIVEN.map(g =>
+    `<button type="button" class="pick" data-g="${esc(g.v)}" aria-pressed="${state.given === g.v}"><span>${esc(g.v)}</span><small>${esc(g.sub)}</small></button>`).join("");
+}
+function renderList(){
+  $("cases").textContent = state.cases;
+  $("lrows").innerHTML = LIST_DRUGS.map(d => {
+    const [dr, us] = state.lc[d.id];
+    const st = (w, n, lab) => `<div><label>${lab}</label><span class="step2"><button type="button" data-l="${d.id}|${w}|-1" aria-label="${lab} ${d.id}: one fewer">−</button><output>${n}</output><button type="button" data-l="${d.id}|${w}|1" aria-label="${lab} ${d.id}: one more">+</button></span></div>`;
+    return `<div class="lrow"><span class="lname ${d.c}">${esc(d.id)}</span><div class="pair">${st(0, dr, "Drawn up")}${st(1, us, "Used")}</div>
+      ${dr ? `<div class="never">Never given: <b>${dr - us}</b></div>` : ""}</div>`;
+  }).join("");
+}
+function setMode(m){
+  state.mode = m;
+  document.querySelectorAll(".modes button").forEach(b => b.setAttribute("aria-selected", b.dataset.mode === m));
+  document.querySelectorAll(".step.w").forEach(x => x.hidden = m !== "waste");
+  document.querySelectorAll(".step.l").forEach(x => x.hidden = m !== "list");
+  document.querySelector(".sub").textContent = m === "waste"
+    ? "Drew up a syringe and didn't use it? Log it here. A few taps, completely anonymous."
+    : "At the end of each list: how many patients, and which emergency drugs were drawn up and used. Log it even if nothing was wasted.";
+  update();
+}
 function update(){
-  const th = theatreName(), total = items().reduce((a, b) => a + b.n, 0);
-  const drugOk = total > 0 && (!state.other || $("drug-other-in").value.trim());
-  const ok = state.site && th && drugOk && state.reason;
-  $("go").disabled = !ok;
+  const th = theatreName();
   $("s1").classList.toggle("done", !!state.site);
   $("s2").classList.toggle("done", !!th);
-  $("s3").classList.toggle("done", !!drugOk);
-  $("s4").classList.toggle("done", !!state.reason);
-  const next = !state.site ? "choose a site" : !th ? "choose a theatre" : !total ? "tap a drug" : !drugOk ? "type the drug name" : !state.reason ? "choose a reason" : "";
+  let ok, next, line;
+  if(state.mode === "list"){
+    const drawn = Object.values(state.lc).reduce((a, v) => a + v[0], 0);
+    $("l3").classList.toggle("done", state.cases > 0);
+    $("l4").classList.toggle("done", true);
+    next = !state.site ? "choose a site" : !th ? "choose a theatre" : !(state.cases || drawn) ? "enter the number of patients" : "";
+    ok = !next;
+    line = `${state.cases} patient${state.cases === 1 ? "" : "s"} · ${drawn} drawn up`;
+  } else {
+    const total = items().reduce((a, b) => a + b.n, 0);
+    const drugOk = total > 0 && (!state.other || $("drug-other-in").value.trim());
+    $("s3").classList.toggle("done", !!drugOk);
+    $("s4").classList.toggle("done", !!state.given);
+    $("s5").classList.toggle("done", !!state.reason);
+    next = !state.site ? "choose a site" : !th ? "choose a theatre" : !total ? "tap a drug" : !drugOk ? "type the drug name" : !state.given ? "was any given?" : !state.reason ? "choose a reason" : "";
+    ok = !next;
+    line = `${total} syringe${total === 1 ? "" : "s"}`;
+  }
+  $("go").disabled = !ok;
   $("sum").innerHTML = state.site
-    ? `<b>${esc(state.site)}${th ? " · Theatre " + esc(th) : ""}</b><br>${total} syringe${total === 1 ? "" : "s"}${next ? " · Next: " + next : ""}`
+    ? `<b>${esc(state.site)}${th ? " · Theatre " + esc(th) : ""}</b><br>${line}${next ? " · Next: " + next : ""}`
     : "Next: " + next;
 }
+
+document.querySelector(".modes").addEventListener("click", e => {
+  const b = e.target.closest("[data-mode]"); if(!b) return;
+  history.replaceState(null, "", b.dataset.mode === "list" ? "#end-of-list" : location.pathname + location.search);
+  setMode(b.dataset.mode);
+});
+window.addEventListener("hashchange", () => setMode(location.hash === "#end-of-list" ? "list" : "waste"));
+$("given").addEventListener("click", e => {
+  const b = e.target.closest("[data-g]"); if(!b) return;
+  state.given = b.dataset.g; renderGiven(); update();
+});
+$("l3").addEventListener("click", e => {
+  const b = e.target.closest("[data-c]"); if(!b) return;
+  state.cases = Math.min(40, Math.max(0, state.cases + Number(b.dataset.c))); renderList(); update();
+});
+$("lrows").addEventListener("click", e => {
+  const b = e.target.closest("[data-l]"); if(!b) return;
+  const [d, w, step] = b.dataset.l.split("|"), v = state.lc[d];
+  v[w] = Math.min(30, Math.max(0, v[w] + Number(step)));
+  if(w === "0" && v[1] > v[0]) v[1] = v[0];          // used can't exceed drawn up
+  if(w === "1" && v[1] > v[0]) v[0] = v[1];
+  renderList(); update();
+});
 
 $("sites").addEventListener("click", e => {
   const b = e.target.closest("[data-s]"); if(!b) return;
@@ -427,10 +536,10 @@ $("drug-other-in").addEventListener("input", update);
 /* sending, with a queue for entries made without signal */
 const queue = () => store.get("dwa-queue", []);
 async function send(en){
+  // older queued entries have no p
+  const p = en.p || {kind:"drugwaste", site:en.site, theatre:en.theatre, reason:en.reason, items:JSON.stringify(en.items)};
   try{
-    const r = await fetch(ENDPOINT, {method:"POST", body:new URLSearchParams({
-      kind:"drugwaste", id:en.id, ts:en.ts, site:en.site, theatre:en.theatre, reason:en.reason, items:JSON.stringify(en.items), website:""
-    })});
+    const r = await fetch(ENDPOINT, {method:"POST", body:new URLSearchParams(Object.assign({id:en.id, ts:en.ts, website:""}, p))});
     const j = await r.json();
     return !!j.ok;
   }catch(x){ return false; }
@@ -450,34 +559,44 @@ function showStatus(){
 }
 
 $("go").addEventListener("click", async () => {
-  const now = new Date();
-  const entry = {
-    id: now.getTime().toString(36) + Math.random().toString(36).slice(2, 7),
-    ts: now.toISOString(), site: state.site, theatre: theatreName(), items: items(), reason: state.reason
-  };
+  const now = new Date(), th = theatreName();
+  const entry = {id: now.getTime().toString(36) + Math.random().toString(36).slice(2, 7), ts: now.toISOString()};
+  let msg;
+  if(state.mode === "list"){
+    entry.p = {kind:"drugwaste_list", site:state.site, theatre:th, cases:String(state.cases), counts:JSON.stringify(state.lc)};
+    const drawn = Object.values(state.lc).reduce((a, v) => a + v[0], 0);
+    msg = `List check: ${state.cases} patient${state.cases === 1 ? "" : "s"}, ${drawn} emergency syringe${drawn === 1 ? "" : "s"} drawn up`;
+  } else {
+    const it = items();
+    entry.p = {kind:"drugwaste", site:state.site, theatre:th, reason:state.reason, given:state.given, items:JSON.stringify(it)};
+    const total = it.reduce((a, b) => a + b.n, 0);
+    msg = `${total} syringe${total === 1 ? "" : "s"} (${state.given.toLowerCase()})`;
+  }
   $("go").disabled = true; $("go").textContent = "Sending…";
   const ok = await send(entry);
   if(!ok){ const q = queue(); q.push(entry); store.set("dwa-queue", q); }
   store.set("dwa-count", store.get("dwa-count", 0) + 1);
-  Object.assign(last, {site:entry.site, theatre:state.theatre}); store.set("dwa-last", last);
-  const total = entry.items.reduce((a, b) => a + b.n, 0);
-  $("t-p").textContent = `${total} syringe${total === 1 ? "" : "s"} · ${entry.site}, theatre ${entry.theatre} · ${now.toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit"})}` +
+  Object.assign(last, {site:state.site, theatre:state.theatre}); store.set("dwa-last", last);
+  $("t-p").textContent = `${msg} · ${state.site}, theatre ${th} · ${now.toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit"})}` +
     (ok ? "" : ". Saved on this phone and will upload automatically.");
   $("go").textContent = "Submit";
+  $("again").textContent = state.mode === "list" ? "Done" : "Log another";
   $("toast").classList.add("show"); $("again").focus();
   showStatus();
 });
 $("again").addEventListener("click", () => {
-  state.counts = {}; state.other = 0; state.reason = null; state.open = null;
+  state.counts = {}; state.other = 0; state.reason = null; state.open = null; state.given = null;
+  state.cases = 0; LIST_DRUGS.forEach(d => state.lc[d.id] = [0, 0]);
   $("drug-other-in").value = "";
   $("toast").classList.remove("show");
-  renderDrugs(); renderReasons(); update(); window.scrollTo({top:0, behavior:"smooth"});
+  renderDrugs(); renderReasons(); renderGiven(); renderList(); update(); window.scrollTo({top:0, behavior:"smooth"});
   flush();
 });
 
 // one tap to repeat from the same theatre
 if(last.site && SITES[last.site]){ state.site = last.site; if(allTheatres(last.site).includes(last.theatre)) state.theatre = last.theatre; }
-renderSites(); renderTheatres(); renderDrugs(); renderReasons(); update(); showStatus();
+renderSites(); renderTheatres(); renderDrugs(); renderReasons(); renderGiven(); renderList(); showStatus();
+setMode(location.hash === "#end-of-list" ? "list" : "waste");
 window.addEventListener("online", flush); flush();
 }
 </script>
