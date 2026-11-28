@@ -50,19 +50,20 @@ function feedbackSheet_() {
   return sh;
 }
 
-// Drug waste audit (drug-waste.html): one row per drug (and propofol volume band) per entry. No personal data.
+// Drug waste audit (drug-waste.html): one row per drug (and propofol/remifentanil amount band) per entry. No personal data.
 const DW_SITES = {
   'York': ['1','2','3','4','5','6','7','8','9','10','11','12','DC1','DC2','DC3','DC4','DC5','DC6'],
   'Scarborough': ['1','2','3','4','5','6'],
   'Bridlington': ['1','2']
 };
-const DW_DRUGS = ['Propofol', 'Ephedrine', 'Metaraminol', 'Rocuronium', 'Atracurium', 'Suxamethonium'];
-const DW_GROUP = { Propofol: 'Induction agent', Ephedrine: 'Vasopressor', Metaraminol: 'Vasopressor',
+const DW_DRUGS = ['Propofol', 'Remifentanil', 'Ephedrine', 'Metaraminol', 'Rocuronium', 'Atracurium', 'Suxamethonium'];
+const DW_GROUP = { Propofol: 'Induction agent', Remifentanil: 'Opioid', Ephedrine: 'Vasopressor', Metaraminol: 'Vasopressor',
                    Rocuronium: 'Neuromuscular blocker', Atracurium: 'Neuromuscular blocker', Suxamethonium: 'Neuromuscular blocker' };
-const DW_VOLS = ['<5 mL', '5–10 mL', '>10 mL'];
+const DW_AMOUNTS = { Propofol: ['<5 mL', '5–10 mL', '>10 mL'],
+                     Remifentanil: ['<0.5 mg', '0.5–1 mg', '1–1.5 mg', '>1.5 mg'] };
 const DW_REASONS = ['Drawn up "just in case"', 'Case cancelled or changed', 'Contaminated or dropped', 'Expired / time limit', 'Other'];
 const DW_HEADERS = ['Received', 'Logged at', 'Date', 'Time', 'Weekday', 'Site', 'Theatre', 'Drug', 'Drug group',
-                    'Propofol volume', 'Syringes', 'Reason', 'Entry ID'];
+                    'Amount (propofol mL / remifentanil mg)', 'Syringes', 'Reason', 'Entry ID'];
 
 function drugSheet_() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -98,7 +99,7 @@ function drugWaste_(p) {
     if (!n) return;
     let drug = clean_(it.drug, 50);
     if (DW_DRUGS.indexOf(drug) < 0) drug = 'Other: ' + sheetSafe(drug.replace(/^Other:\s*/, ''));
-    const vol = drug === 'Propofol' && DW_VOLS.indexOf(it.vol) >= 0 ? it.vol : '';
+    const vol = DW_AMOUNTS[drug] && DW_AMOUNTS[drug].indexOf(it.vol) >= 0 ? it.vol : '';
     rows.push([now, at, Utilities.formatDate(at, tz, 'yyyy-MM-dd'), Utilities.formatDate(at, tz, 'HH:mm'),
                Utilities.formatDate(at, tz, 'EEE'), site, theatre, drug, DW_GROUP[drug] || 'Other', vol, n,
                DW_REASONS.indexOf(p.reason) >= 0 ? p.reason : '', id]);

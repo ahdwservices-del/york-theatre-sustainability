@@ -14,96 +14,128 @@
   --display:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;
   --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --label:"Barlow Condensed","Arial Narrow",sans-serif;
-  --yellow:#ffe14a; --violet:#c9a8ec; --red:#ff5a4e; --other:#eef2f1;
+  --yellow:#ffe14a; --blue:#8ecbf5; --violet:#c9a8ec; --red:#ff5a4e; --other:#eef2f1;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
-    --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5; --other:#1b302f; color-scheme:dark;
+    --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --other:#1b302f; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0c1a1a; --surface:#132524; --ink:#e6f1ef; --muted:#9db5b3; --line:#27403e;
-  --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --hero-ink:#eef7f5; --other:#1b302f; color-scheme:dark;
+  --accent:#5fd0c5; --accent-ink:#062a28; --accent-soft:#173836; --hero:#0a2e2c; --other:#1b302f; color-scheme:dark;
 }
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;overflow-x:clip}
 h1,h2{font-family:var(--display);line-height:1.1;text-wrap:balance;margin:0}
-h1{font-size:clamp(1.9rem,5vw,2.6rem);font-weight:700;letter-spacing:-.02em}
+h1{font-size:clamp(1.8rem,5vw,2.5rem);font-weight:700;letter-spacing:-.02em}
+button{-webkit-tap-highlight-color:transparent}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
+/* header: full menu on wide screens, Menu button on phones */
 header.top{background:var(--hero);color:var(--hero-ink)}
-.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 20px;max-width:1120px;margin:0 auto}
+.topbar{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;padding:12px 20px;max-width:1120px;margin:0 auto}
 .brand{font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--hero-ink);text-decoration:none;margin-right:auto;display:flex;gap:10px;align-items:center}
 .brand i{width:14px;height:14px;border-radius:50%;background:#5fd0c5;display:inline-block}
 nav{display:flex;gap:4px;flex-wrap:wrap}
 nav a{color:var(--hero-ink);text-decoration:none;padding:7px 12px;border-radius:999px;font-size:.92rem;font-weight:500;opacity:.85}
 nav a:hover{opacity:1;background:rgba(255,255,255,.1)}
 nav a[aria-current="page"]{background:#5fd0c5;color:#062a28;opacity:1;font-weight:600}
+.menubtn{display:none;font:600 .95rem var(--body);color:var(--hero-ink);background:rgba(255,255,255,.12);border:0;border-radius:999px;padding:9px 16px;min-height:40px;cursor:pointer}
+@media (max-width:760px){
+  .menubtn{display:inline-flex}
+  nav{display:none;width:100%;padding:6px 0 4px}
+  nav.open{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav a{padding:11px 12px}
+}
 
 .wrap{max-width:680px;margin:0 auto;padding:22px 16px 130px}
-.head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.sub{color:var(--muted);margin:8px 0 0}
-.clock{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px;text-align:right;font-size:13px;color:var(--muted)}
-.clock b{display:block;color:var(--ink);font-size:18px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.intro{margin-bottom:18px}
+.sub{color:var(--muted);margin:8px 0 12px}
+.stamp{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 10px;font-size:.9rem;color:var(--muted)}
+.stamp svg{width:18px;height:18px;flex:none;color:var(--accent)}
+.stamp b{color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
 
-.step{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
-.step h2{font-family:var(--body);font-size:1.05rem;margin:0 0 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--line);color:var(--ink);font-size:14px;flex:none}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 16px;margin-bottom:14px}
+.step h2{font-family:var(--body);font-size:1.08rem;margin:0 0 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--line);color:var(--ink);font-size:14px;flex:none;transition:background .2s}
 .step.done .num{background:var(--accent);color:var(--accent-ink)}
-.hint{font-weight:400;color:var(--muted);font-size:.9rem;margin-left:auto}
-.group{font-size:.85rem;color:var(--muted);font-weight:600;margin:12px 0 6px}
+.hint{font-weight:400;color:var(--muted);font-size:.88rem;margin-left:auto}
+.group{font-size:.85rem;color:var(--muted);font-weight:600;margin:14px 0 8px}
 .group:first-child{margin-top:0}
 
-.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:8px}
-.seg button,.chip{font:600 1rem var(--body);min-height:50px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;padding:8px 6px}
-.seg button{min-height:56px}
-.seg button[aria-pressed=true],.chip[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft)}
+/* choice buttons: sites, theatres, reasons */
+.pick{font:600 1rem var(--body);border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s}
+.pick[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.sites{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.site{min-height:60px;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 12px}
+.dot{width:20px;height:20px;border-radius:50%;border:2px solid currentColor;flex:none;display:none;place-items:center;opacity:.6}
+.pick[aria-pressed=true] .dot{opacity:1;background:var(--accent-ink)}
+.pick[aria-pressed=true] .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
+@media (max-width:560px){
+  .sites{grid-template-columns:minmax(0,1fr)}
+  .site{justify-content:flex-start;font-size:1.08rem}
+  .dot{display:grid}
+}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:8px}
+.chip{min-height:50px;padding:6px 4px}
 .chip.wide{grid-column:span 2}
 
+/* drug tiles */
 .drugs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.tile{position:relative;font:inherit;text-align:left;cursor:pointer;border:0;border-radius:14px;padding:13px 14px 12px;min-height:118px;color:#111;display:flex;flex-direction:column;justify-content:space-between;gap:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08),0 2px 0 rgba(0,0,0,.14);transition:transform .12s;width:100%}
+.cell{position:relative}
+.cell.full,.cell.span{grid-column:1/-1}
+.cell.span .tile{min-height:96px}
+.tile{position:relative;width:100%;font:inherit;text-align:left;cursor:pointer;border:0;border-radius:14px;padding:12px 14px;min-height:124px;color:#111;display:flex;flex-direction:column;gap:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08),0 2px 0 rgba(0,0,0,.15);transition:transform .12s}
 .tile:active{transform:scale(.97)}
-.tile .cls{font-size:12px;font-weight:700;opacity:.75;padding-right:40px}
-.tile .name{font:700 clamp(17px,4.6vw,26px)/1.05 var(--label);text-transform:uppercase;overflow-wrap:normal;word-break:normal;max-width:100%}
-.tile .strip{height:8px;border-radius:4px;background:repeating-linear-gradient(90deg,#111 0 6px,transparent 6px 12px);opacity:.85}
-.y{background:var(--yellow)}.v{background:var(--violet)}.r{background:var(--red)}
-.tile.r .strip{background:repeating-linear-gradient(-45deg,#111 0 5px,transparent 5px 10px)}
-.tile .more{font-size:12px;font-weight:700}
+.tile .cls{font-size:12px;font-weight:700;opacity:.75;line-height:1.25}
+.tile .name{font:700 clamp(18px,5vw,26px)/1.05 var(--label);text-transform:uppercase;max-width:100%}
+.tile .foot{margin-top:auto;height:30px;display:flex;align-items:center;font-size:12.5px;font-weight:700;padding-right:40px}
+.tile.has .foot{padding-right:44px}
+.strip{width:100%;height:8px;border-radius:4px;background:repeating-linear-gradient(90deg,#111 0 6px,transparent 6px 12px);opacity:.85}
+.r .strip{background:repeating-linear-gradient(-45deg,#111 0 5px,transparent 5px 10px)}
+.y{background:var(--yellow)}.b{background:var(--blue)}.v{background:var(--violet)}.r{background:var(--red)}
 .tile[aria-expanded=true]{box-shadow:0 0 0 3px var(--ink)}
-.tile.o{background:var(--other);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line);grid-column:1/-1;min-height:64px;flex-direction:row;align-items:center}
-.badge{position:absolute;top:10px;right:10px;min-width:34px;height:34px;padding:0 9px;border-radius:17px;background:#111;color:#fff;font-weight:700;display:none;place-items:center;font-size:17px}
-.has>.badge{display:grid}
-.minus{display:block;visibility:hidden;width:100%;height:40px;margin-top:6px;border-radius:10px;border:0;background:var(--line);color:var(--ink);font:700 22px/1 sans-serif;cursor:pointer}
-.cell{position:relative}.spacer{height:46px}.cell.full{grid-column:1/-1}
-.cell.has .minus{visibility:visible}
-.cell.full .minus{display:none}.cell.full.has .minus{display:block}
+.badge{position:absolute;bottom:13px;right:10px;min-width:32px;height:32px;padding:0 8px;border-radius:16px;background:#111;color:#fff;font:700 16px/32px var(--body);text-align:center;display:none}
+.has>.badge{display:block}
+.tile.has .strip{display:none}
+.minus{position:absolute;left:10px;bottom:9px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.2);color:#111;font:700 24px/1 var(--body);cursor:pointer;display:none;place-items:center}
+.cell.has>.minus{display:grid}
 
-.panel{grid-column:1/-1;border-radius:14px;padding:14px;border:2px solid var(--ink);background:var(--surface)}
+.panel{grid-column:1/-1;border-radius:16px;padding:14px;border:3px solid var(--ink);background:var(--surface)}
 .panel p{margin:0 0 10px;font-weight:700}
-.panel .opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.opt{min-height:84px;padding:10px 6px}
-
-.opt{align-items:center;justify-content:center;text-align:center}
+.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.opt{min-height:104px;align-items:center;justify-content:flex-start;text-align:center;padding:12px 6px 52px}
+.opt .name{font-size:clamp(18px,5vw,24px);text-transform:none}
+.opt .badge{bottom:13px;right:8px}
+.opt + .minus,.cell .opt ~ .minus{left:8px}
 .opts.list{grid-template-columns:minmax(0,1fr)}
-.opts.list .cell{display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:8px;align-items:stretch}
-.opts.list .opt{min-height:58px;flex-direction:row;justify-content:space-between;text-align:left;padding:8px 14px}
+.opts.quad{grid-template-columns:repeat(2,minmax(0,1fr))}
+.opts.quad .opt{min-height:88px}
+.opts.list .opt,.tile.o{min-height:60px;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;padding:10px 60px 10px 16px}
 .opts.list .opt .name{font-size:22px}
-.opts.list .opt .badge{margin:0}
-.opts.list .minus{margin:0;height:auto}
-.opt .badge{position:static;margin-top:4px}
-.opt .name{font-size:clamp(15px,4.2vw,21px);text-transform:none;max-width:100%}
-.tile .name.long{font-size:clamp(15px,4vw,23px)}
-
+.opts.list .opt .badge,.tile.o .badge{top:50%;bottom:auto;margin-top:-16px;right:12px}
+.opts.list .minus,.cell.full .minus{left:auto;right:56px;top:50%;margin-top:-20px;bottom:auto}
+.opts.list .cell.has .opt,.tile.o.has{padding-right:108px}
+.tile.o{background:var(--other);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line)}
+.tile.o .name{font-size:22px}
+.cell.full .minus{background:var(--line);color:var(--ink)}
 .otherbox{display:none;margin-top:10px}
 .otherbox.show{display:block}
-input[type=text]{font:inherit;font-size:16px;width:100%;min-height:48px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 12px}
-details{margin-top:6px}
-summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center;color:var(--accent)}
-#reasons{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+input[type=text]{font:inherit;font-size:16px;width:100%;min-height:50px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 12px}
+input[type=text]:focus{border-color:var(--accent);outline:none}
 
-.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom));z-index:4}
+/* reasons */
+.reasons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.reason{min-height:84px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px;padding:12px 14px;text-align:left;line-height:1.25}
+.reason svg{width:28px;height:28px;color:var(--accent)}
+.reason[aria-pressed=true] svg{color:var(--accent-ink)}
+.reason.wide{grid-column:1/-1;min-height:60px;flex-direction:row;align-items:center;justify-content:flex-start}
+@media (max-width:340px){.reasons{grid-template-columns:minmax(0,1fr)}}
+
+/* submit bar */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom));z-index:4;box-shadow:0 -6px 20px rgba(0,0,0,.06)}
 .bar .in{max-width:680px;margin:0 auto;display:flex;gap:12px;align-items:center}
 .summary{flex:1;font-size:14px;color:var(--muted);line-height:1.3}
 .summary b{color:var(--ink)}
@@ -118,16 +150,17 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 .toast p{margin:0 0 18px;color:var(--muted)}
 .status{font-size:13px;color:var(--muted);text-align:center;margin-top:18px}
 .status b{color:var(--ink)}
-@media(max-width:380px){.tile{min-height:104px}.seg button{font-size:.92rem}.opt{min-height:76px}}
-@media(prefers-reduced-motion:reduce){.tile{transition:none}}
+@media (prefers-reduced-motion:reduce){.tile,.pick,.num{transition:none}}
 </style>
 </head>
 <body>
 <header class="top">
   <div class="topbar">
     <a class="brand" href="index.html#home"><i></i>York Theatre Sustainability</a>
-    <nav aria-label="Main">
+    <button class="menubtn" id="menubtn" aria-expanded="false" aria-controls="mainnav">Menu</button>
+    <nav aria-label="Main" id="mainnav">
       <a href="index.html#home">Home</a>
+      <a href="drug-waste.html" aria-current="page">Drug waste audit</a>
       <a href="why-bother.html">Why bother?</a>
       <a href="boundaries.html">Planet</a>
       <a href="sixrs.html">6 Rs</a>
@@ -135,7 +168,6 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
       <a href="quiz.html">Quiz</a>
       <a href="index.html#low-flow">Low flow</a>
       <a href="propofol.html">Propofol</a>
-      <a href="drug-waste.html" aria-current="page">Drug audit</a>
       <a href="roadmap.html">Roadmap</a>
       <a href="reading.html">Reading</a>
       <a href="feedback.html">Tell us</a>
@@ -144,17 +176,15 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 </header>
 
 <div class="wrap">
-  <div class="head">
-    <div>
-      <h1>Drawn up, not used</h1>
-      <p class="sub">Log any syringe that was drawn up and then thrown away. It takes 10 seconds and is completely anonymous.</p>
-    </div>
-    <div class="clock">Logged at<b id="clock">--:--</b><span id="date"></span></div>
+  <div class="intro">
+    <h1>Drug waste audit</h1>
+    <p class="sub">Drew up a syringe and didn't use it? Log it here. A few taps, completely anonymous.</p>
+    <span class="stamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Auto time-stamp <b id="clock">--:--</b></span>
   </div>
 
   <section class="step" id="s1">
     <h2><span class="num">1</span>Site</h2>
-    <div class="seg" id="sites"></div>
+    <div class="sites" id="sites"></div>
   </section>
 
   <section class="step" id="s2">
@@ -167,17 +197,18 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
     <h2><span class="num">3</span>Drug wasted <span class="hint">Tap once per syringe</span></h2>
     <div class="drugs" id="drugs"></div>
     <div class="otherbox" id="drug-other"><input type="text" id="drug-other-in" placeholder="Which drug?" maxlength="40" aria-label="Other drug name"></div>
-    <details>
-      <summary>Why was it wasted? (optional)</summary>
-      <div class="chips" id="reasons"></div>
-    </details>
+  </section>
+
+  <section class="step" id="s4">
+    <h2><span class="num">4</span>Why was it wasted?</h2>
+    <div class="reasons" id="reasons"></div>
   </section>
 
   <p class="status" id="status"></p>
 </div>
 
 <div class="bar"><div class="in">
-  <div class="summary" id="sum">Choose site, theatre and drug</div>
+  <div class="summary" id="sum"></div>
   <button class="go" id="go" disabled>Submit</button>
 </div></div>
 
@@ -195,7 +226,7 @@ summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:
 // Same Google Apps Script as the roadmap sign-up, quiz counter and feedback. Stored in a "Drug waste" tab.
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbxEQPqamiguEbDLKV2ZvQZ3RA0U3_Bdva9_Xpro1Q4Bt6QA6K_49Laz9ImgqdjGjA/exec";
 
-// Theatres per site, in groups. Edit names here (keep in step with SITES in apps-script/Code.gs).
+// Theatres per site, in groups. Edit names here (keep in step with DW_SITES in apps-script/Code.gs).
 const SITES = {
   "York": [
     {label:"Main theatres", list:["1","2","3","4","5","6","7","8","9","10","11","12"]},
@@ -204,14 +235,23 @@ const SITES = {
   "Scarborough": [{label:"", list:["1","2","3","4","5","6"]}],
   "Bridlington": [{label:"", list:["1","2"]}]
 };
-// Tiles. c = ISO 26825 label colour: y induction (yellow), v vasopressor (violet), r neuromuscular blocker (red)
+// c = ISO 26825 label colour: y induction (yellow), b opioid (blue), v vasopressor (violet), r neuromuscular blocker (red)
 const TILES = [
   {id:"Propofol", cls:"Induction agent", c:"y", ask:"How much propofol was thrown away?", opts:["<5 mL","5–10 mL",">10 mL"], optIs:"vol"},
+  {id:"Remifentanil", cls:"Opioid", c:"b", ask:"How much remifentanil was thrown away?", opts:["<0.5 mg","0.5–1 mg","1–1.5 mg",">1.5 mg"], optIs:"vol"},
   {id:"Ephedrine", cls:"Vasopressor", c:"v"},
   {id:"Metaraminol", cls:"Vasopressor", c:"v"},
-  {id:"NMB", name:"Neuromuscular blocker", cls:"Muscle relaxant", c:"r", ask:"Which neuromuscular blocker?", opts:["Rocuronium","Atracurium","Suxamethonium"], optIs:"drug"}
+  {id:"NMB", name:"Neuromuscular blocker", cls:"Muscle relaxant", c:"r", ask:"Which neuromuscular blocker?", opts:["Rocuronium","Atracurium","Suxamethonium"], optIs:"drug", full:true}
 ];
-const REASONS = ['Drawn up "just in case"', "Case cancelled or changed", "Contaminated or dropped", "Expired / time limit", "Other"];
+// value must match DW_REASONS in Code.gs
+const ICON = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const REASONS = [
+  {v:'Drawn up "just in case"', label:"Drawn up just in case", icon:ICON('<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/>')},
+  {v:"Case cancelled or changed", label:"Case cancelled or changed", icon:ICON('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M10 14l4 4M14 14l-4 4"/>')},
+  {v:"Contaminated or dropped", label:"Contaminated or dropped", icon:ICON('<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/><path d="M4 4l16 16"/>')},
+  {v:"Expired / time limit", label:"Expired or past its time limit", icon:ICON('<path d="M6 3h12M6 21h12M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9"/>')},
+  {v:"Other", label:"Other reason", icon:ICON('<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>'), wide:true}
+];
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
@@ -225,10 +265,16 @@ const allTheatres = s => SITES[s].flatMap(g => g.list);
 const state = {site:null, theatre:null, counts:{}, other:0, open:null, reason:null};
 const last = store.get("dwa-last", {});
 
+$("menubtn").addEventListener("click", () => {
+  const open = $("mainnav").classList.toggle("open");
+  $("menubtn").setAttribute("aria-expanded", open);
+  $("menubtn").textContent = open ? "Close" : "Menu";
+});
+
 function tick(){
   const n = new Date();
-  $("clock").textContent = n.toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit"});
-  $("date").textContent = n.toLocaleDateString("en-GB", {weekday:"short", day:"numeric", month:"short"});
+  $("clock").textContent = n.toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit"}) + " · " +
+    n.toLocaleDateString("en-GB", {weekday:"short", day:"numeric", month:"short"});
 }
 tick(); const clockTimer = setInterval(tick, 15000);
 
@@ -236,63 +282,69 @@ function keyFor(t, opt){
   if(!t.opts) return t.id + "|";
   return t.optIs === "vol" ? t.id + "|" + opt : opt + "|";
 }
-function tileTotal(t){
-  return t.opts ? t.opts.reduce((a, o) => a + (state.counts[keyFor(t, o)] || 0), 0) : (state.counts[keyFor(t)] || 0);
-}
+const tileTotal = t => t.opts ? t.opts.reduce((a, o) => a + (state.counts[keyFor(t, o)] || 0), 0) : (state.counts[keyFor(t)] || 0);
 
 function renderSites(){
   $("sites").innerHTML = Object.keys(SITES).map(s =>
-    `<button type="button" data-s="${esc(s)}" aria-pressed="${state.site === s}">${esc(s)}</button>`).join("");
+    `<button type="button" class="pick site" data-s="${esc(s)}" aria-pressed="${state.site === s}"><span class="dot"></span>${esc(s)}</button>`).join("");
 }
 function renderTheatres(){
   if(!state.site){ $("theatres").innerHTML = ""; $("th-hint").textContent = "Pick a site first"; $("th-other").classList.remove("show"); return; }
   $("th-hint").textContent = state.site;
-  const chip = t => `<button type="button" class="chip" data-t="${esc(t)}" aria-pressed="${state.theatre === t}">${esc(t)}</button>`;
+  const chip = t => `<button type="button" class="pick chip" data-t="${esc(t)}" aria-pressed="${state.theatre === t}">${esc(t)}</button>`;
   $("theatres").innerHTML = SITES[state.site].map((g, i, arr) =>
     (g.label ? `<div class="group">${esc(g.label)}</div>` : "") +
-    `<div class="chips">${g.list.map(chip).join("")}${i === arr.length - 1 ? `<button type="button" class="chip wide" data-t="__other" aria-pressed="${state.theatre === "__other"}">Other</button>` : ""}</div>`
+    `<div class="chips">${g.list.map(chip).join("")}${i === arr.length - 1 ? `<button type="button" class="pick chip wide" data-t="__other" aria-pressed="${state.theatre === "__other"}">Other</button>` : ""}</div>`
   ).join("");
   $("th-other").classList.toggle("show", state.theatre === "__other");
 }
+function counter(k, label, n, cls, inner){
+  return `<div class="cell ${n ? "has" : ""}"><button type="button" class="tile ${cls} ${n ? "has" : ""}" data-k="${esc(k)}" aria-label="${esc(label)}, ${n} logged. Tap to add one">${inner}<span class="badge">${n}</span></button>
+    <button type="button" class="minus" data-m="${esc(k)}" aria-label="Remove one ${esc(label)}">−</button></div>`;
+}
+function rowEnd(idx){
+  // tiles before idx decide whether idx starts a row
+  let col = 0;
+  for(let j = 0; j < idx; j++) col = TILES[j].full ? 0 : (col + 1) % 2;
+  if(TILES[idx].full || col === 1 || idx === TILES.length - 1 || TILES[idx + 1].full) return idx;
+  return idx + 1;
+}
 function renderDrugs(){
   let html = "";
+  const open = TILES.find(x => x.id === state.open);
   TILES.forEach((t, i) => {
     const n = tileTotal(t), name = t.name || t.id;
     if(t.opts){
-      html += `<div class="cell ${n ? "has" : ""}"><button type="button" class="tile ${t.c} ${n ? "has" : ""}" data-open="${esc(t.id)}" aria-expanded="${state.open === t.id}" aria-label="${esc(name)}, ${n} logged, choose ${t.optIs === "vol" ? "amount" : "drug"}">
-        <span class="cls">${esc(t.cls)}</span><span class="name ${name.length > 12 ? "long" : ""}">${esc(name)}</span><span class="more">${state.open === t.id ? "Choose below ▾" : (t.optIs === "vol" ? "Tap to choose amount" : "Tap to choose drug")}</span>
-        <span class="badge">${n}</span></button><div class="spacer" aria-hidden="true"></div></div>`;
+      const what = t.optIs === "vol" ? "amount" : "drug";
+      html += `<div class="cell ${t.full ? "span" : ""} ${n ? "has" : ""}"><button type="button" class="tile ${t.c} ${n ? "has" : ""}" data-open="${esc(t.id)}" aria-expanded="${state.open === t.id}" aria-label="${esc(name)}, ${n} logged. Choose ${what}">
+        <span class="cls">${esc(t.cls)}</span><span class="name">${esc(name)}</span><span class="foot">${state.open === t.id ? "Below ▾" : (t.optIs === "vol" ? "Amount ▸" : "Which one ▸")}</span>
+        <span class="badge">${n}</span></button></div>`;
     } else {
-      html += `<div class="cell ${n ? "has" : ""}"><button type="button" class="tile ${t.c} ${n ? "has" : ""}" data-k="${esc(keyFor(t))}" aria-label="${esc(name)}, ${n} logged">
-        <span class="cls">${esc(t.cls)}</span><span class="name">${esc(name)}</span><span class="strip"></span>
-        <span class="badge">${n}</span></button>
-        <button type="button" class="minus" data-m="${esc(keyFor(t))}" aria-label="Remove one ${esc(name)}">−</button></div>`;
+      html += counter(keyFor(t), name, n, t.c,
+        `<span class="cls">${esc(t.cls)}</span><span class="name">${esc(name)}</span><span class="foot"><span class="strip"></span></span>`);
     }
-    // panel sits under the row containing the open tile
-    const open = TILES.find(x => x.id === state.open);
-    if(open && i % 2 === 1 && Math.floor(TILES.indexOf(open) / 2) === Math.floor(i / 2)){
-      html += `<div class="panel"><p>${esc(open.ask)}</p><div class="opts ${open.optIs === "drug" ? "list" : ""}">${open.opts.map(o => {
-        const k = keyFor(open, o), c = state.counts[k] || 0;
-        return `<div class="cell ${c ? "has" : ""}"><button type="button" class="tile opt ${open.c} ${c ? "has" : ""}" data-k="${esc(k)}" aria-label="${esc(o)}, ${c} logged">
-          <span class="name">${esc(o)}</span><span class="badge">${c}</span></button>
-          <button type="button" class="minus" data-m="${esc(k)}" aria-label="Remove one ${esc(o)}">−</button></div>`;
+    // panel opens under the row holding its tile (tiles pair up two per row unless full width)
+    if(open && i === rowEnd(TILES.indexOf(open))){
+      html += `<div class="panel"><p>${esc(open.ask)}</p><div class="opts ${open.optIs === "drug" ? "list" : open.opts.length === 4 ? "quad" : ""}">${open.opts.map(o => {
+        const k = keyFor(open, o);
+        return counter(k, o, state.counts[k] || 0, "opt " + open.c, `<span class="name">${esc(o)}</span>`);
       }).join("")}</div></div>`;
     }
   });
   html += `<div class="cell full ${state.other ? "has" : ""}"><button type="button" class="tile o ${state.other ? "has" : ""}" data-k="__other" aria-label="Other drug, ${state.other} logged">
-    <span class="name" style="font-size:22px">Other drug</span><span class="badge">${state.other}</span></button>
+    <span class="name">Other drug</span><span class="badge">${state.other}</span></button>
     <button type="button" class="minus" data-m="__other" aria-label="Remove one other drug">−</button></div>`;
   $("drugs").innerHTML = html;
   $("drug-other").classList.toggle("show", state.other > 0);
   fitNames();
 }
-// shrink any drug name that doesn't fit its tile (e.g. if the label font fails to load)
+// shrink any drug name that doesn't fit its tile (e.g. if the label font is blocked)
 function fitNames(){
   document.querySelectorAll("#drugs .tile .name").forEach(el => {
     el.style.fontSize = "";
-    const box = el.closest(".tile"), pad = 12;
+    const box = el.closest(".tile").getBoundingClientRect();
     let size = parseFloat(getComputedStyle(el).fontSize);
-    while(size > 12 && (el.scrollWidth > el.clientWidth + 1 || el.getBoundingClientRect().right > box.getBoundingClientRect().right - pad / 2)){
+    while(size > 12 && (el.scrollWidth > el.clientWidth + 1 || el.getBoundingClientRect().right > box.right - 6)){
       size -= 1; el.style.fontSize = size + "px";
     }
   });
@@ -300,9 +352,10 @@ function fitNames(){
 const fitRO = new ResizeObserver(() => fitNames());
 fitRO.observe(document.body);
 if(document.fonts) document.fonts.ready.then(fitNames);
+
 function renderReasons(){
   $("reasons").innerHTML = REASONS.map(r =>
-    `<button type="button" class="chip" data-r="${esc(r)}" aria-pressed="${state.reason === r}">${esc(r)}</button>`).join("");
+    `<button type="button" class="pick reason ${r.wide ? "wide" : ""}" data-r="${esc(r.v)}" aria-pressed="${state.reason === r.v}">${r.icon}<span>${esc(r.label)}</span></button>`).join("");
 }
 
 function theatreName(){ return state.theatre === "__other" ? $("th-other-in").value.trim() : state.theatre; }
@@ -317,15 +370,18 @@ function items(){
   return out;
 }
 function update(){
-  const th = theatreName(), it = items();
-  const total = it.reduce((a, b) => a + b.n, 0);
-  const ok = state.site && th && total > 0 && (!state.other || $("drug-other-in").value.trim());
+  const th = theatreName(), total = items().reduce((a, b) => a + b.n, 0);
+  const drugOk = total > 0 && (!state.other || $("drug-other-in").value.trim());
+  const ok = state.site && th && drugOk && state.reason;
   $("go").disabled = !ok;
   $("s1").classList.toggle("done", !!state.site);
   $("s2").classList.toggle("done", !!th);
-  $("s3").classList.toggle("done", total > 0);
-  if(!state.site) $("sum").textContent = "Choose site, theatre and drug";
-  else $("sum").innerHTML = `<b>${esc(state.site)}${th ? " · Theatre " + esc(th) : ""}</b><br>${total} syringe${total === 1 ? "" : "s"}`;
+  $("s3").classList.toggle("done", !!drugOk);
+  $("s4").classList.toggle("done", !!state.reason);
+  const next = !state.site ? "choose a site" : !th ? "choose a theatre" : !total ? "tap a drug" : !drugOk ? "type the drug name" : !state.reason ? "choose a reason" : "";
+  $("sum").innerHTML = state.site
+    ? `<b>${esc(state.site)}${th ? " · Theatre " + esc(th) : ""}</b><br>${total} syringe${total === 1 ? "" : "s"}${next ? " · Next: " + next : ""}`
+    : "Next: " + next;
 }
 
 $("sites").addEventListener("click", e => {
@@ -357,7 +413,7 @@ $("drugs").addEventListener("click", e => {
 });
 $("reasons").addEventListener("click", e => {
   const b = e.target.closest("[data-r]"); if(!b) return;
-  state.reason = state.reason === b.dataset.r ? null : b.dataset.r; renderReasons();
+  state.reason = b.dataset.r; renderReasons(); update();
 });
 $("th-other-in").addEventListener("input", update);
 $("drug-other-in").addEventListener("input", update);
@@ -391,7 +447,7 @@ $("go").addEventListener("click", async () => {
   const now = new Date();
   const entry = {
     id: now.getTime().toString(36) + Math.random().toString(36).slice(2, 7),
-    ts: now.toISOString(), site: state.site, theatre: theatreName(), items: items(), reason: state.reason || ""
+    ts: now.toISOString(), site: state.site, theatre: theatreName(), items: items(), reason: state.reason
   };
   $("go").disabled = true; $("go").textContent = "Sending…";
   const ok = await send(entry);

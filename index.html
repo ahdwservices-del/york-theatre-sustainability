@@ -92,6 +92,14 @@ a.card:hover{border-color:var(--accent)}
 .tellus b{font-family:var(--display);font-size:1.35rem;line-height:1.2}
 .tellus .tbtn{background:#10302f;color:#fff;font-weight:700;padding:12px 20px;border-radius:999px;white-space:nowrap}
 @media (hover:hover){.tellus:hover .tbtn{background:#0b6e69}}
+.dwa{display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:var(--surface);color:var(--ink);border:2px solid var(--ink);border-radius:var(--r);padding:20px 24px;margin-top:28px;text-decoration:none;box-shadow:0 3px 0 var(--ink)}
+.dwa svg{width:96px;height:56px;flex:none}
+.dwa div{flex:1;min-width:200px;display:flex;flex-direction:column;gap:4px}
+.dwa b{font-family:var(--display);font-size:1.35rem;line-height:1.2}
+.dwa-tag{align-self:flex-start;font-size:.75rem;font-weight:700;padding:2px 10px;border-radius:999px;background:#ff5a4e;color:#111}
+.dwa .tbtn{background:var(--accent);color:var(--accent-ink);font-weight:700;padding:12px 20px;border-radius:999px;white-space:nowrap}
+.dwa + .tellus{margin-top:14px}
+@media (hover:hover){.dwa:hover .tbtn{filter:brightness(1.1)}}
 .help{background:var(--accent-soft);border-radius:var(--r);padding:24px 26px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .help p{margin-top:6px}
 
@@ -206,6 +214,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
     <a class="brand" href="#home"><i></i>York Theatre Sustainability</a>
     <nav aria-label="Main">
       <a href="#home" data-nav="home">Home</a>
+      <a href="drug-waste.html">Drug waste audit</a>
       <a href="why-bother.html">Why bother?</a>
       <a href="boundaries.html">Planet</a>
       <a href="sixrs.html">6 Rs</a>
@@ -213,7 +222,6 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
       <a href="quiz.html">Quiz</a>
       <a href="#low-flow" data-nav="low-flow" data-nav2="low-flow-scarborough low-flow-bridlington">Low flow</a>
       <a href="propofol.html">Propofol</a>
-      <a href="drug-waste.html">Drug audit</a>
       <a href="roadmap.html">Roadmap</a>
       <a href="reading.html">Reading</a>
       <a href="feedback.html">Tell us</a>
@@ -231,6 +239,7 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
         <p>Quick tools to help every theatre team waste less.</p>
         <div class="cta">
           <a class="btn primary" href="#waste-finder">Which bin?</a>
+          <a class="btn primary" href="drug-waste.html">Log drug waste</a>
           <a class="btn ghost" href="quiz.html">Try the quiz</a>
           <a class="btn ghost" href="feedback.html">Tell us what gets in the way</a>
         </div>
@@ -240,6 +249,11 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
     </div>
   </div>
   <div class="wrap">
+    <a class="dwa" href="drug-waste.html">
+      <svg viewBox="0 0 96 56" aria-hidden="true"><rect x="2" y="6" width="20" height="44" rx="5" fill="#ffe14a"/><rect x="5" y="40" width="14" height="4" rx="2" fill="#111" opacity=".85"/><rect x="26" y="6" width="20" height="44" rx="5" fill="#8ecbf5"/><rect x="29" y="40" width="14" height="4" rx="2" fill="#111" opacity=".85"/><rect x="50" y="6" width="20" height="44" rx="5" fill="#c9a8ec"/><rect x="53" y="40" width="14" height="4" rx="2" fill="#111" opacity=".85"/><rect x="74" y="6" width="20" height="44" rx="5" fill="#ff5a4e"/><rect x="77" y="40" width="14" height="4" rx="2" fill="#111" opacity=".85"/></svg>
+      <div><span class="dwa-tag">Live audit</span><b>Drew up a syringe you didn't use?</b><span>Log it in 10 seconds. It shows us which drugs we waste most, and where.</span></div>
+      <span class="tbtn">Log drug waste →</span>
+    </a>
     <a class="tellus" href="feedback.html">
       <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 10h36v22H20l-9 8v-8H6z" fill="#10302f"/><circle cx="16" cy="21" r="2.6" fill="#ffd23f"/><circle cx="24" cy="21" r="2.6" fill="#ffd23f"/><circle cx="32" cy="21" r="2.6" fill="#ffd23f"/></svg>
       <div><b>Something stopping you doing the green thing?</b><span>Tell us. It's completely anonymous and takes two minutes.</span></div>
